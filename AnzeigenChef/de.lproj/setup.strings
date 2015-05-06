@@ -1,0 +1,12 @@
+
+/* Class = "NSWindow"; title = "Window"; ObjectID = "F0z-JX-Cv5"; */
+"F0z-JX-Cv5.title" = "Window";
+
+/* Class = "NSButtonCell"; title = "OK"; ObjectID = "eDL-C1-8jJ"; */
+"eDL-C1-8jJ.title" = "OK";
+
+/* Class = "NSTabViewItem"; label = "Tab"; ObjectID = "kpB-Ck-BYA"; */
+"kpB-Ck-BYA.label" = "Tab";
+
+/* Class = "NSTabViewItem"; label = "View"; ObjectID = "oCJ-UV-P4p"; */
+"oCJ-UV-P4p.label" = "View";
