@@ -8,6 +8,8 @@
 
 import Foundation
 
+
+
 class httpcl{
     
     
@@ -51,7 +53,20 @@ class httpcl{
             if (res.statusCode >= 200 && res.statusCode < 300)
             {
                 var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                // println(responseData)
                 if responseData.containsString("m-abmelden.html"){
+                    let jsonstr = (responseData as String).getstring("var adsAsJson = ",endStr: "Belen.My.ManageAdsView")
+                    var xdata: NSData = jsonstr.dataUsingEncoding(NSUTF8StringEncoding)!
+                    var err: NSError?
+                    var json : NSDictionary = (NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) as? NSDictionary)!
+                    if ((json["ads"]) != nil){
+                        let ads : NSArray = json["ads"] as! NSArray
+                        for var i=0; i<ads.count; ++i{
+                            if (ads[i] is NSDictionary){
+                                println(ads[i]["title"])
+                            }
+                        }
+                    }
                     return true
                 }
             }

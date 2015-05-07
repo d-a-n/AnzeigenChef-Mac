@@ -10,6 +10,7 @@
 		542400F11AF61681006DF527 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 542400F01AF61681006DF527 /* libsqlite3.dylib */; };
 		5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = 5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */; };
 		542401101AF62F1D006DF527 /* dbfunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5424010F1AF62F1D006DF527 /* dbfunc.swift */; };
+		545B99E11AFAC6EB0011BD0F /* myextensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545B99E01AFAC6EB0011BD0F /* myextensions.swift */; };
 		5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485B5CE1AF79CB100919752 /* foldercontroller.swift */; };
 		5485B5D11AF79CB100919752 /* foldercontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5485B5CF1AF79CB100919752 /* foldercontroller.xib */; };
 		548F14431AF659A5000D6F1A /* catitem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548F14421AF659A5000D6F1A /* catitem.swift */; };
@@ -39,6 +40,7 @@
 		5424010B1AF61B97006DF527 /* AnzeigenChef-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AnzeigenChef-Bridging-Header.h"; sourceTree = "<group>"; };
 		5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AnzeigenChef-Bridging-Header.m"; sourceTree = "<group>"; };
 		5424010F1AF62F1D006DF527 /* dbfunc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dbfunc.swift; sourceTree = "<group>"; };
+		545B99E01AFAC6EB0011BD0F /* myextensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = myextensions.swift; sourceTree = "<group>"; };
 		5485B5CE1AF79CB100919752 /* foldercontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = foldercontroller.swift; sourceTree = "<group>"; };
 		5485B5CF1AF79CB100919752 /* foldercontroller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = foldercontroller.xib; sourceTree = "<group>"; };
 		548F14421AF659A5000D6F1A /* catitem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = catitem.swift; sourceTree = "<group>"; };
@@ -82,6 +84,7 @@
 				5424010F1AF62F1D006DF527 /* dbfunc.swift */,
 				548F14421AF659A5000D6F1A /* catitem.swift */,
 				54F192471AFA094C007757A8 /* httpcl.swift */,
+				545B99E01AFAC6EB0011BD0F /* myextensions.swift */,
 			);
 			name = class;
 			sourceTree = "<group>";
@@ -265,6 +268,7 @@
 				548F14431AF659A5000D6F1A /* catitem.swift in Sources */,
 				5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */,
 				54FC69281AF56E3C00610B93 /* setup_account.swift in Sources */,
+				545B99E11AFAC6EB0011BD0F /* myextensions.swift in Sources */,
 				542401101AF62F1D006DF527 /* dbfunc.swift in Sources */,
 				54F192481AFA094C007757A8 /* httpcl.swift in Sources */,
 				54F1C3011AF4C748005219FC /* setup.swift in Sources */,

@@ -7,9 +7,11 @@
 //
 
 import Cocoa
+import Foundation
 
 // GLOBAL DB!
 var db: COpaquePointer = nil
+
 
 
 @NSApplicationMain
@@ -55,8 +57,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     override func awakeFromNib() {
-        
+
     }
+    
+    
+    
+  
+    
     
     func menuNeedsUpdate(menu: NSMenu){
         
