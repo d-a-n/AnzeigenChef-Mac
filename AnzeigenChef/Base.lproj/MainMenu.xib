@@ -811,6 +811,11 @@
                             <action selector="delete:" target="-1" id="13U-3z-ekT"/>
                         </connections>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="E1262CEB-9EE7-472D-8399-C8ECBE3ECAED" label="Synchronize" paletteLabel="Synchronize" tag="-1" image="NSComputer" id="rua-wk-LT5">
+                        <connections>
+                            <action selector="syncbutton:" target="Voe-Tx-rLC" id="02i-sB-Wgb"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="Jas-75-8Rh"/>
@@ -820,6 +825,8 @@
                     <toolbarItem reference="gSB-xw-Krp"/>
                     <toolbarItem reference="0jG-H4-6b8"/>
                     <toolbarItem reference="vpI-HN-yty"/>
+                    <toolbarItem reference="gSB-xw-Krp"/>
+                    <toolbarItem reference="rua-wk-LT5"/>
                     <toolbarItem reference="2NA-zs-6q9"/>
                     <toolbarItem reference="ThZ-VD-Z3e"/>
                     <toolbarItem reference="ppK-zb-j7y"/>
@@ -861,6 +868,7 @@
     <resources>
         <image name="NSAddTemplate" width="11" height="11"/>
         <image name="NSCaution" width="32" height="32"/>
+        <image name="NSComputer" width="32" height="32"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="NSInfo" width="32" height="32"/>
         <image name="NSMultipleDocuments" width="32" height="32"/>
