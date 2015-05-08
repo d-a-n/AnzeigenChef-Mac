@@ -22,6 +22,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBOutlet weak var catpopup: NSMenu!
     
     var mydb = dbfunc()
+    var myhttpcl = httpcl()
     var setupControl : setup!
     var folderControl : foldercontroller!
     var katDataArray : [[String : String]] = []
@@ -237,7 +238,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             if (returnCode == NSModalResponseOK){
                 
             }
-            self.setupControl = nil;
         });
         
         /*
@@ -246,6 +246,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         */
     }
     // End ShowSetup ******
+    
+    
+    @IBAction func syncbutton(sender: AnyObject) {
+        // OK Accounts holen
+        var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
+        for var i=0; i<dataArray.count; ++i{
+            let uname : String = dataArray[i]["username"]!
+            let upass : String = dataArray[i]["password"]!
+            let thelist : NSArray = myhttpcl.shortlist_ebay_account(uname, password: upass)
+            for var ii=0; ii<thelist.count; ++ii{
+                if let ditem = thelist[ii] as? NSDictionary{
+                    var sqlstr : String = "INSERT INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided) VALUES (";
+                    sqlstr += dataArray[i]["id"]! + ","
+                    sqlstr += self.mydb.quotedstring( (ditem["id"] as AnyObject?)!.stringValue ) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["price"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["title"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["category"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["endDate"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring( (ditem["viewCount"] as! NSNumber).stringValue ) + ","
+                    sqlstr += self.mydb.quotedstring( (ditem["watchCount"] as! NSNumber).stringValue ) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["image"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["state"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring(ditem["seoUrl"] as! String) + ","
+                    sqlstr += self.mydb.quotedstring( (ditem["shippingProvided"] as AnyObject?)!.stringValue) + ""
+                    sqlstr += ")"
+                    self.mydb.executesql(sqlstr);
+                }
+            }
+        }
+    }
     
     
     //MARK:CatPopUp actions

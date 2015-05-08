@@ -109,6 +109,9 @@
                                     <buttonCell key="cell" type="push" title="Save account" bezelStyle="rounded" alignment="center" enabled="NO" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="L7j-i7-y77">
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
+                                        <string key="keyEquivalent" base64-UTF8="YES">
+DQ
+</string>
                                     </buttonCell>
                                     <connections>
                                         <action selector="okaction:" target="-2" id="oGP-5l-uXR"/>
