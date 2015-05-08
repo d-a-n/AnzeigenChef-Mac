@@ -26,6 +26,11 @@ class dbfunc{
             if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate text, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
+            } else {
+                if sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS items_id on items (itemid,account)", nil, nil, nil) != SQLITE_OK {
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error creating table: \(errmsg)")
+                }
             }
         }
     }

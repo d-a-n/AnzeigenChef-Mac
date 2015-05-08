@@ -256,25 +256,51 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             let upass : String = dataArray[i]["password"]!
             let thelist : NSArray = myhttpcl.shortlist_ebay_account(uname, password: upass)
             for var ii=0; ii<thelist.count; ++ii{
-                if let ditem = thelist[ii] as? NSDictionary{
-                    var sqlstr : String = "INSERT INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided) VALUES (";
+                if let ditem = thelist[ii] as? NSDictionary {
+                    let cditem = self.fixdicttostrings(ditem)
+                    var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided) VALUES (";
                     sqlstr += dataArray[i]["id"]! + ","
-                    sqlstr += self.mydb.quotedstring( (ditem["id"] as AnyObject?)!.stringValue ) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["price"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["title"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["category"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["endDate"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring( (ditem["viewCount"] as! NSNumber).stringValue ) + ","
-                    sqlstr += self.mydb.quotedstring( (ditem["watchCount"] as! NSNumber).stringValue ) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["image"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["state"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring(ditem["seoUrl"] as! String) + ","
-                    sqlstr += self.mydb.quotedstring( (ditem["shippingProvided"] as AnyObject?)!.stringValue) + ""
+                    if cditem["id"] != nil { sqlstr += self.mydb.quotedstring(cditem["id"] as! String) + "," } else { continue } // if no id resume next
+                    if cditem["price"] != nil { sqlstr += self.mydb.quotedstring(cditem["price"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["title"] != nil { sqlstr += self.mydb.quotedstring(cditem["title"] as! String) + "," } else { sqlstr+="'0'," }
+                    if cditem["category"] != nil { sqlstr += self.mydb.quotedstring(cditem["category"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["endDate"] != nil { sqlstr += self.mydb.quotedstring(cditem["endDate"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["viewCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["viewCount"] as! String) + "," } else { sqlstr+="'0'," }
+                    if cditem["watchCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["watchCount"] as! String) + "," } else { sqlstr+="'0'," }
+                    if cditem["image"] != nil { sqlstr += self.mydb.quotedstring(cditem["image"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["state"] != nil { sqlstr += self.mydb.quotedstring(cditem["state"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["seoUrl"] != nil { sqlstr += self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," } else { sqlstr+="''," }
+                    if cditem["shippingProvided"] != nil { sqlstr += self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "" } else { sqlstr+="''" }
                     sqlstr += ")"
-                    self.mydb.executesql(sqlstr);
+                    if (self.mydb.executesql(sqlstr)){
+                        
+                    }
                 }
             }
         }
+    }
+    
+    func fixdicttostrings(oldDic : NSDictionary) -> NSMutableDictionary{
+        var newDic : NSMutableDictionary = NSMutableDictionary.new()
+        for (key, value) in oldDic {
+            // checkVal
+            var newval : String = ""
+            if (value is NSNumber){
+                newval = (value as AnyObject?)!.stringValue
+            } else if(value is Bool){
+                if (value as! Bool){
+                    newval = "true"
+                } else {
+                    newval = "false"
+                }
+            } else if(value is String) {
+                newval = value as! String
+            } else {
+                newval = ""
+            }
+            newDic.setObject(newval, forKey: key as! String)
+        }
+        return newDic
     }
     
     
