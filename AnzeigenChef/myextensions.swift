@@ -57,4 +57,12 @@ extension String
         }
         return ""
     }
+    
+    func quotedstring() -> String{
+        var escapedString = self.stringByReplacingOccurrencesOfString("'",
+            withString: "''",
+            options: .LiteralSearch,
+            range: nil)
+        return "'\(escapedString)\'"
+    }
 }

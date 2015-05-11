@@ -15,17 +15,19 @@ var db: COpaquePointer = nil
 
 
 @NSApplicationMain
-class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate,NSMenuDelegate {
+class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSOutlineViewDelegate,NSMenuDelegate,NSTableViewDataSource,NSTableViewDelegate {
 
     @IBOutlet weak var window: NSWindow!
     @IBOutlet weak var catlist: NSOutlineView!
     @IBOutlet weak var catpopup: NSMenu!
+    @IBOutlet weak var itemstableview: NSTableView!
     
     var mydb = dbfunc()
     var myhttpcl = httpcl()
     var setupControl : setup!
     var folderControl : foldercontroller!
     var katDataArray : [[String : String]] = []
+    var tableDataArray : NSArray = []
     var catlastclickrow : Int = -1
     
     private let kNodesPBoardType = "myNodesPBoardType"
@@ -51,6 +53,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.catlist.reloadData()
         catlist.expandItem(firstCatItem);
         catlist.registerForDraggedTypes([kNodesPBoardType])
+        
+        tableDataArray = self.mydb.sql_read_items("")
+        itemstableview.reloadData()
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -152,6 +157,26 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return child1
     }
    
+    
+    
+    //MARK: TableView
+    func numberOfRowsInTableView(tableView: NSTableView) -> Int{
+        return tableDataArray.count
+    }
+    
+    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?{
+        if (tableDataArray.count-1 >= row){
+            let nsdic : [String : String] = tableDataArray.objectAtIndex(row) as! [String : String]
+            let fieldName : String = tableColumn!.identifier!
+            let cstr = nsdic[fieldName]
+            if (cstr != nil){
+                return nsdic[fieldName]
+            }
+        }
+        return ""
+    }
+    
+    
     
     //MARK: CatList DragDROP!
     func outlineView(outlineView: NSOutlineView, writeItems items: [AnyObject], toPasteboard pasteboard: NSPasteboard) -> Bool{
@@ -396,6 +421,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             self.catdelete(ldata[i]["id"]!)
         }
     }
+    
+    //MARK:DB Items
     
 
 
