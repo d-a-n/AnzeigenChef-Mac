@@ -15,6 +15,7 @@ class dbfunc{
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
+            // sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
             if sqlite3_exec(db, "create table if not exists accounts (id integer primary key autoincrement, username text, password text, platform text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -23,7 +24,7 @@ class dbfunc{
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             }
-            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate text, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate text, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text, folder int)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {

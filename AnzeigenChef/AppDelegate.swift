@@ -21,6 +21,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBOutlet weak var catlist: NSOutlineView!
     @IBOutlet weak var catpopup: NSMenu!
     @IBOutlet weak var itemstableview: NSTableView!
+    @IBOutlet weak var progressBar: NSProgressIndicator!
+    @IBOutlet weak var currentFolderLabel: NSTextField!
     
     var mydb = dbfunc()
     var myhttpcl = httpcl()
@@ -29,6 +31,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var katDataArray : [[String : String]] = []
     var tableDataArray : NSArray = []
     var catlastclickrow : Int = -1
+    var currentFolderID : Int = -8
     
     private let kNodesPBoardType = "myNodesPBoardType"
     private var dragNodesArray: [catitem] = []
@@ -46,15 +49,18 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         mydb.opendb();
-        self.addcat("Activ", myid: "-9", myimg : "NSStatusAvailable", cparent: firstCatItem, is_template:false);
+        let selk : catitem = self.addcat("Activ", myid: "-9", myimg : "NSStatusAvailable", cparent: firstCatItem, is_template:false);
         self.addcat("Stopped", myid: "-8", myimg : "NSStatusUnavailable", cparent: firstCatItem, is_template:false);
         self.templateCatItem = self.addcat("Templates", myid: "-10", myimg: "NSFolder", cparent: firstCatItem, is_template:false);
         self.loadCats()
+        catlist.setDataSource(self)
         self.catlist.reloadData()
         catlist.expandItem(firstCatItem);
         catlist.registerForDraggedTypes([kNodesPBoardType])
-        
-        self.load_data("")
+        catlist.setDelegate(self)
+        catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
+        self.currentFolderLabel.stringValue = selk.get_catname()
+        self.load_data("-9")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -62,7 +68,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     override func awakeFromNib() {
-
+        
     }
     
     
@@ -150,11 +156,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return nil;
     }
     
+    func outlineView(outlineView: NSOutlineView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet{
+        if (proposedSelectionIndexes.count>0){
+            let n : catitem = self.catlist.itemAtRow(proposedSelectionIndexes.firstIndex) as! catitem
+            self.currentFolderLabel.stringValue = n.get_catname()
+            self.currentFolderID = n.get_catid().toInt()!
+            self.load_data("folder="+String(self.currentFolderID))
+        }
+        return proposedSelectionIndexes
+    }
+    
     func addcat(myname : String, myid : String, myimg : String, cparent: catitem, is_template : Bool) -> catitem{
         var child1 : catitem = catitem(cname: myname, cid: myid, cimg : myimg, istemplate:is_template, cparent : cparent, cgroup: false)
         cparent.addChild(child1)
         return child1
     }
+    
+    
    
     
     
@@ -273,50 +291,68 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     
     @IBAction func syncbutton(sender: AnyObject) {
-        // OK Accounts holen
-        var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
-        for var i=0; i<dataArray.count; ++i{
-            let uname : String = dataArray[i]["username"]!
-            let upass : String = dataArray[i]["password"]!
-            let thelist : NSArray = myhttpcl.shortlist_ebay_account(uname, password: upass)
-            for var ii=0; ii<thelist.count; ++ii{
-                if let ditem = thelist[ii] as? NSDictionary {
-                    let cditem = self.fixdicttostrings(ditem)
-                    var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided) VALUES (";
-                    sqlstr += dataArray[i]["id"]! + ","
-                    if cditem["id"] != nil { sqlstr += self.mydb.quotedstring(cditem["id"] as! String) + "," } else { continue } // if no id resume next
-                    if cditem["price"] != nil { sqlstr += self.mydb.quotedstring(cditem["price"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["title"] != nil { sqlstr += self.mydb.quotedstring(cditem["title"] as! String) + "," } else { sqlstr+="'0'," }
-                    if cditem["category"] != nil { sqlstr += self.mydb.quotedstring(cditem["category"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["endDate"] != nil { sqlstr += self.mydb.quotedstring(cditem["endDate"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["viewCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["viewCount"] as! String) + "," } else { sqlstr+="'0'," }
-                    if cditem["watchCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["watchCount"] as! String) + "," } else { sqlstr+="'0'," }
-                    if cditem["image"] != nil { sqlstr += self.mydb.quotedstring(cditem["image"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["state"] != nil { sqlstr += self.mydb.quotedstring(cditem["state"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["seoUrl"] != nil { sqlstr += self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," } else { sqlstr+="''," }
-                    if cditem["shippingProvided"] != nil { sqlstr += self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "" } else { sqlstr+="''" }
-                    sqlstr += ")"
-                    if (self.mydb.executesql(sqlstr)){
-                        var sqlstr : String = "UPDATE items SET ";
-                        if cditem["price"] != nil { sqlstr += "price="+self.mydb.quotedstring(cditem["price"] as! String) + "," }
-                        if cditem["title"] != nil { sqlstr += "title="+self.mydb.quotedstring(cditem["title"] as! String) + "," }
-                        if cditem["category"] != nil { sqlstr += "category="+self.mydb.quotedstring(cditem["category"] as! String) + "," }
-                        if cditem["endDate"] != nil { sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"] as! String) + "," }
-                        if cditem["viewCount"] != nil { sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"] as! String) + "," }
-                        if cditem["watchCount"] != nil { sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"] as! String) + "," }
-                        if cditem["image"] != nil { sqlstr += "image="+self.mydb.quotedstring(cditem["image"] as! String) + "," }
-                        if cditem["state"] != nil { sqlstr += "state="+self.mydb.quotedstring(cditem["state"] as! String) + "," }
-                        if cditem["seoUrl"] != nil { sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," }
-                        if cditem["shippingProvided"] != nil { sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "" }
-                        sqlstr += " WHERE itemid="+self.mydb.quotedstring(cditem["id"] as! String)
-                        self.mydb.executesql(sqlstr)
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            // OK Accounts holen
+            var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
+            self.progressBar.maxValue = Double(dataArray.count)
+            self.progressBar.doubleValue = 0
+            self.progressBar.startAnimation(self)
+            for var i=0; i<dataArray.count; ++i{
+                self.progressBar.doubleValue = Double(i)
+                self.progressBar.startAnimation(self)
+                let uname : String = dataArray[i]["username"]!
+                let upass : String = dataArray[i]["password"]!
+                let thelist : NSArray = self.myhttpcl.shortlist_ebay_account(uname, password: upass)
+                for var ii=0; ii<thelist.count; ++ii{
+                    self.progressBar.maxValue = Double(thelist.count)
+                    self.progressBar.doubleValue = Double(ii)
+                    if let ditem = thelist[ii] as? NSDictionary {
+                        let cditem = self.fixdicttostrings(ditem)
+                        var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided,folder) VALUES (";
+                        sqlstr += dataArray[i]["id"]! + ","
+                        if cditem["id"] != nil { sqlstr += self.mydb.quotedstring(cditem["id"] as! String) + "," } else { continue } // if no id resume next
+                        if cditem["price"] != nil { sqlstr += self.mydb.quotedstring(cditem["price"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["title"] != nil { sqlstr += self.mydb.quotedstring(cditem["title"] as! String) + "," } else { sqlstr+="'0'," }
+                        if cditem["category"] != nil { sqlstr += self.mydb.quotedstring(cditem["category"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["endDate"] != nil { sqlstr += self.mydb.quotedstring(cditem["endDate"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["viewCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["viewCount"] as! String) + "," } else { sqlstr+="'0'," }
+                        if cditem["watchCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["watchCount"] as! String) + "," } else { sqlstr+="'0'," }
+                        if cditem["image"] != nil { sqlstr += self.mydb.quotedstring(cditem["image"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["state"] != nil { sqlstr += self.mydb.quotedstring(cditem["state"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["seoUrl"] != nil { sqlstr += self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," } else { sqlstr+="''," }
+                        if cditem["shippingProvided"] != nil { sqlstr += self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "," } else { sqlstr+="''," }
+                        sqlstr += "-9)" // Folder -8 is current running...
+                        if (self.mydb.executesql(sqlstr)){
+                            var sqlstr : String = "UPDATE items SET ";
+                            if cditem["price"] != nil { sqlstr += "price="+self.mydb.quotedstring(cditem["price"] as! String) + "," }
+                            if cditem["title"] != nil { sqlstr += "title="+self.mydb.quotedstring(cditem["title"] as! String) + "," }
+                            if cditem["category"] != nil { sqlstr += "category="+self.mydb.quotedstring(cditem["category"] as! String) + "," }
+                            if cditem["endDate"] != nil { sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"] as! String) + "," }
+                            if cditem["viewCount"] != nil { sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"] as! String) + "," }
+                            if cditem["watchCount"] != nil { sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"] as! String) + "," }
+                            if cditem["image"] != nil { sqlstr += "image="+self.mydb.quotedstring(cditem["image"] as! String) + "," }
+                            if cditem["state"] != nil { sqlstr += "state="+self.mydb.quotedstring(cditem["state"] as! String) + "," }
+                            if cditem["seoUrl"] != nil { sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," }
+                            if cditem["shippingProvided"] != nil { sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "," }
+                            sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"] as! String)
+                            self.mydb.executesql(sqlstr)
+                        }
                     }
                 }
             }
+            
+            self.progressBar.stopAnimation(self)
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                if (self.currentFolderID == -9){
+                    self.load_data("-9")
+                }
+            }
+            
+            
         }
-        self.load_data("")
-        
     }
+    
     
     func fixdicttostrings(oldDic : NSDictionary) -> NSMutableDictionary{
         var newDic : NSMutableDictionary = NSMutableDictionary.new()
