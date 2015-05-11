@@ -54,8 +54,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         catlist.expandItem(firstCatItem);
         catlist.registerForDraggedTypes([kNodesPBoardType])
         
-        tableDataArray = self.mydb.sql_read_items("")
-        itemstableview.reloadData()
+        self.load_data("")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -298,11 +297,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     if cditem["shippingProvided"] != nil { sqlstr += self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "" } else { sqlstr+="''" }
                     sqlstr += ")"
                     if (self.mydb.executesql(sqlstr)){
-                        
+                        var sqlstr : String = "UPDATE items SET ";
+                        if cditem["price"] != nil { sqlstr += "price="+self.mydb.quotedstring(cditem["price"] as! String) + "," }
+                        if cditem["title"] != nil { sqlstr += "title="+self.mydb.quotedstring(cditem["title"] as! String) + "," }
+                        if cditem["category"] != nil { sqlstr += "category="+self.mydb.quotedstring(cditem["category"] as! String) + "," }
+                        if cditem["endDate"] != nil { sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"] as! String) + "," }
+                        if cditem["viewCount"] != nil { sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"] as! String) + "," }
+                        if cditem["watchCount"] != nil { sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"] as! String) + "," }
+                        if cditem["image"] != nil { sqlstr += "image="+self.mydb.quotedstring(cditem["image"] as! String) + "," }
+                        if cditem["state"] != nil { sqlstr += "state="+self.mydb.quotedstring(cditem["state"] as! String) + "," }
+                        if cditem["seoUrl"] != nil { sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," }
+                        if cditem["shippingProvided"] != nil { sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "" }
+                        sqlstr += " WHERE itemid="+self.mydb.quotedstring(cditem["id"] as! String)
+                        self.mydb.executesql(sqlstr)
                     }
                 }
             }
         }
+        self.load_data("")
+        
     }
     
     func fixdicttostrings(oldDic : NSDictionary) -> NSMutableDictionary{
@@ -423,7 +436,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     //MARK:DB Items
-    
+    func load_data(filterStr : String){
+        tableDataArray = self.mydb.sql_read_items(filterStr)
+        itemstableview.reloadData()
+        let itemtext : String = NSLocalizedString("Items", comment: "Quantity of items in current view")
+        self.window.title = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String + " (" + String(tableDataArray.count) + " " + itemtext + ")"
+    }
 
 
 }
