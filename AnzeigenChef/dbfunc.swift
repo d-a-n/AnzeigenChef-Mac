@@ -15,7 +15,7 @@ class dbfunc{
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
-            // sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
+            /// sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
             if sqlite3_exec(db, "create table if not exists accounts (id integer primary key autoincrement, username text, password text, platform text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -32,6 +32,7 @@ class dbfunc{
                     let errmsg = String.fromCString(sqlite3_errmsg(db))
                     println("error creating table: \(errmsg)")
                 }
+                sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS items_folder on items (folder)", nil, nil, nil)
             }
         }
     }
@@ -121,7 +122,7 @@ class dbfunc{
     
     func sql_read_items(sqlFilter : String) -> [[String : String]]{
         var statement: COpaquePointer = nil
-        var sText = "select id, account, itemid, price, title, category, enddate, viewcount, watchcount, image, state,seourl, shippingprovided from items";
+        var sText = "select items.id, items.account, items.itemid, items.price, items.title, items.category, items.enddate, items.viewcount, items.watchcount, items.image, items.state, items.seourl, items.shippingprovided, accounts.username AS AUsername from items INNER JOIN accounts ON items.account=accounts.id";
         if (sqlFilter != ""){
             sText = sText + " WHERE " + sqlFilter
         }
@@ -135,7 +136,7 @@ class dbfunc{
         while sqlite3_step(statement) == SQLITE_ROW {
             
             let row_id = self.textAt(0,statementx: statement)
-            let row_account = self.textAt(1,statementx: statement)
+            let row_account = self.textAt(13,statementx: statement)
             let row_itemid = self.textAt(2,statementx: statement)
             let row_price = self.textAt(3,statementx: statement)
             let row_title = self.textAt(4,statementx: statement)

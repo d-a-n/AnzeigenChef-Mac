@@ -60,7 +60,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         catlist.setDelegate(self)
         catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
         self.currentFolderLabel.stringValue = selk.get_catname()
-        self.load_data("-9")
+        self.currentFolderID = -9
+        self.load_data("folder=-9")
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -292,11 +293,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     @IBAction func syncbutton(sender: AnyObject) {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            // OK Accounts holen
+            // get accounts
             var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
+            // setup visual progress
             self.progressBar.maxValue = Double(dataArray.count)
             self.progressBar.doubleValue = 0
             self.progressBar.startAnimation(self)
+            // move all running items to stopped
+            self.mydb.executesql("UPDATE items SET folder=-8 WHERE folder=-9")
             for var i=0; i<dataArray.count; ++i{
                 self.progressBar.doubleValue = Double(i)
                 self.progressBar.startAnimation(self)
@@ -345,7 +349,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             
             dispatch_async(dispatch_get_main_queue()) {
                 if (self.currentFolderID == -9){
-                    self.load_data("-9")
+                    println("Mache reload für "+String(self.currentFolderID))
+                    self.load_data("folder=-9")
                 }
             }
             
