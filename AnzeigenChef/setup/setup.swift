@@ -13,6 +13,8 @@ class setup: NSWindowController,NSTableViewDataSource,NSTableViewDelegate {
     var setupAccount : setup_account!
     @IBOutlet var accountTable: NSTableView!
     @IBOutlet var deleteButton: NSButton!
+    @IBOutlet var autosynccheckbox: NSButton!
+    @IBOutlet var autosyncminutes: NSTextField!
     
     var dataArray : [[String : String]] = []
     var currentSelection = 0;
@@ -103,6 +105,15 @@ class setup: NSWindowController,NSTableViewDataSource,NSTableViewDelegate {
         });
         
     }
+    
+    @IBAction func activeSyncCheck(sender: AnyObject) {
+        if (self.autosynccheckbox.state == NSOnState){
+            self.autosyncminutes.enabled = true
+        } else {
+            self.autosyncminutes.enabled = false
+        }
+    }
+    
     
     @IBAction func deleteAccount(sender: AnyObject) {
         var mydb = dbfunc();

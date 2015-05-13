@@ -24,6 +24,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var currentFolderLabel: NSTextField!
     @IBOutlet weak var messControl: MessageControl!
+    @IBOutlet weak var syncButton: NSToolbarItem!
     
     
     var mydb = dbfunc()
@@ -34,6 +35,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var tableDataArray : NSArray = []
     var catlastclickrow : Int = -1
     var currentFolderID : Int = -8
+    var syncinprocess : Bool = false
     
     private let kNodesPBoardType = "myNodesPBoardType"
     private var dragNodesArray: [catitem] = []
@@ -101,7 +103,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
     }
-     
+    
+    override func validateToolbarItem(theItem: NSToolbarItem) -> Bool {
+        if theItem.action == Selector("syncbutton:") {
+            if syncinprocess {
+                return false
+            } else {
+                return true
+            }
+        }
+        return theItem.enabled
+    }
     
     //MARK: Outline
     func outlineView(outlineView: NSOutlineView, isGroupItem item: AnyObject) -> Bool{
@@ -303,6 +315,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     
     @IBAction func syncbutton(sender: AnyObject) {
+        self.syncinprocess = true
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
             // get accounts
             var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
@@ -321,6 +334,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 
                 // Logout
                 self.myhttpcl.logout_ebay_account()
+                
+                // Login
+                let isok : Bool = self.myhttpcl.check_ebay_account(uname, password: upass)
+                if (isok == false){
+                    println("Login für " + uname + " nicht möglich :( ")
+                    continue
+                }
                 
                 // get items
                 let thelist : NSArray = self.myhttpcl.shortlist_ebay_account(uname, password: upass)
@@ -341,7 +361,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         sqlstr += self.mydb.quotedstring(cditem["price"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["title"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["category"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["endDate"]) + ","
+                        
+                        var dateFormatter = NSDateFormatter()
+                        dateFormatter.dateFormat = "dd.MM.yyyy"
+                        let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
+                        dateFormatter.dateFormat = "yyyy-MM-dd"
+                        var endDate = dateFormatter.stringFromDate(date!)
+                        sqlstr += self.mydb.quotedstring(endDate) + ","
+                        
                         sqlstr += self.mydb.quotedstring(cditem["viewCount"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["watchCount"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["image"]) + ","
@@ -354,7 +381,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                             sqlstr += "price="+self.mydb.quotedstring(cditem["price"]) + ","
                             sqlstr += "title="+self.mydb.quotedstring(cditem["title"]) + ","
                             sqlstr += "category="+self.mydb.quotedstring(cditem["category"]) + ","
-                            sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"]) + ","
+                             
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = "dd.MM.yyyy"
+                            let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
+                            dateFormatter.dateFormat = "yyyy-MM-dd"
+                            var endDate = dateFormatter.stringFromDate(date!)
+                            sqlstr += "enddate="+self.mydb.quotedstring(endDate) + ","
+                            
                             sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"]) + ","
                             sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"]) + ","
                             sqlstr += "image="+self.mydb.quotedstring(cditem["image"]) + ","
@@ -449,13 +483,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 // end
             }
             
-            self.progressBar.stopAnimation(self)
+            
             
             dispatch_async(dispatch_get_main_queue()) {
+                self.progressBar.doubleValue = 0
+                self.progressBar.stopAnimation(self)
                 if (self.currentFolderID == -9){
-                    println("Mache reload für "+String(self.currentFolderID))
                     self.load_data("folder=-9")
                 }
+                self.syncinprocess = false
             }
             
             

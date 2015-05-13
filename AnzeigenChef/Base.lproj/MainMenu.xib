@@ -27,6 +27,7 @@
                 <outlet property="itemstableview" destination="zZQ-O4-AVI" id="N9h-tx-F4p"/>
                 <outlet property="messControl" destination="qKW-OP-5f0" id="AEc-bs-OXn"/>
                 <outlet property="progressBar" destination="cSq-hv-iGd" id="wJ9-ER-aPP"/>
+                <outlet property="syncButton" destination="rua-wk-LT5" id="Pdj-b8-eMH"/>
                 <outlet property="window" destination="QvC-M9-y7g" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>

@@ -8,6 +8,8 @@
         <customObject id="-2" userLabel="File's Owner" customClass="setup" customModule="AnzeigenChef" customModuleProvider="target">
             <connections>
                 <outlet property="accountTable" destination="6YO-jI-rTW" id="ReU-Bm-WVu"/>
+                <outlet property="autosynccheckbox" destination="bFI-tP-c1X" id="05H-RY-3vD"/>
+                <outlet property="autosyncminutes" destination="J5f-6y-cP4" id="aw6-SK-BXu"/>
                 <outlet property="deleteButton" destination="4CU-Ym-K3R" id="ZiZ-Po-Xl1"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
@@ -26,7 +28,7 @@
                     <tabView id="4yk-ZK-J8m">
                         <rect key="frame" x="13" y="45" width="494" height="355"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
-                        <font key="font" metaFont="system"/>
+                        <font key="font" metaFont="controlContent"/>
                         <tabViewItems>
                             <tabViewItem label="Accounts" identifier="1" id="kpB-Ck-BYA">
                                 <view key="view" id="Jca-UK-BTX">
@@ -124,6 +126,43 @@
                                 <view key="view" id="ak2-7b-Gdy">
                                     <rect key="frame" x="10" y="33" width="474" height="309"/>
                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    <subviews>
+                                        <button id="bFI-tP-c1X">
+                                            <rect key="frame" x="15" y="290" width="110" height="18"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <buttonCell key="cell" type="check" title="Autosync every" bezelStyle="regularSquare" imagePosition="left" inset="2" id="jh8-OS-S5w">
+                                                <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
+                                                <font key="font" metaFont="controlContent"/>
+                                            </buttonCell>
+                                            <connections>
+                                                <action selector="activeSyncCheck:" target="-2" id="qao-Ji-FEs"/>
+                                            </connections>
+                                        </button>
+                                        <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="ZdO-7q-WLq">
+                                            <rect key="frame" x="80" y="265" width="84" height="17"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minutes" id="qoV-5S-eFv">
+                                                <font key="font" metaFont="controlContent"/>
+                                                <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                        <textField verticalHuggingPriority="750" id="J5f-6y-cP4">
+                                            <rect key="frame" x="35" y="262" width="39" height="22"/>
+                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                            <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" enabled="NO" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" title="0" drawsBackground="YES" id="FQr-yd-IjJ">
+                                                <numberFormatter key="formatter" formatterBehavior="default10_4" usesGroupingSeparator="NO" minimumIntegerDigits="0" maximumIntegerDigits="42" id="fTm-6f-42u">
+                                                    <real key="minimum" value="0.0"/>
+                                                    <metadata>
+                                                        <real key="inspectorSampleValue" value="1.234"/>
+                                                    </metadata>
+                                                </numberFormatter>
+                                                <font key="font" metaFont="controlContent"/>
+                                                <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                                                <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                            </textFieldCell>
+                                        </textField>
+                                    </subviews>
                                 </view>
                             </tabViewItem>
                         </tabViewItems>
