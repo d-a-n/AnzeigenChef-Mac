@@ -34,6 +34,12 @@ class dbfunc{
                 }
                 sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS items_folder on items (folder)", nil, nil, nil)
             }
+            if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread text, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String.fromCString(sqlite3_errmsg(db))
+                println("error creating table: \(errmsg)")
+            } else {
+                sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS conversations_idx on conversations (account,cid)", nil, nil, nil)
+            }
         }
     }
     
@@ -47,7 +53,7 @@ class dbfunc{
     func executesql(sqlStr : String) -> Bool{
         if sqlite3_exec(db, sqlStr, nil, nil, nil) != SQLITE_OK {
             let errmsg = String.fromCString(sqlite3_errmsg(db))
-            println("sql error: \(errmsg)")
+            println("sql error: \(errmsg)\nSQL: "+sqlStr)
             return false
         }
         return true
@@ -102,12 +108,12 @@ class dbfunc{
         
         while sqlite3_step(statement) == SQLITE_ROW {
             
-            let row_id = self.textAt(0,statementx: statement)
-            let row_foldername = self.textAt(1,statementx: statement)
-            let row_folderparentid = self.textAt(2,statementx: statement)
-            
+            let cnum = Int(sqlite3_column_count(statement))
             var dataItem = [String : String]()
-            dataItem = ["id" : row_id, "foldername": row_foldername, "folderparentid" : row_folderparentid]
+            for var i=0; i<cnum; ++i{
+                let cname = String.fromCString(sqlite3_column_name(statement,Int32(i)))
+                dataItem[cname!] = self.textAt(i,statementx: statement)
+            }
             sqldata.append(dataItem);
         }
         
@@ -135,22 +141,44 @@ class dbfunc{
         
         while sqlite3_step(statement) == SQLITE_ROW {
             
-            let row_id = self.textAt(0,statementx: statement)
-            let row_account = self.textAt(13,statementx: statement)
-            let row_itemid = self.textAt(2,statementx: statement)
-            let row_price = self.textAt(3,statementx: statement)
-            let row_title = self.textAt(4,statementx: statement)
-            let row_category = self.textAt(5,statementx: statement)
-            let row_enddate = self.textAt(6,statementx: statement)
-            let row_viewcount = self.textAt(7,statementx: statement)
-            let row_watchcount = self.textAt(8,statementx: statement)
-            let row_image = self.textAt(9,statementx: statement)
-            let row_state = self.textAt(10,statementx: statement)
-            let row_seourl = self.textAt(11,statementx: statement)
-            let row_shippingprovided = self.textAt(12,statementx: statement)
-            
+            let cnum = Int(sqlite3_column_count(statement))
             var dataItem = [String : String]()
-            dataItem = ["id" : row_id, "account": row_account, "itemid" : row_itemid, "price" : row_price, "title" : row_title, "category" : row_category, "enddate" : row_enddate, "viewcount" : row_viewcount, "watchcount" : row_watchcount, "image" : row_image, "state" : row_state, "seourl" : row_seourl, "shippingprovided" : row_shippingprovided]
+            for var i=0; i<cnum; ++i{
+                let cname = String.fromCString(sqlite3_column_name(statement,Int32(i)))
+                dataItem[cname!] = self.textAt(i,statementx: statement)
+            }
+            sqldata.append(dataItem);
+        }
+        
+        if sqlite3_finalize(statement) != SQLITE_OK {
+            let errmsg = String.fromCString(sqlite3_errmsg(db))
+            println("error finalizing prepared statement: \(errmsg)")
+        }
+        
+        statement = nil
+        return sqldata
+    }
+    
+    func sql_read_conv(sqlFilter : String, sqlFields : String) -> [[String : String]]{
+        var statement: COpaquePointer = nil
+        var sText = "select " + sqlFields + " FROM conversations";
+        if (sqlFilter != ""){
+            sText = sText + " WHERE " + sqlFilter
+        }
+        if sqlite3_prepare_v2(db, sText, -1, &statement, nil) != SQLITE_OK {
+            let errmsg = String.fromCString(sqlite3_errmsg(db))
+            println("error preparing select: \(errmsg)")
+        }
+        
+        var sqldata : [[String : String]] = [] // array for dicts..
+        
+        while sqlite3_step(statement) == SQLITE_ROW {
+            let cnum = Int(sqlite3_column_count(statement))
+            var dataItem = [String : String]()
+            for var i=0; i<cnum; ++i{
+                let cname = String.fromCString(sqlite3_column_name(statement,Int32(i)))
+                dataItem[cname!] = self.textAt(i,statementx: statement)
+            }
             sqldata.append(dataItem);
         }
         
@@ -179,8 +207,10 @@ class dbfunc{
         return Int(sqlite3_last_insert_rowid(db))
     }
     
-    func quotedstring(identifier : String) -> String{
-        var escapedString = identifier.stringByReplacingOccurrencesOfString("'",
+    func quotedstring(identifier : AnyObject?) -> String{
+        if (identifier === nil) { return "''" }
+        
+        var escapedString = (identifier as! String).stringByReplacingOccurrencesOfString("'",
             withString: "''",
             options:    .LiteralSearch,
             range:      nil)

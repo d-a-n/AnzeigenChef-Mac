@@ -7,6 +7,9 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5408B63A1B024D700006EAD7 /* WebKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 5408B6391B024D700006EAD7 /* WebKit.framework */; };
+		542356C11B0283C700830A0F /* MessageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542356C01B0283C700830A0F /* MessageControl.swift */; };
+		542356C91B02879000830A0F /* MessageControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542356C81B02879000830A0F /* MessageControlCell.swift */; };
 		542400F11AF61681006DF527 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 542400F01AF61681006DF527 /* libsqlite3.dylib */; };
 		5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = 5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */; };
 		542401101AF62F1D006DF527 /* dbfunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5424010F1AF62F1D006DF527 /* dbfunc.swift */; };
@@ -36,6 +39,9 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
+		5408B6391B024D700006EAD7 /* WebKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = WebKit.framework; path = System/Library/Frameworks/WebKit.framework; sourceTree = SDKROOT; };
+		542356C01B0283C700830A0F /* MessageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageControl.swift; sourceTree = "<group>"; };
+		542356C81B02879000830A0F /* MessageControlCell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageControlCell.swift; sourceTree = "<group>"; };
 		542400F01AF61681006DF527 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = "<group>"; };
 		5424010B1AF61B97006DF527 /* AnzeigenChef-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AnzeigenChef-Bridging-Header.h"; sourceTree = "<group>"; };
 		5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AnzeigenChef-Bridging-Header.m"; sourceTree = "<group>"; };
@@ -64,6 +70,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5408B63A1B024D700006EAD7 /* WebKit.framework in Frameworks */,
 				542400F11AF61681006DF527 /* libsqlite3.dylib in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -92,6 +99,7 @@
 		54F1C2D01AF4C422005219FC = {
 			isa = PBXGroup;
 			children = (
+				5408B6391B024D700006EAD7 /* WebKit.framework */,
 				54F1C2DB1AF4C422005219FC /* AnzeigenChef */,
 				54F1C2EC1AF4C423005219FC /* AnzeigenChefTests */,
 				54F1C2DA1AF4C422005219FC /* Products */,
@@ -120,6 +128,8 @@
 				5424010B1AF61B97006DF527 /* AnzeigenChef-Bridging-Header.h */,
 				5485B5CE1AF79CB100919752 /* foldercontroller.swift */,
 				5485B5CF1AF79CB100919752 /* foldercontroller.xib */,
+				542356C01B0283C700830A0F /* MessageControl.swift */,
+				542356C81B02879000830A0F /* MessageControlCell.swift */,
 			);
 			path = AnzeigenChef;
 			sourceTree = "<group>";
@@ -267,7 +277,9 @@
 				5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */,
 				548F14431AF659A5000D6F1A /* catitem.swift in Sources */,
 				5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */,
+				542356C91B02879000830A0F /* MessageControlCell.swift in Sources */,
 				54FC69281AF56E3C00610B93 /* setup_account.swift in Sources */,
+				542356C11B0283C700830A0F /* MessageControl.swift in Sources */,
 				545B99E11AFAC6EB0011BD0F /* myextensions.swift in Sources */,
 				542401101AF62F1D006DF527 /* dbfunc.swift in Sources */,
 				54F192481AFA094C007757A8 /* httpcl.swift in Sources */,

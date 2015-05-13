@@ -23,6 +23,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBOutlet weak var itemstableview: NSTableView!
     @IBOutlet weak var progressBar: NSProgressIndicator!
     @IBOutlet weak var currentFolderLabel: NSTextField!
+    @IBOutlet weak var messControl: MessageControl!
+    
     
     var mydb = dbfunc()
     var myhttpcl = httpcl()
@@ -194,6 +196,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return ""
     }
     
+    func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet{
+        if (proposedSelectionIndexes.count>0){
+            let n : [String : String] = tableDataArray.objectAtIndex(proposedSelectionIndexes.firstIndex) as! [String : String]
+            let this_itemid : String = n["itemid"]!
+            self.messControl.loadData("adid='"+this_itemid+"' ORDER BY receiveddate DESC")
+        }
+        return proposedSelectionIndexes
+    }
+    
     
     
     //MARK: CatList DragDROP!
@@ -301,48 +312,95 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             self.progressBar.startAnimation(self)
             // move all running items to stopped
             self.mydb.executesql("UPDATE items SET folder=-8 WHERE folder=-9")
+            
             for var i=0; i<dataArray.count; ++i{
                 self.progressBar.doubleValue = Double(i)
                 self.progressBar.startAnimation(self)
                 let uname : String = dataArray[i]["username"]!
                 let upass : String = dataArray[i]["password"]!
+                
+                // get items
                 let thelist : NSArray = self.myhttpcl.shortlist_ebay_account(uname, password: upass)
+                
+                // get conversations
+                let conv : NSArray = self.myhttpcl.conversation_ebay(uname, password: upass)
+ 
+                self.progressBar.maxValue = Double(thelist.count+conv.count)
+                self.progressBar.doubleValue = 0
+                
                 for var ii=0; ii<thelist.count; ++ii{
-                    self.progressBar.maxValue = Double(thelist.count)
-                    self.progressBar.doubleValue = Double(ii)
+                    self.progressBar.doubleValue+=1
                     if let ditem = thelist[ii] as? NSDictionary {
                         let cditem = self.fixdicttostrings(ditem)
                         var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided,folder) VALUES (";
                         sqlstr += dataArray[i]["id"]! + ","
-                        if cditem["id"] != nil { sqlstr += self.mydb.quotedstring(cditem["id"] as! String) + "," } else { continue } // if no id resume next
-                        if cditem["price"] != nil { sqlstr += self.mydb.quotedstring(cditem["price"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["title"] != nil { sqlstr += self.mydb.quotedstring(cditem["title"] as! String) + "," } else { sqlstr+="'0'," }
-                        if cditem["category"] != nil { sqlstr += self.mydb.quotedstring(cditem["category"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["endDate"] != nil { sqlstr += self.mydb.quotedstring(cditem["endDate"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["viewCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["viewCount"] as! String) + "," } else { sqlstr+="'0'," }
-                        if cditem["watchCount"] != nil { sqlstr += self.mydb.quotedstring(cditem["watchCount"] as! String) + "," } else { sqlstr+="'0'," }
-                        if cditem["image"] != nil { sqlstr += self.mydb.quotedstring(cditem["image"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["state"] != nil { sqlstr += self.mydb.quotedstring(cditem["state"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["seoUrl"] != nil { sqlstr += self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," } else { sqlstr+="''," }
-                        if cditem["shippingProvided"] != nil { sqlstr += self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "," } else { sqlstr+="''," }
+                        sqlstr += self.mydb.quotedstring(cditem["id"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["price"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["title"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["category"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["endDate"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["viewCount"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["watchCount"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["image"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["state"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["seoUrl"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["shippingProvided"]) + ","
                         sqlstr += "-9)" // Folder -8 is current running...
                         if (self.mydb.executesql(sqlstr)){
                             var sqlstr : String = "UPDATE items SET ";
-                            if cditem["price"] != nil { sqlstr += "price="+self.mydb.quotedstring(cditem["price"] as! String) + "," }
-                            if cditem["title"] != nil { sqlstr += "title="+self.mydb.quotedstring(cditem["title"] as! String) + "," }
-                            if cditem["category"] != nil { sqlstr += "category="+self.mydb.quotedstring(cditem["category"] as! String) + "," }
-                            if cditem["endDate"] != nil { sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"] as! String) + "," }
-                            if cditem["viewCount"] != nil { sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"] as! String) + "," }
-                            if cditem["watchCount"] != nil { sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"] as! String) + "," }
-                            if cditem["image"] != nil { sqlstr += "image="+self.mydb.quotedstring(cditem["image"] as! String) + "," }
-                            if cditem["state"] != nil { sqlstr += "state="+self.mydb.quotedstring(cditem["state"] as! String) + "," }
-                            if cditem["seoUrl"] != nil { sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"] as! String) + "," }
-                            if cditem["shippingProvided"] != nil { sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"] as! String) + "," }
-                            sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"] as! String)
+                            sqlstr += "price="+self.mydb.quotedstring(cditem["price"]) + ","
+                            sqlstr += "title="+self.mydb.quotedstring(cditem["title"]) + ","
+                            sqlstr += "category="+self.mydb.quotedstring(cditem["category"]) + ","
+                            sqlstr += "enddate="+self.mydb.quotedstring(cditem["endDate"]) + ","
+                            sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"]) + ","
+                            sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"]) + ","
+                            sqlstr += "image="+self.mydb.quotedstring(cditem["image"]) + ","
+                            sqlstr += "state="+self.mydb.quotedstring(cditem["state"]) + ","
+                            sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"]) + ","
+                            sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"]) + ","
+                            sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"])
                             self.mydb.executesql(sqlstr)
                         }
                     }
                 }
+                // end
+                
+                // now conversations to db..
+                for var ii=0; ii<conv.count; ++ii{
+                    self.progressBar.doubleValue+=1
+                    if let ditem = conv[ii] as? NSDictionary {
+                        let cditem = self.fixdicttostrings(ditem)
+                        var sqlstr : String = "INSERT OR IGNORE INTO conversations (account,adtitle,adstatus,adimage,email,cid,buyername,sellername,adid,role,unread,textshort,boundness,receiveddate,negotiationenabled) VALUES (";
+                        sqlstr += dataArray[i]["id"]! + ","
+                        sqlstr += self.mydb.quotedstring(cditem["adTitle"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["adStatus"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["adImage"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["email"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["id"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["buyerName"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["sellerName"] ) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["adId"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["role"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["unread"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["textShortTrimmed"]) + ","
+                        sqlstr += self.mydb.quotedstring(cditem["boundness"]) + ","
+                        if (cditem["receivedDate"] != nil){
+                            var date = NSDate(timeIntervalSince1970: (cditem["receivedDate"] as! NSString).doubleValue/1000)
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                            var receivedDate = dateFormatter.stringFromDate(date)
+                            sqlstr += self.mydb.quotedstring(receivedDate) + ","
+                        }
+                        sqlstr += self.mydb.quotedstring(cditem["negotiationEnabled"])+")"
+                        if (self.mydb.executesql(sqlstr)){
+                            var sqlstr : String = "UPDATE conversations SET ";
+                            sqlstr += "unread="+self.mydb.quotedstring(cditem["unread"])
+                            sqlstr += " WHERE cid="+self.mydb.quotedstring(cditem["id"])
+                            self.mydb.executesql(sqlstr)
+                        }
+                    }
+                }
+                // end
             }
             
             self.progressBar.stopAnimation(self)
