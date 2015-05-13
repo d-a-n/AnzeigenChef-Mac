@@ -12,20 +12,20 @@
 		542356C91B02879000830A0F /* MessageControlCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 542356C81B02879000830A0F /* MessageControlCell.swift */; };
 		542400F11AF61681006DF527 /* libsqlite3.dylib in Frameworks */ = {isa = PBXBuildFile; fileRef = 542400F01AF61681006DF527 /* libsqlite3.dylib */; };
 		5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */ = {isa = PBXBuildFile; fileRef = 5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */; };
-		542401101AF62F1D006DF527 /* dbfunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5424010F1AF62F1D006DF527 /* dbfunc.swift */; };
-		545B99E11AFAC6EB0011BD0F /* myextensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 545B99E01AFAC6EB0011BD0F /* myextensions.swift */; };
 		5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485B5CE1AF79CB100919752 /* foldercontroller.swift */; };
 		5485B5D11AF79CB100919752 /* foldercontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5485B5CF1AF79CB100919752 /* foldercontroller.xib */; };
-		548F14431AF659A5000D6F1A /* catitem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 548F14421AF659A5000D6F1A /* catitem.swift */; };
-		54F192481AFA094C007757A8 /* httpcl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F192471AFA094C007757A8 /* httpcl.swift */; };
+		54F1311C1B03841D001070D8 /* catitem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131181B03841D001070D8 /* catitem.swift */; };
+		54F1311D1B03841D001070D8 /* dbfunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131191B03841D001070D8 /* dbfunc.swift */; };
+		54F1311E1B03841D001070D8 /* httpcl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1311A1B03841D001070D8 /* httpcl.swift */; };
+		54F1311F1B03841D001070D8 /* myextensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1311B1B03841D001070D8 /* myextensions.swift */; };
+		54F131241B038506001070D8 /* setup_account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131211B038506001070D8 /* setup_account.swift */; };
+		54F131251B038506001070D8 /* setup_account.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54F131221B038506001070D8 /* setup_account.xib */; };
+		54F131261B038506001070D8 /* setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131231B038506001070D8 /* setup.swift */; };
 		54F1C2DF1AF4C422005219FC /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1C2DE1AF4C422005219FC /* AppDelegate.swift */; };
 		54F1C2E11AF4C422005219FC /* Images.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 54F1C2E01AF4C422005219FC /* Images.xcassets */; };
 		54F1C2E41AF4C422005219FC /* MainMenu.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54F1C2E21AF4C422005219FC /* MainMenu.xib */; };
 		54F1C2F01AF4C423005219FC /* AnzeigenChefTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1C2EF1AF4C423005219FC /* AnzeigenChefTests.swift */; };
-		54F1C3011AF4C748005219FC /* setup.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1C2FF1AF4C748005219FC /* setup.swift */; };
 		54F1C3041AF55E06005219FC /* setup.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54F1C3061AF55E06005219FC /* setup.xib */; };
-		54FC69281AF56E3C00610B93 /* setup_account.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54FC69261AF56E3C00610B93 /* setup_account.swift */; };
-		54FC69291AF56E3C00610B93 /* setup_account.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54FC69271AF56E3C00610B93 /* setup_account.xib */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -45,12 +45,15 @@
 		542400F01AF61681006DF527 /* libsqlite3.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; path = libsqlite3.dylib; sourceTree = "<group>"; };
 		5424010B1AF61B97006DF527 /* AnzeigenChef-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "AnzeigenChef-Bridging-Header.h"; sourceTree = "<group>"; };
 		5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = "AnzeigenChef-Bridging-Header.m"; sourceTree = "<group>"; };
-		5424010F1AF62F1D006DF527 /* dbfunc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = dbfunc.swift; sourceTree = "<group>"; };
-		545B99E01AFAC6EB0011BD0F /* myextensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = myextensions.swift; sourceTree = "<group>"; };
 		5485B5CE1AF79CB100919752 /* foldercontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = foldercontroller.swift; sourceTree = "<group>"; };
 		5485B5CF1AF79CB100919752 /* foldercontroller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = foldercontroller.xib; sourceTree = "<group>"; };
-		548F14421AF659A5000D6F1A /* catitem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = catitem.swift; sourceTree = "<group>"; };
-		54F192471AFA094C007757A8 /* httpcl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = httpcl.swift; sourceTree = "<group>"; };
+		54F131181B03841D001070D8 /* catitem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = catitem.swift; path = class/catitem.swift; sourceTree = "<group>"; };
+		54F131191B03841D001070D8 /* dbfunc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = dbfunc.swift; path = class/dbfunc.swift; sourceTree = "<group>"; };
+		54F1311A1B03841D001070D8 /* httpcl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = httpcl.swift; path = class/httpcl.swift; sourceTree = "<group>"; };
+		54F1311B1B03841D001070D8 /* myextensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = myextensions.swift; path = class/myextensions.swift; sourceTree = "<group>"; };
+		54F131211B038506001070D8 /* setup_account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = setup_account.swift; sourceTree = "<group>"; };
+		54F131221B038506001070D8 /* setup_account.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = setup_account.xib; sourceTree = "<group>"; };
+		54F131231B038506001070D8 /* setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = setup.swift; sourceTree = "<group>"; };
 		54F1C2D91AF4C422005219FC /* AnzeigenChef.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = AnzeigenChef.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		54F1C2DD1AF4C422005219FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		54F1C2DE1AF4C422005219FC /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
@@ -59,10 +62,7 @@
 		54F1C2E91AF4C423005219FC /* AnzeigenChefTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = AnzeigenChefTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		54F1C2EE1AF4C423005219FC /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		54F1C2EF1AF4C423005219FC /* AnzeigenChefTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AnzeigenChefTests.swift; sourceTree = "<group>"; };
-		54F1C2FF1AF4C748005219FC /* setup.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = setup.swift; sourceTree = "<group>"; };
 		54F1C3051AF55E06005219FC /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.xib; name = Base; path = Base.lproj/setup.xib; sourceTree = "<group>"; };
-		54FC69261AF56E3C00610B93 /* setup_account.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = setup_account.swift; sourceTree = "<group>"; };
-		54FC69271AF56E3C00610B93 /* setup_account.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = setup_account.xib; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -88,12 +88,23 @@
 		5424010E1AF62F09006DF527 /* class */ = {
 			isa = PBXGroup;
 			children = (
-				5424010F1AF62F1D006DF527 /* dbfunc.swift */,
-				548F14421AF659A5000D6F1A /* catitem.swift */,
-				54F192471AFA094C007757A8 /* httpcl.swift */,
-				545B99E01AFAC6EB0011BD0F /* myextensions.swift */,
+				54F131181B03841D001070D8 /* catitem.swift */,
+				54F131191B03841D001070D8 /* dbfunc.swift */,
+				54F1311A1B03841D001070D8 /* httpcl.swift */,
+				54F1311B1B03841D001070D8 /* myextensions.swift */,
 			);
 			name = class;
+			sourceTree = "<group>";
+		};
+		54F131201B0384AD001070D8 /* setup */ = {
+			isa = PBXGroup;
+			children = (
+				54F131211B038506001070D8 /* setup_account.swift */,
+				54F131221B038506001070D8 /* setup_account.xib */,
+				54F131231B038506001070D8 /* setup.swift */,
+				54F1C3061AF55E06005219FC /* setup.xib */,
+			);
+			path = setup;
 			sourceTree = "<group>";
 		};
 		54F1C2D01AF4C422005219FC = {
@@ -118,12 +129,12 @@
 		54F1C2DB1AF4C422005219FC /* AnzeigenChef */ = {
 			isa = PBXGroup;
 			children = (
+				54F131201B0384AD001070D8 /* setup */,
 				5424010E1AF62F09006DF527 /* class */,
 				54F1C2DE1AF4C422005219FC /* AppDelegate.swift */,
 				54F1C2E01AF4C422005219FC /* Images.xcassets */,
 				54F1C2E21AF4C422005219FC /* MainMenu.xib */,
 				54F1C2DC1AF4C422005219FC /* Supporting Files */,
-				54FC69251AF56E1E00610B93 /* setup */,
 				5424010C1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m */,
 				5424010B1AF61B97006DF527 /* AnzeigenChef-Bridging-Header.h */,
 				5485B5CE1AF79CB100919752 /* foldercontroller.swift */,
@@ -158,17 +169,6 @@
 				54F1C2EE1AF4C423005219FC /* Info.plist */,
 			);
 			name = "Supporting Files";
-			sourceTree = "<group>";
-		};
-		54FC69251AF56E1E00610B93 /* setup */ = {
-			isa = PBXGroup;
-			children = (
-				54F1C2FF1AF4C748005219FC /* setup.swift */,
-				54F1C3061AF55E06005219FC /* setup.xib */,
-				54FC69261AF56E3C00610B93 /* setup_account.swift */,
-				54FC69271AF56E3C00610B93 /* setup_account.xib */,
-			);
-			name = setup;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -251,11 +251,11 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				54F131251B038506001070D8 /* setup_account.xib in Resources */,
 				54F1C2E11AF4C422005219FC /* Images.xcassets in Resources */,
 				54F1C3041AF55E06005219FC /* setup.xib in Resources */,
 				54F1C2E41AF4C422005219FC /* MainMenu.xib in Resources */,
 				5485B5D11AF79CB100919752 /* foldercontroller.xib in Resources */,
-				54FC69291AF56E3C00610B93 /* setup_account.xib in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -275,15 +275,15 @@
 			files = (
 				54F1C2DF1AF4C422005219FC /* AppDelegate.swift in Sources */,
 				5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */,
-				548F14431AF659A5000D6F1A /* catitem.swift in Sources */,
 				5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */,
 				542356C91B02879000830A0F /* MessageControlCell.swift in Sources */,
-				54FC69281AF56E3C00610B93 /* setup_account.swift in Sources */,
+				54F1311F1B03841D001070D8 /* myextensions.swift in Sources */,
+				54F131261B038506001070D8 /* setup.swift in Sources */,
 				542356C11B0283C700830A0F /* MessageControl.swift in Sources */,
-				545B99E11AFAC6EB0011BD0F /* myextensions.swift in Sources */,
-				542401101AF62F1D006DF527 /* dbfunc.swift in Sources */,
-				54F192481AFA094C007757A8 /* httpcl.swift in Sources */,
-				54F1C3011AF4C748005219FC /* setup.swift in Sources */,
+				54F1311D1B03841D001070D8 /* dbfunc.swift in Sources */,
+				54F131241B038506001070D8 /* setup_account.swift in Sources */,
+				54F1311E1B03841D001070D8 /* httpcl.swift in Sources */,
+				54F1311C1B03841D001070D8 /* catitem.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -320,6 +320,7 @@
 				54F1C3051AF55E06005219FC /* Base */,
 			);
 			name = setup.xib;
+			path = ..;
 			sourceTree = "<group>";
 		};
 /* End PBXVariantGroup section */

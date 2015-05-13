@@ -589,7 +589,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         tableDataArray = self.mydb.sql_read_select(newFilter)
         itemstableview.reloadData()
         let itemtext : String = NSLocalizedString("Items", comment: "Quantity of items in current view")
-        self.window.title = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String + " (" + String(tableDataArray.count) + " " + itemtext + ")"
+        var newWinTitle = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String + " "
+        newWinTitle += NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"] as! String
+        newWinTitle += " (" + String(tableDataArray.count) + " " + itemtext + ")"
+        self.window.title = newWinTitle
     }
 
 
