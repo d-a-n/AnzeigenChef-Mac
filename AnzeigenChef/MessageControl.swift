@@ -19,7 +19,7 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
     
     //MARK: Data
     func loadData(filterStr : String){
-        self.messDataArray = mydb.sql_read_conv(filterStr, sqlFields: "id, account, cid, buyername, receiveddate, textshort")
+        self.messDataArray = mydb.sql_read_conv(filterStr, sqlFields: "id, account, cid, buyername, receiveddate, textshort, unread")
         self.messTable.reloadData()
     }
     
@@ -46,6 +46,12 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
             cellView.l2?.stringValue = nsdic["textshort"]!
             
             cellView.l1.textColor = NSColor.whiteColor()
+            
+            if (nsdic["unread"]! == "0") {
+                cellView.rbimage.image = NSImage(named: "NSStatusNone")
+            } else {
+                cellView.rbimage.image = NSImage(named: "NSStatusPartiallyAvailable")
+            }
         }
         return cellView
     }
@@ -55,6 +61,7 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
             let nsdic : [String : String] = messDataArray.objectAtIndex(proposedSelectionIndexes.firstIndex) as! [String : String]
             let current_cid : String = nsdic["cid"]!
             let current_account : String = nsdic["account"]!
+            let current_buyername : String = nsdic["buyername"]!
             
             let MessageArray = self.mydb.sql_read_select("SELECT * FROM conversations_text WHERE cid='" + current_cid + "' AND account='" + current_account + "' ORDER BY receiveddate ASC")
             
@@ -71,23 +78,24 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
                 let textShortStr : String = MessageArray[i]["textshort"]!
                 let receiveddateStr : String = MessageArray[i]["receiveddate"]!
                 
-                if (boundnessStr == "OUTBOUND"){
-                    htmlstring += "<div class=\"div1\">"
-                } else {
-                    htmlstring += "<div class=\"div2\">"
-                }
-                
                 let dateFormatter = NSDateFormatter()
                 dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
                 let date = dateFormatter.dateFromString(receiveddateStr)
                 dateFormatter.dateFormat = "dd.MM.yy HH:mm"
                 var receivedDate = dateFormatter.stringFromDate(date!)
-                htmlstring += receivedDate + "<br/><br/>"
+                
+                if (boundnessStr == "OUTBOUND"){
+                    htmlstring += "<div class=\"div1\"><div style=\"float: right; text-align: right; width: 120px\">" + receivedDate + "</div><div style=\"margin-right: 150px;\"><u>" + NSLocalizedString("You wrote", comment:"you wrote a message") + ":</u></div>"
+                } else {
+                    htmlstring += "<div class=\"div2\"><div style=\"float: right; text-align: right; width: 120px\">" + receivedDate + "</div><div style=\"margin-right: 150px;\"><b>" + current_buyername + " " + NSLocalizedString("wrote", comment:"other wrote a message") + ":</b></div>"
+                }
+                
+                htmlstring += "<br/><br/>"
 
                 
                 htmlstring += textShortStr.stringByReplacingOccurrencesOfString("\n", withString: "<br/>", options: nil, range: nil)
                 htmlstring += MessageArray[i]["attachments"]!
-                htmlstring += "</div><div style=\"height: 15px\"></div>"
+                htmlstring += "</div><div style=\"height: 15px; clear:both\"></div>"
             }
 
             htmlstring += "<script>window.scrollTo(0,document.body.scrollHeight);</script>"

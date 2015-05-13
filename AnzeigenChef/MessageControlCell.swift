@@ -13,6 +13,7 @@ class MessageControlCell: NSTableCellView {
     @IBOutlet var l1 : NSTextField!
     @IBOutlet var l1_right : NSTextField!
     @IBOutlet var l2 : NSTextField!
+    @IBOutlet var rbimage : NSImageView!
     
     var defaultText_l1_color = NSColor.selectedMenuItemColor()
     var defaultText_l1_right_color = NSColor.grayColor()

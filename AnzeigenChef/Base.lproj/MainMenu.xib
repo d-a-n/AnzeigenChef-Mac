@@ -1019,7 +1019,7 @@
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                             <subviews>
                                                                                 <tableView verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" autosaveColumns="NO" typeSelect="NO" rowHeight="84" rowSizeStyle="automatic" headerView="ENY-2X-951" viewBased="YES" id="XJk-kJ-tTb">
-                                                                                    <rect key="frame" x="0.0" y="0.0" width="123" height="0.0"/>
+                                                                                    <rect key="frame" x="0.0" y="0.0" width="260" height="0.0"/>
                                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -1043,7 +1043,7 @@
                                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                                     <subviews>
                                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="JrR-Ee-WiS">
-                                                                                                            <rect key="frame" x="13" y="64" width="118" height="17"/>
+                                                                                                            <rect key="frame" x="25" y="64" width="106" height="17"/>
                                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Label" usesSingleLineMode="YES" id="9PT-aO-7tw">
                                                                                                                 <font key="font" metaFont="systemBold"/>
@@ -1052,7 +1052,7 @@
                                                                                                             </textFieldCell>
                                                                                                         </textField>
                                                                                                         <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" setsMaxLayoutWidthAtFirstLayout="YES" id="Vsu-Q8-edL">
-                                                                                                            <rect key="frame" x="13" y="3" width="244" height="53"/>
+                                                                                                            <rect key="frame" x="25" y="3" width="232" height="53"/>
                                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                                             <textFieldCell key="cell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" title="Label" id="LLe-uA-gJO">
                                                                                                                 <font key="font" size="11" name=".HelveticaNeueDeskInterface-Regular"/>
@@ -1064,16 +1064,22 @@
                                                                                                             <rect key="frame" x="135" y="64" width="121" height="17"/>
                                                                                                             <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
                                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="00.00.0000" usesSingleLineMode="YES" id="8aB-8Y-wgO">
-                                                                                                                <font key="font" metaFont="controlContent"/>
+                                                                                                                <font key="font" metaFont="cellTitle"/>
                                                                                                                 <color key="textColor" name="controlShadowColor" catalog="System" colorSpace="catalog"/>
                                                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                                             </textFieldCell>
                                                                                                         </textField>
+                                                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="cW3-dZ-FFB">
+                                                                                                            <rect key="frame" x="3" y="34" width="16" height="16"/>
+                                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES" flexibleMaxY="YES"/>
+                                                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusNone" id="Tw7-q7-oFg"/>
+                                                                                                        </imageView>
                                                                                                     </subviews>
                                                                                                     <connections>
                                                                                                         <outlet property="l1" destination="JrR-Ee-WiS" id="UIh-hf-mGB"/>
                                                                                                         <outlet property="l1_right" destination="xmz-Ke-ydR" id="qfO-yO-hqb"/>
                                                                                                         <outlet property="l2" destination="Vsu-Q8-edL" id="Ljh-ad-WEe"/>
+                                                                                                        <outlet property="rbimage" destination="cW3-dZ-FFB" id="gs0-2y-048"/>
                                                                                                     </connections>
                                                                                                 </tableCellView>
                                                                                             </prototypeCellViews>
@@ -1232,6 +1238,7 @@
         <image name="NSMultipleDocuments" width="32" height="32"/>
         <image name="NSNetwork" width="32" height="32"/>
         <image name="NSPreferencesGeneral" width="32" height="32"/>
+        <image name="NSStatusNone" width="16" height="16"/>
         <image name="NSStatusUnavailable" width="16" height="16"/>
         <image name="NSTrashEmpty" width="32" height="32"/>
     </resources>

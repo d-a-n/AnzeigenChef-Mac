@@ -37,14 +37,14 @@ class dbfunc{
                 sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS items_folder on items (folder)", nil, nil, nil)
             }
             
-            if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread text, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread INTEGER, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {
                 sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS conversations_idx on conversations (account,cid)", nil, nil, nil)
             }
             
-            if sqlite3_exec(db, "create table if not exists conversations_text (id integer primary key autoincrement, account integer, textshort text, textshorttrimmed text, boundness text, type text, receiveddate datetime, attachments text, cid text, unread text)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists conversations_text (id integer primary key autoincrement, account integer, textshort text, textshorttrimmed text, boundness text, type text, receiveddate datetime, attachments text, cid text, unread INTEGER)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {
