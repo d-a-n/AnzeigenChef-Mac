@@ -20,10 +20,12 @@ class dbfunc{
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             }
+            
             if sqlite3_exec(db, "create table if not exists folders (id integer primary key autoincrement, foldername text, folderparentid integer)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             }
+            
             if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate text, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text, folder int)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -34,11 +36,19 @@ class dbfunc{
                 }
                 sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS items_folder on items (folder)", nil, nil, nil)
             }
+            
             if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread text, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {
                 sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS conversations_idx on conversations (account,cid)", nil, nil, nil)
+            }
+            
+            if sqlite3_exec(db, "create table if not exists conversations_text (id integer primary key autoincrement, account integer, textshort text, textshorttrimmed text, boundness text, type text, receiveddate datetime, attachments text, cid text, unread text)", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String.fromCString(sqlite3_errmsg(db))
+                println("error creating table: \(errmsg)")
+            } else {
+                sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS conversations_text_idx on conversations_text (account,cid,receiveddate)", nil, nil, nil)
             }
         }
     }
@@ -126,9 +136,11 @@ class dbfunc{
         return sqldata
     }
     
-    func sql_read_items(sqlFilter : String) -> [[String : String]]{
+     
+    
+    func sql_read_conv(sqlFilter : String, sqlFields : String) -> [[String : String]]{
         var statement: COpaquePointer = nil
-        var sText = "select items.id, items.account, items.itemid, items.price, items.title, items.category, items.enddate, items.viewcount, items.watchcount, items.image, items.state, items.seourl, items.shippingprovided, accounts.username AS AUsername from items INNER JOIN accounts ON items.account=accounts.id";
+        var sText = "select " + sqlFields + " FROM conversations";
         if (sqlFilter != ""){
             sText = sText + " WHERE " + sqlFilter
         }
@@ -140,7 +152,6 @@ class dbfunc{
         var sqldata : [[String : String]] = [] // array for dicts..
         
         while sqlite3_step(statement) == SQLITE_ROW {
-            
             let cnum = Int(sqlite3_column_count(statement))
             var dataItem = [String : String]()
             for var i=0; i<cnum; ++i{
@@ -159,13 +170,9 @@ class dbfunc{
         return sqldata
     }
     
-    func sql_read_conv(sqlFilter : String, sqlFields : String) -> [[String : String]]{
+    func sql_read_select(sqlStr : String) -> [[String : String]]{
         var statement: COpaquePointer = nil
-        var sText = "select " + sqlFields + " FROM conversations";
-        if (sqlFilter != ""){
-            sText = sText + " WHERE " + sqlFilter
-        }
-        if sqlite3_prepare_v2(db, sText, -1, &statement, nil) != SQLITE_OK {
+        if sqlite3_prepare_v2(db, sqlStr, -1, &statement, nil) != SQLITE_OK {
             let errmsg = String.fromCString(sqlite3_errmsg(db))
             println("error preparing select: \(errmsg)")
         }

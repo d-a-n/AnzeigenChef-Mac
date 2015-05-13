@@ -35,7 +35,14 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
         if (messDataArray.count-1>=row){
             let nsdic : [String : String] = messDataArray.objectAtIndex(row) as! [String : String]
             cellView.l1?.stringValue = nsdic["buyername"]!
-            cellView.l1_right?.stringValue = nsdic["receiveddate"]!
+            
+            let dateFormatter = NSDateFormatter()
+            dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+            let date = dateFormatter.dateFromString(nsdic["receiveddate"]!)
+            dateFormatter.dateFormat = "dd.MM.yy HH:mm"
+            var receivedDate = dateFormatter.stringFromDate(date!)
+            
+            cellView.l1_right?.stringValue = receivedDate
             cellView.l2?.stringValue = nsdic["textshort"]!
             
             cellView.l1.textColor = NSColor.whiteColor()
@@ -48,15 +55,51 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
             let nsdic : [String : String] = messDataArray.objectAtIndex(proposedSelectionIndexes.firstIndex) as! [String : String]
             let current_cid : String = nsdic["cid"]!
             let current_account : String = nsdic["account"]!
-            let dataArray = mydb.sql_read_accounts("id="+current_account)
-            if (dataArray.count>0){
-                var my_httpcl = httpcl()
-                let htmlstring = my_httpcl.conversation_detail_ebay_html(dataArray[0]["username"]!, password: dataArray[0]["password"]!, cid: current_cid)
-                myWeb.mainFrame.loadHTMLString(htmlstring, baseURL: nil)
+            
+            let MessageArray = self.mydb.sql_read_select("SELECT * FROM conversations_text WHERE cid='" + current_cid + "' AND account='" + current_account + "' ORDER BY receiveddate ASC")
+            
+            var htmlstring : String = "<html>\n<head>\n<style>\n"
+            htmlstring += "body{ background-color: #F0F0F0; }\n"
+            htmlstring += ".div1{ font-family: Arial, Helvetica, sans-serif; font-size: 12px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #87b919; padding: 5; color: #FFFFFF; width: 90%; border-radius: 3px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box; margin-left: 30px}\n"
+            htmlstring += ".div2{ font-family: Arial, Helvetica, sans-serif; font-size: 12px; -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale; background-color: #FFFFFF; padding: 5; color: #000000; width: 90%; border-radius: 3px; box-sizing: border-box; -moz-box-sizing: border-box; -webkit-box-sizing: border-box;}\n"
+            htmlstring += "</style>\n</head>\n"
+            htmlstring += "<body>"
+            
+            var currentcolor = ""
+            for var i=0; i<MessageArray.count; ++i{
+                let boundnessStr : String = MessageArray[i]["boundness"]!
+                let textShortStr : String = MessageArray[i]["textshort"]!
+                let receiveddateStr : String = MessageArray[i]["receiveddate"]!
+                
+                if (boundnessStr == "OUTBOUND"){
+                    htmlstring += "<div class=\"div1\">"
+                } else {
+                    htmlstring += "<div class=\"div2\">"
+                }
+                
+                let dateFormatter = NSDateFormatter()
+                dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                let date = dateFormatter.dateFromString(receiveddateStr)
+                dateFormatter.dateFormat = "dd.MM.yy HH:mm"
+                var receivedDate = dateFormatter.stringFromDate(date!)
+                htmlstring += receivedDate + "<br/><br/>"
+
+                
+                htmlstring += textShortStr.stringByReplacingOccurrencesOfString("\n", withString: "<br/>", options: nil, range: nil)
+                htmlstring += MessageArray[i]["attachments"]!
+                htmlstring += "</div><div style=\"height: 15px\"></div>"
             }
+
+            htmlstring += "<script>window.scrollTo(0,document.body.scrollHeight);</script>"
+            htmlstring += "</body>"
+            htmlstring += "</html>"
+            
+            myWeb.mainFrame.loadHTMLString(htmlstring, baseURL: nil)
             
         }
         return proposedSelectionIndexes
     }
+    
+ 
 
 }

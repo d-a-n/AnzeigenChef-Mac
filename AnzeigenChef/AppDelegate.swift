@@ -319,6 +319,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 let uname : String = dataArray[i]["username"]!
                 let upass : String = dataArray[i]["password"]!
                 
+                // Logout
+                self.myhttpcl.logout_ebay_account()
+                
                 // get items
                 let thelist : NSArray = self.myhttpcl.shortlist_ebay_account(uname, password: upass)
                 
@@ -397,6 +400,49 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                             sqlstr += "unread="+self.mydb.quotedstring(cditem["unread"])
                             sqlstr += " WHERE cid="+self.mydb.quotedstring(cditem["id"])
                             self.mydb.executesql(sqlstr)
+                        }
+                        
+                        // Get messagedetails...
+                        let conv_messages : NSArray = self.myhttpcl.conversation_detail_ebay(uname, password: upass, cid: cditem["id"] as! String)
+                        for var iii=0; iii<conv_messages.count; ++iii{
+                            if let convitem = conv_messages[iii] as? NSDictionary {
+                                let cdconvitem = self.fixdicttostrings(convitem)
+                                var sqlstr : String = "INSERT OR IGNORE INTO conversations_text (account, textshort, textshorttrimmed, boundness, type, receiveddate, attachments, cid, unread) VALUES ("
+                                sqlstr += dataArray[i]["id"]! + ","
+                                sqlstr += self.mydb.quotedstring(cdconvitem["textShort"]) + ","
+                                sqlstr += self.mydb.quotedstring(cdconvitem["textShortTrimmed"]) + ","
+                                sqlstr += self.mydb.quotedstring(cdconvitem["boundness"]) + ","
+                                sqlstr += self.mydb.quotedstring(cdconvitem["type"]) + ","
+                                if (cdconvitem["receivedDate"] != nil){
+                                    var date = NSDate(timeIntervalSince1970: (cdconvitem["receivedDate"] as! NSString).doubleValue/1000)
+                                    var dateFormatter = NSDateFormatter()
+                                    dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+                                    var receivedDate = dateFormatter.stringFromDate(date)
+                                    sqlstr += self.mydb.quotedstring(receivedDate) + ","
+                                }
+                                
+                                var attachStr = ""
+                                if  let new_attachments = conv_messages[iii]["attachments"] as? NSArray {
+                                    for var ai=0; ai<new_attachments.count; ++ai{
+                                        let new_attachments_item = self.fixdicttostrings(new_attachments[ai] as! NSDictionary)
+                                        if new_attachments_item["format"] as! String == "image/jpeg" {
+                                            attachStr += "<img src=\"" + (new_attachments_item["url"] as! String) + "\" height=120><br/><br/>"
+                                        }
+                                    }
+                                }
+                                
+                                sqlstr += self.mydb.quotedstring(attachStr) + ","
+                                sqlstr += self.mydb.quotedstring(cditem["id"]) + ","
+                                if (cditem["unread"] as! NSString).isEqualToString("true"){
+                                    sqlstr += "'1'"
+                                } else {
+                                    sqlstr += "'0'"
+                                }
+                                sqlstr += ")"
+                                if (self.mydb.executesql(sqlstr)){
+                                    // OK?
+                                }
+                            }
                         }
                     }
                 }
@@ -536,7 +582,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     //MARK:DB Items
     func load_data(filterStr : String){
-        tableDataArray = self.mydb.sql_read_items(filterStr)
+        var newFilter = "SELECT * FROM items"
+        if (filterStr != "") {
+            newFilter += " WHERE " + filterStr
+        }
+        tableDataArray = self.mydb.sql_read_select(newFilter)
         itemstableview.reloadData()
         let itemtext : String = NSLocalizedString("Items", comment: "Quantity of items in current view")
         self.window.title = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String + " (" + String(tableDataArray.count) + " " + itemtext + ")"
