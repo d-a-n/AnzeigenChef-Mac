@@ -142,7 +142,7 @@
                                             <rect key="frame" x="80" y="265" width="84" height="17"/>
                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                                             <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Minutes" id="qoV-5S-eFv">
-                                                <font key="font" metaFont="controlContent"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>
@@ -157,7 +157,7 @@
                                                         <real key="inspectorSampleValue" value="1.234"/>
                                                     </metadata>
                                                 </numberFormatter>
-                                                <font key="font" metaFont="controlContent"/>
+                                                <font key="font" metaFont="cellTitle"/>
                                                 <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                                                 <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                                             </textFieldCell>

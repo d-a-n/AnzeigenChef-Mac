@@ -27,6 +27,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBOutlet weak var syncButton: NSToolbarItem!
     
     
+    var my_new_edit_ebay : new_edit_ebay!
     var mydb = dbfunc()
     var myhttpcl = httpcl()
     var setupControl : setup!
@@ -104,12 +105,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
     }
     
+    override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+        if menuItem.action == Selector("add:"){
+            if (self.currentFolderID == -10 || self.currentFolderID>0) {
+                menuItem.enabled = true
+            } else {
+                menuItem.enabled = false
+            }
+        }
+        return menuItem.enabled
+    }
+    
     override func validateToolbarItem(theItem: NSToolbarItem) -> Bool {
         if theItem.action == Selector("syncbutton:") {
             if syncinprocess {
                 return false
             } else {
                 return true
+            }
+        }
+        if theItem.action == Selector("add:") {
+            if (self.currentFolderID == -10 || self.currentFolderID>0) {
+                theItem.enabled = true
+            } else {
+                theItem.enabled = false
             }
         }
         return theItem.enabled
@@ -520,6 +539,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             newDic.setObject(newval, forKey: key as! String)
         }
         return newDic
+    }
+    
+    func add(sender: NSMenuItem){
+        self.my_new_edit_ebay = nil
+        self.my_new_edit_ebay = new_edit_ebay(windowNibName: "new_edit_ebay");
+        
+        // self.folderControl.currentData = ""
+        
+        self.window!.beginSheet(self.my_new_edit_ebay.window!, completionHandler: {(returnCode) -> Void in
+            if (returnCode == NSModalResponseOK){
+                /*
+                if (self.catlastclickrow > -1){
+                    
+                    
+                    let currentitem = self.catlist.itemAtRow(self.catlastclickrow) as! catitem
+                    if (self.mydb.executesql("INSERT INTO folders (foldername,folderparentid) VALUES ('"+self.folderControl.folderNameEdit.stringValue+"','"+String(currentitem.get_catid())+"')")){
+                        self.addcat(self.folderControl.folderNameEdit.stringValue, myid: String(self.mydb.lastId()), myimg: "NSFolder", cparent: currentitem, is_template: true)
+                        self.catlist.reloadItem(currentitem, reloadChildren: true)
+                        self.catlist.expandItem(currentitem)
+                    }
+                }
+                */
+            }
+        });
     }
     
     

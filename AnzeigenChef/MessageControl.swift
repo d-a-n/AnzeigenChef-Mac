@@ -48,9 +48,10 @@ class MessageControl: NSObject,NSTableViewDataSource,NSTableViewDelegate {
             cellView.l1.textColor = NSColor.whiteColor()
             
             if (nsdic["unread"]! == "0") {
-                cellView.rbimage.image = NSImage(named: "NSStatusNone")
+                cellView.rbimage.hidden = true
             } else {
-                cellView.rbimage.image = NSImage(named: "NSStatusPartiallyAvailable")
+                cellView.rbimage.hidden = false
+                // cellView.rbimage.image = NSImage(named: "NSStatusPartiallyAvailable")
             }
         }
         return cellView
