@@ -147,6 +147,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             }
         }
+        if theItem.action == Selector("stopad:") {
+            if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
         return theItem.enabled
     }
     
@@ -430,6 +437,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                             sqlstr += "state="+self.mydb.quotedstring(cditem["state"]) + ","
                             sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"]) + ","
                             sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"]) + ","
+                            
+                            if (cditem["price"] as! String).indexOf("VB")>=0 {
+                               sqlstr += "pricetype="+self.mydb.quotedstring("2") + ","
+                            } else if (cditem["price"] as! String) != "" {
+                               sqlstr += "pricetype="+self.mydb.quotedstring("1") + ","
+                            } else {
+                                sqlstr += "pricetype="+self.mydb.quotedstring("3") + ","
+                            }
+                            
                             sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"])
                             self.mydb.executesql(sqlstr)
                         }
@@ -620,6 +636,44 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     
+    @IBAction func stopad(sender: AnyObject) {
+        let alert = NSAlert()
+        alert.messageText = NSLocalizedString("Are you sure you want to delete the selected ads?", comment: "Delete message...")
+        alert.informativeText = NSLocalizedString("Deleted ads cannot resume", comment: "Delete message header...")
+        alert.addButtonWithTitle(NSLocalizedString("Yes", comment: "Alert yes"))
+        alert.addButtonWithTitle(NSLocalizedString("No", comment: "Alert no"))
+        alert.alertStyle = NSAlertStyle.WarningAlertStyle
+        let result = alert.runModal()
+        switch(result) {
+        case NSAlertFirstButtonReturn:
+            let selx = itemstableview.selectedRowIndexes.toArray()
+            for var i=0; i<selx.count; ++i{
+                let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+                let current_account : String = nsdic["account"]!
+                let current_item : String = nsdic["itemid"]!
+                let current_state : String = nsdic["state"]!
+                
+                var dataArray : [[String : String]] = self.mydb.sql_read_accounts("id=" + current_account)
+                if (dataArray.count>0){
+                    self.myhttpcl.logout_ebay_account()
+                    if (self.myhttpcl.check_ebay_account(dataArray[0]["username"]!, password: dataArray[0]["password"]!)){
+                        
+                        if (self.myhttpcl.stop_ad_ebay(current_item)){
+                            self.mydb.executesql("UPDATE items SET state='stopped', folder='-8' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
+                        } else {
+                            println(current_item + " not stopped")
+                        }
+                        
+                    }
+                }
+            }
+            self.load_data(currentFilter)
+        case NSAlertSecondButtonReturn:
+            return
+        default:
+            break
+        }
+    }
     
     
     //MARK:CatPopUp actions

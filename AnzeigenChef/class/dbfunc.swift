@@ -26,7 +26,7 @@ class dbfunc{
                 println("error creating table: \(errmsg)")
             }
             
-            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate date, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text, folder int)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer, itemid text, price text, title text, category text, enddate date, viewcount int, watchcount int, image text, state text,seourl text, shippingprovided text, folder int, adtype integer, attribute text, pricetype integer, postalcode text, street text, myname text, myphone text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {

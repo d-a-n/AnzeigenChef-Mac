@@ -1167,7 +1167,11 @@
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="5D954BDC-4C9C-49B7-807E-3F793EACDD72" label="Send now" paletteLabel="Send now" tag="-1" image="NSNetwork" id="zSR-CS-7aR"/>
-                    <toolbarItem implicitItemIdentifier="89D43F4C-7D4E-421A-A1A3-EF8878FD10E5" label="Stop now" paletteLabel="Stop now" tag="-1" image="Stop - 2_48x48" id="Eal-l9-Dse"/>
+                    <toolbarItem implicitItemIdentifier="89D43F4C-7D4E-421A-A1A3-EF8878FD10E5" label="Stop now" paletteLabel="Stop now" tag="-1" image="Stop - 2_48x48" id="Eal-l9-Dse">
+                        <connections>
+                            <action selector="stopad:" target="Voe-Tx-rLC" id="tfd-Gc-9LX"/>
+                        </connections>
+                    </toolbarItem>
                     <toolbarItem implicitItemIdentifier="12683648-CD10-4657-A164-72E91D12D81B" label="About" paletteLabel="About" tag="-1" image="NSInfo" id="ppK-zb-j7y">
                         <connections>
                             <action selector="orderFrontStandardAboutPanel:" target="-1" id="erw-WM-Apf"/>
