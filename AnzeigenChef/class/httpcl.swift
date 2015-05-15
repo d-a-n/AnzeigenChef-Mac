@@ -61,6 +61,63 @@ class httpcl{
         return false
     }
     
+    
+    
+    func pause_ad_ebay(adId : String, whatDo : String)->Bool {
+        
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-anzeige-pausieren.json")
+        if (whatDo == "active"){
+            ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-anzeige-fortsetzen.json")
+        }
+        
+        var request = NSMutableURLRequest(URL: ebayUrl! )
+        var stringPost="adId="+adId
+        let data = stringPost.dataUsingEncoding(NSASCIIStringEncoding)
+        
+        request.HTTPMethod = "POST"
+        request.timeoutInterval = 60
+        request.HTTPBody=data
+        request.HTTPShouldHandleCookies=true
+        
+        var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                
+                var xdata: NSData = responseData.dataUsingEncoding(NSUTF8StringEncoding)!
+                var err: NSError?
+                if let jsonobj : AnyObject = NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) {
+                    if let json : NSDictionary = jsonobj as? NSDictionary {
+                        
+                        if ((json["status"]) != nil){
+                            if (json["status"] as! String == "OK"){
+                                return true
+                            } else {
+                                println(responseData)
+                            }
+                        } else {
+                            println(responseData)
+                        }
+                    }
+                } else {
+                    println("Could not parse JSON: \(err!)" + "<br/><br/>" + (responseData as String))
+                    return false
+                }
+                
+            }
+        }
+        return false
+    }
+    
+    
+    
+    
+    
     func shortlist_ebay_account(username : String, password : String)->NSArray {
         var reponseError: NSError?
         var response: NSURLResponse?

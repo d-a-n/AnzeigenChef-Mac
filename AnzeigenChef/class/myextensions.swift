@@ -66,3 +66,14 @@ extension String
         return "'\(escapedString)\'"
     }
 }
+
+
+extension NSIndexSet {
+    func toArray() -> [Int] {
+        var indexes:[Int] = [];
+        self.enumerateIndexesUsingBlock { (index:Int, _) in
+            indexes.append(index);
+        }
+        return indexes;
+    }
+}

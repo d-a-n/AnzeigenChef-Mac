@@ -37,6 +37,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var catlastclickrow : Int = -1
     var currentFolderID : Int = -8
     var syncinprocess : Bool = false
+    var currentFilter = ""
     
     private let kNodesPBoardType = "myNodesPBoardType"
     private var dragNodesArray: [catitem] = []
@@ -55,6 +56,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         mydb.opendb();
         let selk : catitem = self.addcat("Activ", myid: "-9", myimg : "NSStatusAvailable", cparent: firstCatItem, is_template:false);
+        self.addcat("Inactive", myid: "-7", myimg : "NSStatusPartiallyAvailable", cparent: firstCatItem, is_template:false);
         self.addcat("Stopped", myid: "-8", myimg : "NSStatusUnavailable", cparent: firstCatItem, is_template:false);
         self.templateCatItem = self.addcat("Templates", myid: "-10", myimg: "NSFolder", cparent: firstCatItem, is_template:false);
         self.loadCats()
@@ -129,6 +131,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 theItem.enabled = true
             } else {
                 theItem.enabled = false
+            }
+        }
+        if theItem.action == Selector("deactivate:") && theItem.tag == 876 {
+            if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        if theItem.action == Selector("deactivate:") && theItem.tag == 877 {
+            if (self.currentFolderID == -7 && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
             }
         }
         return theItem.enabled
@@ -566,6 +582,46 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     
+    @IBAction func deactivate(sender: AnyObject) {
+        let selx = itemstableview.selectedRowIndexes.toArray()
+        for var i=0; i<selx.count; ++i{
+            let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+            let current_account : String = nsdic["account"]!
+            let current_item : String = nsdic["itemid"]!
+            let current_state : String = nsdic["state"]!
+            var dowa = ""
+            
+            var dataArray : [[String : String]] = self.mydb.sql_read_accounts("id=" + current_account)
+            if (dataArray.count>0){
+                self.myhttpcl.logout_ebay_account()
+                if (self.myhttpcl.check_ebay_account(dataArray[0]["username"]!, password: dataArray[0]["password"]!)){
+                    
+                    if current_state == "active" {
+                        dowa = "paused"
+                    } else {
+                        dowa = "active"
+                    }
+                    
+                    if (self.myhttpcl.pause_ad_ebay(current_item, whatDo: dowa)){
+                        self.mydb.executesql("UPDATE items SET state='"+dowa+"' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
+                        if (dowa == "paused"){
+                            self.mydb.executesql("UPDATE items SET folder='-7' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
+                        } else {
+                            self.mydb.executesql("UPDATE items SET folder='-9' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
+                        }
+                    } else {
+                        println(current_item + " not " + dowa)
+                    }
+                    
+                }
+            }
+        }
+        self.load_data(currentFilter)
+    }
+    
+    
+    
+    
     //MARK:CatPopUp actions
     @IBAction func addFolderAction(sender: AnyObject) {
         
@@ -661,6 +717,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     //MARK:DB Items
     func load_data(filterStr : String){
+        self.currentFilter = filterStr
         var newFilter = "SELECT * FROM items"
         if (filterStr != "") {
             newFilter += " WHERE " + filterStr

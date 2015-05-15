@@ -1167,7 +1167,7 @@
                         </connections>
                     </toolbarItem>
                     <toolbarItem implicitItemIdentifier="5D954BDC-4C9C-49B7-807E-3F793EACDD72" label="Send now" paletteLabel="Send now" tag="-1" image="NSNetwork" id="zSR-CS-7aR"/>
-                    <toolbarItem implicitItemIdentifier="89D43F4C-7D4E-421A-A1A3-EF8878FD10E5" label="Stop now" paletteLabel="Stop now" tag="-1" image="NSCaution" id="Eal-l9-Dse"/>
+                    <toolbarItem implicitItemIdentifier="89D43F4C-7D4E-421A-A1A3-EF8878FD10E5" label="Stop now" paletteLabel="Stop now" tag="-1" image="Stop - 2_48x48" id="Eal-l9-Dse"/>
                     <toolbarItem implicitItemIdentifier="12683648-CD10-4657-A164-72E91D12D81B" label="About" paletteLabel="About" tag="-1" image="NSInfo" id="ppK-zb-j7y">
                         <connections>
                             <action selector="orderFrontStandardAboutPanel:" target="-1" id="erw-WM-Apf"/>
@@ -1184,11 +1184,23 @@
                             <action selector="syncbutton:" target="Voe-Tx-rLC" id="02i-sB-Wgb"/>
                         </connections>
                     </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="83EA2D2E-FDE4-4347-A609-2ABDA30DF38C" label="Deactivate" paletteLabel="Deactivate" tag="876" image="Circle - Green_48x48" id="LQx-Rz-yI5">
+                        <connections>
+                            <action selector="deactivate:" target="Voe-Tx-rLC" id="M04-gV-pgI"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="D720E37C-E9CF-49F4-9F2E-31F569824244" label="Resume" paletteLabel="Resume" tag="877" image="Badge - Green_48x48" id="xdw-WV-FOx">
+                        <connections>
+                            <action selector="deactivate:" target="Voe-Tx-rLC" id="6Gf-8p-MxJ"/>
+                        </connections>
+                    </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="Jas-75-8Rh"/>
                     <toolbarItem reference="gSB-xw-Krp"/>
                     <toolbarItem reference="zSR-CS-7aR"/>
+                    <toolbarItem reference="LQx-Rz-yI5"/>
+                    <toolbarItem reference="xdw-WV-FOx"/>
                     <toolbarItem reference="Eal-l9-Dse"/>
                     <toolbarItem reference="gSB-xw-Krp"/>
                     <toolbarItem reference="0jG-H4-6b8"/>
@@ -1234,8 +1246,9 @@
         </menu>
     </objects>
     <resources>
+        <image name="Badge - Green_48x48" width="48" height="48"/>
+        <image name="Circle - Green_48x48" width="48" height="48"/>
         <image name="NSAddTemplate" width="11" height="11"/>
-        <image name="NSCaution" width="32" height="32"/>
         <image name="NSComputer" width="32" height="32"/>
         <image name="NSFolder" width="32" height="32"/>
         <image name="NSInfo" width="32" height="32"/>
@@ -1245,5 +1258,6 @@
         <image name="NSStatusPartiallyAvailable" width="16" height="16"/>
         <image name="NSStatusUnavailable" width="16" height="16"/>
         <image name="NSTrashEmpty" width="32" height="32"/>
+        <image name="Stop - 2_48x48" width="48" height="48"/>
     </resources>
 </document>
