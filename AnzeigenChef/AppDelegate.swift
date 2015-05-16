@@ -676,6 +676,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     
+    
+    
+    
+    
+    
     //MARK:CatPopUp actions
     @IBAction func addFolderAction(sender: AnyObject) {
         
@@ -783,6 +788,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         newWinTitle += NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"] as! String
         newWinTitle += " (" + String(tableDataArray.count) + " " + itemtext + ")"
         self.window.title = newWinTitle
+        if (tableDataArray.count>0){
+            self.tableView(itemstableview, selectionIndexesForProposedSelection: NSIndexSet(index: 0))
+        } else {
+            self.messControl.resetAll()
+        }
     }
 
 

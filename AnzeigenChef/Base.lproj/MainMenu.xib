@@ -15,6 +15,7 @@
         <customObject id="-3" userLabel="Application" customClass="NSObject"/>
         <customObject id="qKW-OP-5f0" customClass="MessageControl" customModule="AnzeigenChef" customModuleProvider="target">
             <connections>
+                <outlet property="answerButton" destination="zV5-wT-Rnc" id="Zr8-Ky-ZAs"/>
                 <outlet property="messTable" destination="XJk-kJ-tTb" id="Xmg-tj-IBD"/>
                 <outlet property="myWeb" destination="Qlc-pR-kyl" id="rgm-1g-c8e"/>
             </connections>
@@ -987,17 +988,20 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <button verticalHuggingPriority="750" id="zV5-wT-Rnc">
-                                                                    <rect key="frame" x="603" y="4" width="149" height="25"/>
+                                                                    <rect key="frame" x="603" y="0.0" width="149" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                    <buttonCell key="cell" type="roundTextured" title="Anwer question" bezelStyle="texturedRounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ukh-qy-oZv">
+                                                                    <buttonCell key="cell" type="push" title="Anwer question" bezelStyle="rounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ukh-qy-oZv">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
+                                                                    <connections>
+                                                                        <action selector="answerMessageAction:" target="qKW-OP-5f0" id="ocW-WY-S7v"/>
+                                                                    </connections>
                                                                 </button>
                                                                 <button verticalHuggingPriority="750" id="5W4-Ov-FR5">
-                                                                    <rect key="frame" x="8" y="4" width="149" height="25"/>
+                                                                    <rect key="frame" x="10" y="0.0" width="149" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                    <buttonCell key="cell" type="roundTextured" title="Block user" bezelStyle="texturedRounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RbG-Tk-HPZ">
+                                                                    <buttonCell key="cell" type="push" title="Block user" bezelStyle="rounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="RbG-Tk-HPZ">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>
