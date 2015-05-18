@@ -835,7 +835,7 @@
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableColumns>
-                                                                        <tableColumn identifier="itemid" width="118" minWidth="40" maxWidth="1000" id="DYh-xa-Lqe">
+                                                                        <tableColumn identifier="itemid" editable="NO" width="118" minWidth="40" maxWidth="1000" id="DYh-xa-Lqe">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="ArtID">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -848,7 +848,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="title" width="144.2421875" minWidth="40" maxWidth="1000" id="PB2-3R-zhe">
+                                                                        <tableColumn identifier="title" editable="NO" width="144.2421875" minWidth="40" maxWidth="1000" id="PB2-3R-zhe">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Title">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -861,7 +861,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="price" width="89.53125" minWidth="10" maxWidth="3.4028234663852886e+38" id="9Ju-cq-mM4">
+                                                                        <tableColumn identifier="price" editable="NO" width="89.53125" minWidth="10" maxWidth="3.4028234663852886e+38" id="9Ju-cq-mM4">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Price">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -874,7 +874,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="viewcount" width="84.53125" minWidth="10" maxWidth="3.4028234663852886e+38" id="LwM-uU-zvT">
+                                                                        <tableColumn identifier="viewcount" editable="NO" width="84.53125" minWidth="10" maxWidth="3.4028234663852886e+38" id="LwM-uU-zvT">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Viewcount">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -887,7 +887,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="watchcount" width="87.6015625" minWidth="10" maxWidth="3.4028234663852886e+38" id="ZH1-Xr-DcP">
+                                                                        <tableColumn identifier="watchcount" editable="NO" width="87.6015625" minWidth="10" maxWidth="3.4028234663852886e+38" id="ZH1-Xr-DcP">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="right" title="Watchcount">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -900,7 +900,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="state" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="3DI-IY-Av4">
+                                                                        <tableColumn identifier="state" editable="NO" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="3DI-IY-Av4">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="State">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -913,7 +913,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="enddate" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="VSO-Fm-XcG">
+                                                                        <tableColumn identifier="enddate" editable="NO" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="VSO-Fm-XcG">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Enddate">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -926,7 +926,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="account" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="2EL-Lk-oNc">
+                                                                        <tableColumn identifier="account" editable="NO" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="2EL-Lk-oNc">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Account">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
@@ -939,7 +939,7 @@
                                                                             </textFieldCell>
                                                                             <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
                                                                         </tableColumn>
-                                                                        <tableColumn identifier="category" width="18" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ofd-Al-EI3">
+                                                                        <tableColumn identifier="category" editable="NO" width="18" minWidth="10" maxWidth="3.4028234663852886e+38" id="Ofd-Al-EI3">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Category">
                                                                                 <font key="font" metaFont="smallSystem"/>
                                                                                 <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>

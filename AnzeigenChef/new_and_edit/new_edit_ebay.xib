@@ -7,6 +7,18 @@
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="new_edit_ebay" customModule="AnzeigenChef" customModuleProvider="target">
             <connections>
+                <outlet property="adDesc" destination="gqB-zH-0e7" id="0QI-DH-nPJ"/>
+                <outlet property="adPhone" destination="NWz-RT-kna" id="iQB-zC-Mtl"/>
+                <outlet property="adPostalCode" destination="NEn-cF-xjt" id="BdF-a6-Vj3"/>
+                <outlet property="adPrice" destination="Fgb-E0-apC" id="mDb-JD-vYo"/>
+                <outlet property="adPriceType" destination="01j-yy-yGP" id="hRV-kS-lQV"/>
+                <outlet property="adStreet" destination="EpR-0n-ad1" id="joJ-R3-R9K"/>
+                <outlet property="adTitle" destination="zi9-XG-GpL" id="kl0-Js-FJ9"/>
+                <outlet property="adType" destination="SbZ-eb-sWl" id="hTb-Xe-pS7"/>
+                <outlet property="adYourName" destination="TmT-fX-YhO" id="yqE-dQ-fPp"/>
+                <outlet property="catSelButton" destination="AWq-4s-lDM" id="POR-cm-VdZ"/>
+                <outlet property="listAccount" destination="edl-Uq-7kz" id="NpR-cA-mkh"/>
+                <outlet property="okButton" destination="CNt-gS-8T0" id="YlH-Mb-Vqy"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
@@ -19,7 +31,7 @@
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <value key="minSize" type="size" width="605" height="684"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="-5" width="605" height="684"/>
+                <rect key="frame" x="0.0" y="0.0" width="605" height="684"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <button verticalHuggingPriority="750" id="AWq-4s-lDM">
@@ -29,6 +41,9 @@
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                             <font key="font" metaFont="system"/>
                         </buttonCell>
+                        <connections>
+                            <action selector="selectCatAction:" target="-2" id="3HO-as-irm"/>
+                        </connections>
                     </button>
                     <matrix verticalHuggingPriority="750" allowsEmptySelection="NO" autorecalculatesCellSize="YES" id="SbZ-eb-sWl">
                         <rect key="frame" x="20" y="546" width="118" height="38"/>
@@ -58,7 +73,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Title" id="xQ5-xX-xPX">
                             <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.14725188386267354" green="0.2738057012244004" blue="0.71172691053814363" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -76,7 +91,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Description" id="rVC-nL-fCX">
                             <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.14725188386267354" green="0.2738057012244004" blue="0.71172691053814363" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -114,7 +129,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Price" id="AET-UE-Kuj">
                             <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.14725188386267354" green="0.2738057012244004" blue="0.71172691053814363" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -122,7 +137,7 @@
                         <rect key="frame" x="20" y="261" width="78" height="22"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" id="tnP-6d-04r">
-                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="currency" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="qlt-Tp-DUF"/>
+                            <numberFormatter key="formatter" formatterBehavior="default10_4" numberStyle="currency" lenient="YES" minimumIntegerDigits="1" maximumIntegerDigits="2000000000" maximumFractionDigits="3" id="qlt-Tp-DUF"/>
                             <font key="font" metaFont="system"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -160,7 +175,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Postalcode" id="vMY-jB-VB0">
                             <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.14725188386267354" green="0.2738057012244004" blue="0.71172691053814363" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -196,7 +211,7 @@
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Your name" id="iuV-ui-4Ic">
                             <font key="font" metaFont="cellTitle"/>
-                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="textColor" red="0.14725188386267354" green="0.2738057012244004" blue="0.71172691053814363" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
@@ -259,6 +274,9 @@
                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                         <font key="font" metaFont="system"/>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="okAction:" target="-2" id="CMl-SG-jm0"/>
+                                    </connections>
                                 </button>
                                 <button verticalHuggingPriority="750" id="6Mg-EK-Z1J">
                                     <rect key="frame" x="10" y="4" width="124" height="32"/>
@@ -270,12 +288,38 @@
 Gw
 </string>
                                     </buttonCell>
+                                    <connections>
+                                        <action selector="cancelAction:" target="-2" id="VM7-7b-Ro4"/>
+                                    </connections>
                                 </button>
                             </subviews>
                         </view>
                         <color key="borderColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
                         <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </box>
+                    <comboBox focusRingType="none" verticalHuggingPriority="750" id="edl-Uq-7kz">
+                        <rect key="frame" x="348" y="542" width="240" height="26"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                        <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" focusRingType="none" drawsBackground="YES" usesSingleLineMode="YES" completes="NO" numberOfVisibleItems="5" id="9OZ-SD-EaD">
+                            <font key="font" metaFont="system"/>
+                            <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                            <objectValues>
+                                <string>Item 1</string>
+                                <string>Item 2</string>
+                                <string>Item 3</string>
+                            </objectValues>
+                        </comboBoxCell>
+                    </comboBox>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="gMK-db-OKp">
+                        <rect key="frame" x="346" y="567" width="241" height="17"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="List with" id="VEh-Ma-i57">
+                            <font key="font" metaFont="cellTitle"/>
+                            <color key="textColor" name="labelColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
                 </subviews>
             </view>
             <connections>

@@ -61,6 +61,65 @@ class httpcl{
         return false
     }
     
+    func getcats_ebay()->NSDictionary{
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben.html")
+        let emptyarray : NSDictionary = ["name" : "nix", "identifier" : "-1", "children" : []]
+        
+        var request = NSMutableURLRequest(URL: ebayUrl! )
+        
+        request.HTTPMethod = "GET"
+        request.timeoutInterval = 60
+        request.HTTPShouldHandleCookies=true
+        
+        var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                responseData = "{\"categoryTree\": {" + (responseData as! String).getstring("categoryTree: {", endStr: "});") + "}"
+                
+                var xdata: NSData = responseData.dataUsingEncoding(NSUTF8StringEncoding)!
+                var err: NSError?
+                if let jsonobj : AnyObject = NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) {
+                    if let json : NSDictionary = jsonobj as? NSDictionary {
+                        
+                        if ((json["categoryTree"]) != nil){
+                            let jscategoryTree = json["categoryTree"] as! NSDictionary
+                            return jscategoryTree
+                            //if (jscategoryTree["children"] != nil){
+                            //    let jsKids = jscategoryTree["children"] as! NSArray
+                                /*
+                                for var i=0; i<jsKids.count; ++i{
+                                    if (jsKids[i]["name"] != nil){
+                                        println(jsKids[i]["name"])
+                                        println(jsKids[i]["identifier"])
+                                    }
+                                }
+                                */
+                            //    return jsKids
+                            //} else {
+                            //    println(responseData)
+                            //}
+                        } else {
+                            println(responseData)
+                        }
+                    }
+                } else {
+                    println("Could not parse JSON: \(err!)" + "<br/><br/>" + (responseData as String))
+                    return emptyarray
+                }
+                
+            } else {
+                println("StatusCode: "+String(res.statusCode)+" -> ")
+            }
+
+        }
+        return emptyarray
+    }
+    
     
     
     func pause_ad_ebay(adId : String, whatDo : String)->Bool {
@@ -119,15 +178,15 @@ class httpcl{
     func stop_ad_ebay(adId : String)->Bool {
         var reponseError: NSError?
         var response: NSURLResponse?
-        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-anzeigen-loeschen.json")
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-anzeigen-loeschen.json?ids="+adId+"&pageNum=1")
         
         var request = NSMutableURLRequest(URL: ebayUrl! )
-        var stringPost="adId="+adId
+        var stringPost="ids="+adId
         let data = stringPost.dataUsingEncoding(NSASCIIStringEncoding)
         
-        request.HTTPMethod = "POST"
+        request.HTTPMethod = "GET"
         request.timeoutInterval = 60
-        request.HTTPBody=data
+        // request.HTTPBody=data
         request.HTTPShouldHandleCookies=true
         
         var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
@@ -142,8 +201,8 @@ class httpcl{
                 if let jsonobj : AnyObject = NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) {
                     if let json : NSDictionary = jsonobj as? NSDictionary {
                         
-                        if ((json["status"]) != nil){
-                            if (json["status"] as! String == "OK"){
+                        if ((json["success"]) != nil){
+                            if (json["success"] as! NSArray).count>0{
                                 return true
                             } else {
                                 println(responseData)
@@ -158,7 +217,7 @@ class httpcl{
                 }
                 
             } else {
-                println("StatusCode: "+String(res.statusCode))
+                println("StatusCode: "+String(res.statusCode)+" -> "+stringPost)
             }
         }
         return false

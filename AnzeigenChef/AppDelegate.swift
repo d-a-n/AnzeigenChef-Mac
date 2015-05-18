@@ -126,6 +126,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return true
             }
         }
+        /* ADD BUTTON ACTIVE, CHANGE FOLDER!
         if theItem.action == Selector("add:") {
             if (self.currentFolderID == -10 || self.currentFolderID>0) {
                 theItem.enabled = true
@@ -133,6 +134,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 theItem.enabled = false
             }
         }
+        */
         if theItem.action == Selector("deactivate:") && theItem.tag == 876 {
             if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
                 return true
@@ -576,23 +578,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     func add(sender: NSMenuItem){
         self.my_new_edit_ebay = nil
         self.my_new_edit_ebay = new_edit_ebay(windowNibName: "new_edit_ebay");
-        
-        // self.folderControl.currentData = ""
+        self.my_new_edit_ebay.currentfolder = self.currentFolderID
+        if (self.my_new_edit_ebay.currentfolder<=0 && self.my_new_edit_ebay.currentfolder != -10){
+            self.my_new_edit_ebay.currentfolder = -10
+        }
         
         self.window!.beginSheet(self.my_new_edit_ebay.window!, completionHandler: {(returnCode) -> Void in
             if (returnCode == NSModalResponseOK){
-                /*
-                if (self.catlastclickrow > -1){
-                    
-                    
-                    let currentitem = self.catlist.itemAtRow(self.catlastclickrow) as! catitem
-                    if (self.mydb.executesql("INSERT INTO folders (foldername,folderparentid) VALUES ('"+self.folderControl.folderNameEdit.stringValue+"','"+String(currentitem.get_catid())+"')")){
-                        self.addcat(self.folderControl.folderNameEdit.stringValue, myid: String(self.mydb.lastId()), myimg: "NSFolder", cparent: currentitem, is_template: true)
-                        self.catlist.reloadItem(currentitem, reloadChildren: true)
-                        self.catlist.expandItem(currentitem)
-                    }
-                }
-                */
+                self.load_data(self.currentFilter)
             }
         });
     }
@@ -660,6 +653,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         
                         if (self.myhttpcl.stop_ad_ebay(current_item)){
                             self.mydb.executesql("UPDATE items SET state='stopped', folder='-8' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
+                            self.load_data(currentFilter)
                         } else {
                             println(current_item + " not stopped")
                         }
@@ -667,7 +661,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     }
                 }
             }
-            self.load_data(currentFilter)
         case NSAlertSecondButtonReturn:
             return
         default:
