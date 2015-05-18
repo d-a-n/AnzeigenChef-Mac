@@ -23,13 +23,26 @@ class catselector: NSWindowController {
     }
     
     override func awakeFromNib() {
-        println("init")
-        let m = httpcl()
-        self.catdata = m.getcats_ebay()
+        let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+        let path = documents.stringByAppendingPathComponent("ebaykats.ini")
+        
+        if (NSFileManager.defaultManager().fileExistsAtPath(path))
+        {
+            self.catdata = NSDictionary(contentsOfFile: path)!
+        } else {
+            let alert = NSAlert()
+            alert.messageText = NSLocalizedString("No categoryfile found, please sync your accounts", comment: "NoAccounts")
+            alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
+            alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+            let result = alert.runModal()
+        }
+        
         self.catlisttable.reloadData()
         if(self.catlisttable.itemAtRow(0) != nil){
            self.catlisttable.expandItem(self.catlisttable.itemAtRow(0))
         }
+        
+        
     }
     
     @IBAction func okbuttonAction(sender: AnyObject) {

@@ -361,6 +361,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     @IBAction func syncbutton(sender: AnyObject) {
         self.syncinprocess = true
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            // cats done?
+            var catsdone = false
             // get accounts
             var dataArray : [[String : String]] = self.mydb.sql_read_accounts("")
             // setup visual progress
@@ -384,6 +386,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 if (isok == false){
                     println("Login für " + uname + " nicht möglich :( ")
                     continue
+                }
+                
+                // Login ok, load cats
+                if (catsdone == false){
+                    let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
+                    let path = documents.stringByAppendingPathComponent("ebaykats.ini")
+                    let m = httpcl()
+                    let catdata : NSDictionary = m.getcats_ebay()
+                    catdata.writeToFile(path, atomically: true)
+                    catsdone = true
                 }
                 
                 // get items
