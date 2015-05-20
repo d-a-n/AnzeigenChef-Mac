@@ -9,7 +9,9 @@
 import Cocoa
 
 class catselector: NSWindowController {
-    var catdata : NSDictionary = ["name" : "root", "id" : "0"]
+    var catdata : NSDictionary = ["fieldName": "categoryId", "name" : "root", "fieldValue" : "root", "identifier" : "0"]
+    var selpath : String = ""
+    var selid : String = ""
 
     @IBOutlet var catlisttable: NSOutlineView!
     @IBOutlet var okButton: NSButton!
@@ -66,6 +68,43 @@ class catselector: NSWindowController {
                 self.okButton.enabled = true
             }
         }
+        
+        if (self.okButton.enabled){
+            var cpath : NSMutableArray = []
+            var cpathIds : NSMutableArray = []
+            var cpathIdsOK : Bool = false
+            var currentObj: AnyObject? = self.catlisttable.itemAtRow(proposedSelectionIndexes.firstIndex)
+            let firstFieldName : String = (currentObj as! NSDictionary)["fieldName"]! as! String
+            let firstFieldValue : String = (currentObj as! NSDictionary)["fieldValue"]! as! String
+            let firstName : String = (currentObj as! NSDictionary)["name"]! as! String
+
+            cpath.addObject(firstName)
+            cpathIds.insertObject( firstFieldName + "=" + firstFieldValue, atIndex: 0)
+            
+            while (outlineView.parentForItem(currentObj)?.isEqual(self.catdata) == false) {
+                let ob: (AnyObject?) = outlineView.parentForItem(currentObj)
+                
+                let firstFieldName : String = (ob as! NSDictionary)["fieldName"]! as! String
+                let firstFieldValue : String = (ob as! NSDictionary)["fieldValue"]! as! String
+                let firstName : String = (ob as! NSDictionary)["name"]! as! String
+                
+                cpath.insertObject(firstName , atIndex: 0)
+                
+                if cpathIdsOK == false {
+                    cpathIds.insertObject( firstFieldName + "=" + firstFieldValue, atIndex: 0)
+                }
+                
+                if firstFieldName == "categoryId" {
+                    cpathIdsOK = true
+                }
+                
+                currentObj = ob
+            }
+            
+            self.selid = cpathIds.componentsJoinedByString("|")
+            self.selpath = cpath.componentsJoinedByString(" -> ")
+        }
+        
         return proposedSelectionIndexes
     }
     

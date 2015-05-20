@@ -69,6 +69,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.currentFolderLabel.stringValue = selk.get_catname()
         self.currentFolderID = -9
         self.load_data("folder=-9")
+        // self.syncbutton(self)
     }
 
     func applicationWillTerminate(aNotification: NSNotification) {
@@ -150,7 +151,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         if theItem.action == Selector("stopad:") {
-            if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
+            if ((self.currentFolderID == -9 || self.currentFolderID == -7) && self.itemstableview.selectedRow > -1){
                 return true
             } else {
                 return false

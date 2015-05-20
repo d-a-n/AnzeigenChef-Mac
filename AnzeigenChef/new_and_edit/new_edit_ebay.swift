@@ -61,7 +61,8 @@ class new_edit_ebay: NSWindowController {
         
         self.window!.beginSheet(self.catSel.window!, completionHandler: {(returnCode) -> Void in
             if (returnCode == NSModalResponseOK){
-                
+                self.catSelButton.toolTip = self.catSel.selid
+                self.catSelButton.title = self.catSel.selpath
             }
         });
         
@@ -113,11 +114,12 @@ class new_edit_ebay: NSWindowController {
         
         // Build SQL
         if (self.editId == ""){
-            sqlStr = "INSERT INTO items (account, state, price, title, category, image, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc) VALUES ("
+            sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, image, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc) VALUES ("
             sqlStr += "'" + selectedAccount + "',"
             sqlStr += "'template',"
             sqlStr += "'" + String(format:"%f", self.adPrice.doubleValue) + "',"
             sqlStr += self.mydb.quotedstring(self.adTitle.stringValue) + ","
+            sqlStr += self.mydb.quotedstring(self.catSelButton.title) + ","
             sqlStr += self.mydb.quotedstring(self.catSelButton.toolTip) + ","
             sqlStr += "''," // image?
             sqlStr += "0," // shipping provided?
