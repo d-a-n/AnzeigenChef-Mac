@@ -65,6 +65,11 @@ extension String
             range: nil)
         return "'\(escapedString)\'"
     }
+    
+    func encodeURL() -> String{
+        var escapedString = self.stringByAddingPercentEncodingWithAllowedCharacters(.URLHostAllowedCharacterSet())
+        return escapedString!
+    }
 }
 
 

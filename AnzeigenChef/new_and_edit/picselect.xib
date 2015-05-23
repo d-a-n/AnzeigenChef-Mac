@@ -1,0 +1,199 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none">
+    <dependencies>
+        <deployment identifier="macosx"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+    </dependencies>
+    <objects>
+        <customObject id="-2" userLabel="File's Owner" customClass="picselect" customModule="AnzeigenChef" customModuleProvider="target">
+            <connections>
+                <outlet property="pic1" destination="guE-Tc-vg0" id="kfN-Et-1Y1"/>
+                <outlet property="pic10" destination="gvk-jw-zli" id="D5a-ll-JiH"/>
+                <outlet property="pic11" destination="WiU-XU-AEU" id="Ojh-v1-RNV"/>
+                <outlet property="pic12" destination="yRW-NT-li0" id="rKf-OC-ZR7"/>
+                <outlet property="pic13" destination="UA9-ed-1s7" id="kUh-Ge-wsq"/>
+                <outlet property="pic14" destination="B8U-1U-4u7" id="Blf-WJ-91x"/>
+                <outlet property="pic15" destination="xYt-wb-wN7" id="iR6-9i-K57"/>
+                <outlet property="pic16" destination="TRT-dy-ona" id="jB2-Ui-ZzE"/>
+                <outlet property="pic17" destination="tDJ-Xo-CUI" id="Nmy-xY-D94"/>
+                <outlet property="pic18" destination="PCe-ov-695" id="Xya-LC-9kf"/>
+                <outlet property="pic19" destination="zT3-bE-d1t" id="Cbd-BA-csJ"/>
+                <outlet property="pic2" destination="jUZ-fb-UmN" id="ao8-pg-yGg"/>
+                <outlet property="pic20" destination="uww-fQ-cFd" id="M41-CX-kVB"/>
+                <outlet property="pic3" destination="bom-3q-K0M" id="PQ3-YP-kHX"/>
+                <outlet property="pic4" destination="Td9-AK-nzS" id="rD7-CO-6gQ"/>
+                <outlet property="pic5" destination="vcD-i4-Gq4" id="Ep4-Sa-ocr"/>
+                <outlet property="pic6" destination="gc7-8i-0qD" id="JER-p5-wG3"/>
+                <outlet property="pic7" destination="WFq-pu-CO1" id="j1c-ir-gbQ"/>
+                <outlet property="pic8" destination="7ue-Bc-fBy" id="aGS-fi-sAJ"/>
+                <outlet property="pic9" destination="pgf-Ho-DBu" id="AN0-gk-raR"/>
+                <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
+            </connections>
+        </customObject>
+        <customObject id="-1" userLabel="First Responder" customClass="FirstResponder"/>
+        <customObject id="-3" userLabel="Application" customClass="NSObject"/>
+        <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
+            <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES" resizable="YES"/>
+            <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
+            <rect key="contentRect" x="196" y="240" width="587" height="513"/>
+            <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
+            <view key="contentView" id="se5-gp-TjO">
+                <rect key="frame" x="0.0" y="0.0" width="587" height="513"/>
+                <autoresizingMask key="autoresizingMask"/>
+                <subviews>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="guE-Tc-vg0" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="17" y="387" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="FZq-b8-zK9"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="gc7-8i-0qD" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="17" y="276" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="AlG-A8-Fgd"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="WFq-pu-CO1" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="128" y="276" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="o2k-Pq-9LO"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="7ue-Bc-fBy" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="239" y="276" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="gyB-Y7-gYn"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="WiU-XU-AEU" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="17" y="165" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="5O4-Io-WgO"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="yRW-NT-li0" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="128" y="165" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="MjF-mR-fRa"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="UA9-ed-1s7" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="239" y="165" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="Vw1-Af-Hce"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="B8U-1U-4u7" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="350" y="165" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="hmV-xZ-acS"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="xYt-wb-wN7" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="461" y="165" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="SuJ-VJ-X01"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="TRT-dy-ona" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="17" y="54" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="ely-Xf-au5"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="tDJ-Xo-CUI" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="128" y="54" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="zcz-w4-3EW"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="PCe-ov-695" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="239" y="54" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="eOe-pn-6F3"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="zT3-bE-d1t" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="350" y="54" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="I9y-ua-6af"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="uww-fQ-cFd" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="461" y="54" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="iLS-g4-fin"/>
+                    </imageView>
+                    <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" id="pWh-aL-ajJ">
+                        <rect key="frame" x="0.0" y="0.0" width="587" height="42"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                        <view key="contentView">
+                            <rect key="frame" x="0.0" y="0.0" width="587" height="42"/>
+                            <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                            <subviews>
+                                <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="none" id="7HU-Jq-c93">
+                                    <rect key="frame" x="0.0" y="41" width="587" height="3"/>
+                                    <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxX="YES" flexibleMinY="YES"/>
+                                    <view key="contentView">
+                                        <rect key="frame" x="0.0" y="0.0" width="587" height="3"/>
+                                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                                    </view>
+                                    <color key="borderColor" white="0.0" alpha="0.41999999999999998" colorSpace="calibratedWhite"/>
+                                    <color key="fillColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
+                                </box>
+                                <button verticalHuggingPriority="750" id="vRw-M8-ydb">
+                                    <rect key="frame" x="10" y="4" width="124" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <buttonCell key="cell" type="push" title="Cancel" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="wOf-4a-eNz">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                        <string key="keyEquivalent" base64-UTF8="YES">
+Gw
+</string>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="cancelButtonAction:" target="-2" id="fry-WB-yPw"/>
+                                    </connections>
+                                </button>
+                                <button verticalHuggingPriority="750" id="CLC-EX-VEK">
+                                    <rect key="frame" x="453" y="4" width="124" height="32"/>
+                                    <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                    <buttonCell key="cell" type="push" title="OK" bezelStyle="rounded" alignment="center" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="fUX-w0-STY">
+                                        <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
+                                        <font key="font" metaFont="system"/>
+                                    </buttonCell>
+                                    <connections>
+                                        <action selector="okButtonAction:" target="-2" id="NjI-tY-mT6"/>
+                                    </connections>
+                                </button>
+                            </subviews>
+                        </view>
+                        <color key="borderColor" name="controlLightHighlightColor" catalog="System" colorSpace="catalog"/>
+                        <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
+                    </box>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="jUZ-fb-UmN" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="128" y="387" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="mA8-6e-dm4"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="bom-3q-K0M" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="239" y="387" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="zuD-WB-ebA"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="Td9-AK-nzS" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="350" y="387" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="7SE-0D-MeM"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="vcD-i4-Gq4" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="461" y="387" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="c1u-Gl-Fhl"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="pgf-Ho-DBu" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="350" y="276" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="oXX-aa-4Re"/>
+                    </imageView>
+                    <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="gvk-jw-zli" customClass="myimageview" customModule="AnzeigenChef" customModuleProvider="target">
+                        <rect key="frame" x="461" y="276" width="109" height="109"/>
+                        <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+                        <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" imageFrameStyle="grayBezel" id="eRc-dp-IJa"/>
+                    </imageView>
+                </subviews>
+            </view>
+            <connections>
+                <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
+            </connections>
+            <point key="canvasLocation" x="476.5" y="608.5"/>
+        </window>
+    </objects>
+</document>

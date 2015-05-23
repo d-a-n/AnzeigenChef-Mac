@@ -127,15 +127,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return true
             }
         }
-        /* ADD BUTTON ACTIVE, CHANGE FOLDER!
-        if theItem.action == Selector("add:") {
-            if (self.currentFolderID == -10 || self.currentFolderID>0) {
-                theItem.enabled = true
-            } else {
-                theItem.enabled = false
-            }
-        }
-        */
+        
         if theItem.action == Selector("deactivate:") && theItem.tag == 876 {
             if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
                 return true
@@ -143,6 +135,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             }
         }
+        
         if theItem.action == Selector("deactivate:") && theItem.tag == 877 {
             if (self.currentFolderID == -7 && self.itemstableview.selectedRow > -1){
                 return true
@@ -150,6 +143,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             }
         }
+        
         if theItem.action == Selector("stopad:") {
             if ((self.currentFolderID == -9 || self.currentFolderID == -7) && self.itemstableview.selectedRow > -1){
                 return true
@@ -157,6 +151,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             }
         }
+        
+        if theItem.action == Selector("sendNow:") {
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
         return theItem.enabled
     }
     
@@ -419,13 +422,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         sqlstr += self.mydb.quotedstring(cditem["title"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["category"]) + ","
                         
-                        var dateFormatter = NSDateFormatter()
-                        dateFormatter.dateFormat = "dd.MM.yyyy"
-                        let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
-                        dateFormatter.dateFormat = "yyyy-MM-dd"
-                        var endDate = dateFormatter.stringFromDate(date!)
-                        sqlstr += self.mydb.quotedstring(endDate) + ","
                         
+                        if (cditem["endDate"] != nil){
+                            var dateFormatter = NSDateFormatter()
+                            dateFormatter.dateFormat = "dd.MM.yyyy"
+                            let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
+                            dateFormatter.dateFormat = "yyyy-MM-dd"
+                            var endDate = dateFormatter.stringFromDate(date!)
+                            sqlstr += self.mydb.quotedstring(endDate) + ","
+                        } else {
+                            sqlstr += "'',"
+                        }
                         sqlstr += self.mydb.quotedstring(cditem["viewCount"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["watchCount"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["image"]) + ","
@@ -683,6 +690,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     
     
+    @IBAction func sendNow(sender: AnyObject) {
+        let selx = itemstableview.selectedRowIndexes.toArray()
+        for var i=0; i<selx.count; ++i{
+            let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+            let current_account : String = nsdic["account"]!
+            let current_id : String = nsdic["id"]!
+            
+            var dataArray : [[String : String]] = self.mydb.sql_read_accounts("id=" + current_account)
+            if (dataArray.count>0){
+                self.myhttpcl.logout_ebay_account()
+                if (self.myhttpcl.check_ebay_account(dataArray[0]["username"]!, password: dataArray[0]["password"]!)){
+                    
+                    let ok = self.myhttpcl.addItem(nsdic)
+                    if (ok){
+                        self.syncbutton(self)
+                        let alert = NSAlert()
+                        alert.messageText = NSLocalizedString("Your ad will be visible in two minutes.", comment: "Visible Message")
+                        alert.informativeText = NSLocalizedString("Listing success!", comment: "Listing success")
+                        alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
+                        alert.alertStyle = NSAlertStyle.InformationalAlertStyle
+                        let result = alert.runModal()
+                    } else {
+                        let alert = NSAlert()
+                        alert.informativeText = self.myhttpcl.lastError
+                        alert.messageText = NSLocalizedString("Listing fails!", comment: "Listing fails")
+                        alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
+                        alert.alertStyle = NSAlertStyle.CriticalAlertStyle
+                        let result = alert.runModal()
+                    }
+                }
+            }
+        }
+        self.load_data(currentFilter)
+    }
     
     
     

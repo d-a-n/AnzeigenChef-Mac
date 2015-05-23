@@ -15,6 +15,8 @@ class new_edit_ebay: NSWindowController {
     var mydb = dbfunc()
     var dataArray : NSArray = []
     var catSel : catselector!
+    var picsel : picselect!
+    var imglist : NSMutableArray = []
 
     @IBOutlet var catSelButton: NSButton!
     @IBOutlet var adType: NSMatrix!
@@ -73,6 +75,77 @@ class new_edit_ebay: NSWindowController {
         self.window?.sheetParent?.endSheet(self.window!, returnCode: NSModalResponseCancel)
     }
     
+    @IBAction func selectPicButton(sender: AnyObject) {
+        if (self.picsel == nil) {
+            self.picsel = picselect();
+        }
+        self.window!.beginSheet(self.picsel.window!, completionHandler: {(returnCode) -> Void in
+            if (returnCode == NSModalResponseOK){
+                self.imglist.removeAllObjects()
+                if (self.picsel.pic1.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic1.getmyfile())
+                }
+                if (self.picsel.pic2.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic2.getmyfile())
+                }
+                if (self.picsel.pic3.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic3.getmyfile())
+                }
+                if (self.picsel.pic4.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic4.getmyfile())
+                }
+                if (self.picsel.pic5.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic5.getmyfile())
+                }
+                if (self.picsel.pic6.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic6.getmyfile())
+                }
+                if (self.picsel.pic7.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic7.getmyfile())
+                }
+                if (self.picsel.pic8.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic8.getmyfile())
+                }
+                if (self.picsel.pic9.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic9.getmyfile())
+                }
+                if (self.picsel.pic10.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic10.getmyfile())
+                }
+                if (self.picsel.pic11.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic11.getmyfile())
+                }
+                if (self.picsel.pic12.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic12.getmyfile())
+                }
+                if (self.picsel.pic13.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic13.getmyfile())
+                }
+                if (self.picsel.pic14.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic14.getmyfile())
+                }
+                if (self.picsel.pic15.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic15.getmyfile())
+                }
+                if (self.picsel.pic16.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic16.getmyfile())
+                }
+                if (self.picsel.pic17.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic17.getmyfile())
+                }
+                if (self.picsel.pic18.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic18.getmyfile())
+                }
+                if (self.picsel.pic19.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic19.getmyfile())
+                }
+                if (self.picsel.pic20.getmyfile() != ""){
+                    self.imglist.addObject(self.picsel.pic20.getmyfile())
+                }
+            }
+        });
+    }
+    
     
     @IBAction func okAction(sender: AnyObject) {
         
@@ -112,16 +185,35 @@ class new_edit_ebay: NSWindowController {
         var sqlStr = ""
         let selectedAccount = dataArray[self.listAccount.indexOfSelectedItem]["id"] as! String
         
+        // Build PIC String
+        var picstringupdate = ""
+        var picstringnewfields = ""
+        var picstringnew = ""
+        var currentimagename = ""
+        for var i = 0; i<self.imglist.count; ++i{
+            if (i==0){
+                currentimagename = "image"
+            } else {
+                currentimagename = "image" + String(i+1)
+            }
+            if (picstringupdate == ""){
+                picstringupdate = currentimagename + "=" + self.mydb.quotedstring(self.imglist[i])
+            } else {
+                picstringupdate += "," + currentimagename + "=" + self.mydb.quotedstring(self.imglist[i])
+            }
+            picstringnewfields += "," + currentimagename
+            picstringnew += ", " + self.mydb.quotedstring(self.imglist[i])
+        }
+        
         // Build SQL
         if (self.editId == ""){
-            sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, image, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc) VALUES ("
+            sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc\(picstringnewfields)) VALUES ("
             sqlStr += "'" + selectedAccount + "',"
             sqlStr += "'template',"
             sqlStr += "'" + String(format:"%f", self.adPrice.doubleValue) + "',"
             sqlStr += self.mydb.quotedstring(self.adTitle.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.catSelButton.title) + ","
             sqlStr += self.mydb.quotedstring(self.catSelButton.toolTip) + ","
-            sqlStr += "''," // image?
             sqlStr += "0," // shipping provided?
             sqlStr += "'" + String(self.currentfolder) + "',"
             
@@ -146,7 +238,7 @@ class new_edit_ebay: NSWindowController {
             sqlStr += self.mydb.quotedstring(self.adYourName.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.adPhone.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.adDesc.string) 
-            sqlStr += ")"
+            sqlStr += "\(picstringnew))"
             
             if self.mydb.executesql(sqlStr){
                 self.editId = String(self.mydb.lastId())

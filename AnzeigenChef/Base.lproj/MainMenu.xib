@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7702" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
-        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7702"/>
-        <plugIn identifier="com.apple.WebKitIBPlugin" version="7702"/>
+        <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
+        <plugIn identifier="com.apple.WebKitIBPlugin" version="7706"/>
     </dependencies>
     <objects>
         <customObject id="-2" userLabel="File's Owner" customClass="NSApplication">
@@ -1170,7 +1170,11 @@
                             <action selector="add:" target="-1" id="qpX-Dp-KMx"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="5D954BDC-4C9C-49B7-807E-3F793EACDD72" label="Send now" paletteLabel="Send now" tag="-1" image="NSNetwork" id="zSR-CS-7aR"/>
+                    <toolbarItem implicitItemIdentifier="5D954BDC-4C9C-49B7-807E-3F793EACDD72" label="Send now" paletteLabel="Send now" tag="-1" image="NSNetwork" id="zSR-CS-7aR">
+                        <connections>
+                            <action selector="sendNow:" target="Voe-Tx-rLC" id="rKf-Ko-EiI"/>
+                        </connections>
+                    </toolbarItem>
                     <toolbarItem implicitItemIdentifier="89D43F4C-7D4E-421A-A1A3-EF8878FD10E5" label="Stop now" paletteLabel="Stop now" tag="-1" image="Stop - 2_48x48" id="Eal-l9-Dse">
                         <connections>
                             <action selector="stopad:" target="Voe-Tx-rLC" id="tfd-Gc-9LX"/>

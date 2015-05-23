@@ -15,7 +15,7 @@ class dbfunc{
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
-            // sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
+           // sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
             if sqlite3_exec(db, "create table if not exists accounts (id integer primary key autoincrement, username text, password text, platform text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -26,7 +26,7 @@ class dbfunc{
                 println("error creating table: \(errmsg)")
             }
             
-            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer DEFAULT 0, itemid text, price text DEFAULT 0, title text, category text, categoryId text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text, state text,seourl text, shippingprovided text, folder int, adtype integer DEFAULT 0, attribute text, pricetype integer DEFAULT 0, postalcode text, street text, myname text, myphone text, desc text)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer DEFAULT 0, itemid text, price text DEFAULT 0, title text, category text, categoryId text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,image2 text,image3 text,image4 text,image5 text,image6 text,image7 text,image8 text,image9 text,image10 text,image11 text,image12 text,image13 text,image14 text,image15 text,image16 text,image17 text,image18 text,image19 text,image20 text, state text,seourl text, shippingprovided text, folder int, adtype integer DEFAULT 0, attribute text, pricetype integer DEFAULT 0, postalcode text, street text, myname text, myphone text, desc text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {

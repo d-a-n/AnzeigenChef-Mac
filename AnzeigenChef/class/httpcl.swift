@@ -12,6 +12,7 @@ import Foundation
 
 class httpcl{
     
+    var lastError: String = ""
     
     func check_ebay_account(username : String, password : String)->Bool {
         
@@ -89,20 +90,6 @@ class httpcl{
                         if ((json["categoryTree"]) != nil){
                             let jscategoryTree = json["categoryTree"] as! NSDictionary
                             return jscategoryTree
-                            //if (jscategoryTree["children"] != nil){
-                            //    let jsKids = jscategoryTree["children"] as! NSArray
-                                /*
-                                for var i=0; i<jsKids.count; ++i{
-                                    if (jsKids[i]["name"] != nil){
-                                        println(jsKids[i]["name"])
-                                        println(jsKids[i]["identifier"])
-                                    }
-                                }
-                                */
-                            //    return jsKids
-                            //} else {
-                            //    println(responseData)
-                            //}
                         } else {
                             println(responseData)
                         }
@@ -223,6 +210,184 @@ class httpcl{
         return false
     }
     
+    func addItem(listData : NSDictionary)->Bool {
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        
+        
+        // Step 1: Open
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben.html")
+        var request = NSMutableURLRequest(URL: ebayUrl! )
+        request.timeoutInterval = 60
+        request.HTTPShouldHandleCookies=true
+        
+        var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                
+                // Step 2: Send data...
+                var ebayUrl2 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben-schritt2.html")
+                var request = NSMutableURLRequest(URL: ebayUrl2! )
+                request.setValue(ebayUrl?.absoluteString, forHTTPHeaderField: "Referer")
+                request.timeoutInterval = 60
+                request.HTTPShouldHandleCookies=true
+                var stringPost=(listData["categoryId"] as! String).stringByReplacingOccurrencesOfString("|", withString: "&", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                let data = stringPost.dataUsingEncoding(NSASCIIStringEncoding)
+                request.HTTPBody=data
+                request.HTTPMethod = "POST"
+                var urlData2: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+                if ( urlData2 != nil ) {
+                    let res = response as! NSHTTPURLResponse!;
+                    if (res.statusCode >= 200 && res.statusCode < 300){
+                        var responseData2:NSString  = NSString(data:urlData2!, encoding:NSUTF8StringEncoding)!
+                        if responseData2.containsString("p-anzeige-abschicken.html"){
+                            
+                            // Step 3: Send last data...
+                            var PostData : NSMutableArray = []
+                            PostData.addObject("title=" + (listData["title"] as! String).encodeURL())
+                            PostData.addObject("description=" + (listData["desc"] as! String).encodeURL())
+                            PostData.addObject("priceAmount=" + (listData["price"] as! String).encodeURL())
+                            PostData.addObject("zipCode=" + (listData["postalcode"] as! String).encodeURL())
+                            PostData.addObject("streetName=" + (listData["street"] as! String).encodeURL())
+                            PostData.addObject("contactName=" + (listData["myname"] as! String).encodeURL())
+                            PostData.addObject("phoneNumber=" + (listData["myphone"] as! String).encodeURL())
+                            
+                            // Step 3.1: Send images
+                            for var i = 1; i<20; ++i{
+                                var pi=""
+                                if (i>1){
+                                    pi = String(i)
+                                }
+                                let pURL = listData["image" + pi] as! String
+                                if (pURL != ""){
+                                    let newURL = self.sendPicToeBay(NSURL(string: pURL)!)
+                                    if (newURL != ""){
+                                        PostData.addObject("images=" + newURL.encodeURL())
+                                    }
+                                }
+                            }
+                            
+                            var ebayUrl3 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-abschicken.html")
+                            var request = NSMutableURLRequest(URL: ebayUrl3! )
+                            request.setValue(ebayUrl2?.absoluteString, forHTTPHeaderField: "Referer")
+                            request.timeoutInterval = 60
+                            request.HTTPShouldHandleCookies=true
+                            var stringPost=(listData["categoryId"] as! String).stringByReplacingOccurrencesOfString("|", withString: "&", options: NSStringCompareOptions.LiteralSearch, range: nil) + "&" + PostData.componentsJoinedByString("&")
+                            let data = stringPost.dataUsingEncoding(NSASCIIStringEncoding)
+                            request.HTTPBody=data
+                            request.HTTPMethod = "POST"
+                            var urlData3: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+                            if ( urlData3 != nil ) {
+                                let res = response as! NSHTTPURLResponse!;
+                                if (res.statusCode >= 200 && res.statusCode < 300){
+                                    var responseData3:NSString  = NSString(data:urlData3!, encoding:NSUTF8StringEncoding)!
+                                    if responseData3.containsString("PostAdSuccess"){
+                                        // JUHUUUU!!! gleich sync...
+                                        return true
+                                    } else {
+                                        let flist = self.getfails(responseData3 as String)
+                                        self.lastError = flist.componentsJoinedByString("\n\n")
+                                    }
+                                } else {
+                                    self.lastError = "Response ist " + String(res.statusCode)
+                                }
+                            } else {
+                                self.lastError = "urlData3 ist null"
+                            }
+                        } else {
+                            // p-anzeige-abschicken.html war nicht erfolgreich!
+                            self.lastError = NSLocalizedString("Categoryselection fails.", comment: "Categoryselection fails")
+                        }
+                    }
+                }
+                
+            } else {
+                self.lastError = NSLocalizedString("Categoryselection fails.", comment: "Categoryselection fails") + "( " + String(res.statusCode) + ")"
+            }
+        }
+        return false
+    }
+    
+    func sendPicToeBay(picPath : NSURL) -> String{
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        var error: NSError?
+        let fileName = picPath.path!.lastPathComponent
+        let mimeType = "image/png"
+        let boundaryConstant = "moxieboundary"+NSUUID().UUIDString;
+        
+        let url:NSURL? = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-bild-hochladen.html")
+        let cachePolicy = NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData
+        var request = NSMutableURLRequest(URL: url!, cachePolicy: cachePolicy, timeoutInterval: 2.0)
+        request.setValue("https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben-schritt2.html", forHTTPHeaderField: "Referer")
+        request.setValue("multipart/form-data; boundary=----"+boundaryConstant, forHTTPHeaderField: "Content-Type")
+        request.HTTPMethod = "POST"
+        
+        let picData = NSData(contentsOfFile: picPath.path!)
+ 
+        
+        var dataStringM : NSMutableData = NSMutableData()
+        dataStringM.appendData("------\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("Content-Disposition: form-data; name=\"name\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("\(fileName)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+        dataStringM.appendData("------\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("Content-Type: \(mimeType)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData(picData!)
+        dataStringM.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("------\(boundaryConstant)--\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        
+ 
+        
+        request.HTTPBody = dataStringM
+        
+        var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                
+                var xdata: NSData = responseData.dataUsingEncoding(NSUTF8StringEncoding)!
+                var err: NSError?
+                if let jsonobj : AnyObject = NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) {
+                    if let json : NSDictionary = jsonobj as? NSDictionary {
+                        
+                        if ((json["status"]) != nil){
+                            if (json["status"] as! String == "OK"){
+                                return json["thumbnailUrl"] as! String
+                            } else {
+                                println(responseData)
+                            }
+                        } else {
+                            println(responseData)
+                        }
+                    }
+                } else {
+                    println("Could not parse JSON: \(err!)" + "<br/><br/>" + (responseData as String))
+                    return ""
+                }
+                
+            }
+        }
+        return ""
+        
+    }
+    
+    func getfails(fromStr : String) -> NSMutableArray{
+        var result : NSMutableArray = []
+        var dostr = fromStr
+        while(dostr.indexOf("class=\"formerror\"") >= 0){
+            let failstr = dostr.getstring("class=\"formerror\">", endStr: "</")
+            result.addObject(failstr)
+            dostr = dostr.subString(dostr.indexOf("class=\"formerror\"")+20, length: count(dostr)-dostr.indexOf("class=\"formerror\"")-20)
+        }
+        return result
+    }
     
     func message_ebay(messageId : String, messageText : String, images : NSArray?)->Bool {
         var reponseError: NSError?
