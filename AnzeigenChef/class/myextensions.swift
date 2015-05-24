@@ -7,10 +7,21 @@
 //
 
 import Foundation
-
+import Cocoa
 
 extension String
 {
+    func html_decode() -> String {
+        let encodedData = self.dataUsingEncoding(NSUTF8StringEncoding)!
+        let attributedOptions : [String: AnyObject] = [
+            NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,
+            NSCharacterEncodingDocumentAttribute: NSUTF8StringEncoding
+        ]
+        let attributedString = NSAttributedString(data: encodedData, options: attributedOptions, documentAttributes: nil, error: nil)!
+        let decodedString = attributedString.string
+        return decodedString
+    }
+    
     func contains(s: String) -> Bool
     {
         return (self.rangeOfString(s) != nil) ? true : false
@@ -50,6 +61,9 @@ extension String
         var sindex = self.indexOf(beginStr)
         if (sindex > -1){
             var sindex = sindex + count(beginStr)
+            if (endStr == ""){
+                return self.subString(sindex, length: count(self)-sindex)
+            }
             let eindex = self.indexOf(endStr, startIndex: sindex)
             if (eindex > -1){
                 return self.subString(sindex, length: eindex-sindex)
@@ -86,6 +100,8 @@ extension String
         }
         return buffer
     }
+    
+    
 }
 
 

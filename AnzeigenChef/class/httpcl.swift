@@ -545,6 +545,114 @@ class httpcl{
     }
     
  
+    func get_ad_details(adId : String) -> NSMutableDictionary {
+        var emptyDic : NSMutableDictionary = ["Ack" : "FAIL"]
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        var ebayUrl = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-bearbeiten.html?adId=" + adId)
+        var request = NSMutableURLRequest(URL: ebayUrl! )
+        
+        var urlData2: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData2 != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData2!, encoding:NSUTF8StringEncoding)!
+                
+                // title
+                var ad_title = (responseData as! String).getstring("name=\"title\"", endStr: "/>")
+                ad_title = ad_title.getstring("value=\"", endStr: "\"")
+                
+                // description
+                var ad_description = (responseData as! String).getstring("name=\"description\"", endStr: "</textarea>")
+                ad_description = ad_description.getstring(">", endStr: "")
+                
+                // price
+                var ad_price = (responseData as! String).getstring("name=\"priceAmount\"", endStr: "/>")
+                ad_price = ad_price.getstring("value=\"", endStr: "\"")
+                
+                // postalcode
+                var ad_postalcode = (responseData as! String).getstring("name=\"zipCode\"", endStr: "/>")
+                ad_postalcode = ad_postalcode.getstring("value=\"", endStr: "\"")
+                
+                // street
+                var ad_street = (responseData as! String).getstring("name=\"streetName\"", endStr: "/>")
+                ad_street = ad_street.getstring("value=\"", endStr: "\"")
+                
+                // myname
+                var ad_myname = (responseData as! String).getstring("name=\"contactName\"", endStr: "/>")
+                ad_myname = ad_myname.getstring("value=\"", endStr: "\"")
+                
+                // myphone
+                var ad_myphone = (responseData as! String).getstring("name=\"phoneNumber\"", endStr: "/>")
+                ad_myphone = ad_myphone.getstring("value=\"", endStr: "\"")
+                
+                var imgstr = responseData as! String
+                var imglist : NSMutableArray = []
+                while imgstr.indexOf("name=\"images\"")>=0 {
+                    var imgval = imgstr.getstring("name=\"images\"", endStr: "/>")
+                    imgval = imgval.getstring("value=\"", endStr: "\"")
+                    imglist.addObject(imgval)
+                    imgstr = imgstr.getstring("name=\"images\"", endStr: "")
+                }
+                
+                // pricetype
+                var ad_pricetype = "0"
+                var pricetypetemp = ""
+                pricetypetemp = (responseData as! String).getstring("id=\"priceType1\"", endStr: "/>")
+                if (pricetypetemp.contains("checked")){
+                    ad_pricetype = "1"
+                }
+                pricetypetemp = (responseData as! String).getstring("id=\"priceType2\"", endStr: "/>")
+                if (pricetypetemp.contains("checked")){
+                    ad_pricetype = "2"
+                }
+                pricetypetemp = (responseData as! String).getstring("id=\"priceType3\"", endStr: "/>")
+                if (pricetypetemp.contains("checked")){
+                    ad_pricetype = "3"
+                }
+                
+                // adtype
+                var ad_type = "0"
+                var adtypetemp = ""
+                adtypetemp = (responseData as! String).getstring("id=\"adType1\"", endStr: "/>")
+                if (adtypetemp.contains("checked")){
+                    ad_type = "0"
+                }
+                adtypetemp = (responseData as! String).getstring("id=\"adType2\"", endStr: "/>")
+                if (adtypetemp.contains("checked")){
+                    ad_type = "1"
+                }
+                
+                // category
+                var ad_category = (responseData as! String).getstring("name=\"categoryId\"", endStr: "/>")
+                ad_category = ad_category.getstring("value=\"", endStr: "\"")
+                
+                emptyDic["ad_category"] = "categoryId=" + ad_category
+                emptyDic["ad_type"] = ad_type
+                emptyDic["imglist"] = imglist
+                emptyDic["ad_title"] = ad_title.html_decode()
+                emptyDic["ad_description"] = ad_description.html_decode()
+                emptyDic["ad_price"] = ad_price
+                emptyDic["ad_pricetype"] = ad_pricetype
+                emptyDic["ad_postalcode"] = ad_postalcode.html_decode()
+                emptyDic["ad_street"] = ad_street.html_decode()
+                emptyDic["ad_myname"] = ad_myname.html_decode()
+                emptyDic["ad_myphone"] = ad_myphone.html_decode()
+                
+                return emptyDic
+                
+                // println(ad_title + "\n" + ad_description + "\n" + ad_price + "\n" + ad_postalcode + "\n" + ad_street + "\n" + ad_myname + "\n" + ad_myphone)
+            } else {
+                return emptyDic
+            }
+        }
+        
+        return emptyDic
+    }
+    
+    
+    
     
     func logout_ebay_account() -> Bool{
         var reponseError: NSError?
@@ -562,7 +670,6 @@ class httpcl{
                 return false
             }
         }
-        
         return true
     }
 }

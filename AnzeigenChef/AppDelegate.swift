@@ -466,60 +466,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     self.progressBar.doubleValue+=1
                     if let ditem = thelist[ii] as? NSDictionary {
                         let cditem = self.fixdicttostrings(ditem)
-                        var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,pricetype,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided,folder) VALUES (";
+                        var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid) VALUES (";
                         sqlstr += dataArray[i]["id"]! + ","
-                        sqlstr += self.mydb.quotedstring(cditem["id"]) + ","
-                        
-                        var cprice : String = cditem["price"]! as! String
-                        var ctype : String = "0"
-                        if (cprice.contains("VB") && cprice.contains("€")){
-                            ctype = "2"
-                        } else if cprice.contains("€") {
-                            ctype = "1"
-                        } else {
-                            ctype = "3"
-                        }
-                        sqlstr += self.mydb.quotedstring(ctype) + ","
-                        sqlstr += self.mydb.quotedstring(cprice.cleanToInt()) + ","
-                        
-                        sqlstr += self.mydb.quotedstring(cditem["title"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["category"]) + ","
-                        
-                        
-                        if (cditem["endDate"] != nil){
-                            var dateFormatter = NSDateFormatter()
-                            dateFormatter.dateFormat = "dd.MM.yyyy"
-                            let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
-                            dateFormatter.dateFormat = "yyyy-MM-dd"
-                            var endDate = dateFormatter.stringFromDate(date!)
-                            sqlstr += self.mydb.quotedstring(endDate) + ","
-                        } else {
-                            sqlstr += "'',"
-                        }
-                        sqlstr += self.mydb.quotedstring(cditem["viewCount"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["watchCount"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["image"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["state"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["seoUrl"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["shippingProvided"]) + ","
-                        sqlstr += "-9)" // Folder -8 is current running...
+                        sqlstr += self.mydb.quotedstring(cditem["id"]) + ")"
                         if (self.mydb.executesql(sqlstr)){
                             var sqlstr : String = "UPDATE items SET ";
-                            
-                            var cprice : String = cditem["price"]! as! String
-                            var ctype : String = "0"
-                            if (cprice.contains("VB") && cprice.contains("€")){
-                                ctype = "2"
-                            } else if cprice.contains("€") {
-                                ctype = "1"
-                            } else {
-                                ctype = "3"
-                            }
-                            sqlstr += "pricetype="+self.mydb.quotedstring(ctype) + ","
-                            sqlstr += "price="+self.mydb.quotedstring(cprice.cleanToInt()) + ","
-                            
-                            
-                            sqlstr += "title="+self.mydb.quotedstring(cditem["title"]) + ","
                             sqlstr += "category="+self.mydb.quotedstring(cditem["category"]) + ","
                              
                             var dateFormatter = NSDateFormatter()
@@ -531,19 +482,72 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                             
                             sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"]) + ","
                             sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"]) + ","
-                            sqlstr += "image="+self.mydb.quotedstring(cditem["image"]) + ","
                             sqlstr += "state="+self.mydb.quotedstring(cditem["state"]) + ","
                             sqlstr += "seourl="+self.mydb.quotedstring(cditem["seoUrl"]) + ","
                             sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"]) + ","
                             
-                            if (cditem["price"] as! String).indexOf("VB")>=0 {
-                               sqlstr += "pricetype="+self.mydb.quotedstring("2") + ","
-                            } else if (cditem["price"] as! String) != "" {
-                               sqlstr += "pricetype="+self.mydb.quotedstring("1") + ","
-                            } else {
-                                sqlstr += "pricetype="+self.mydb.quotedstring("3") + ","
+                            // details
+                            let detailData = self.myhttpcl.get_ad_details(cditem["id"] as! String)
+                            if (detailData["ad_title"] != nil){
+                                sqlstr += "title=" + self.mydb.quotedstring(detailData["ad_title"]) + ","
                             }
                             
+                            if (detailData["ad_description"] != nil){
+                                sqlstr += "desc=" + self.mydb.quotedstring(detailData["ad_description"]) + ","
+                            }
+                            
+                            if (detailData["ad_postalcode"] != nil){
+                                sqlstr += "postalcode=" + self.mydb.quotedstring(detailData["ad_postalcode"]) + ","
+                            }
+                            
+                            if (detailData["ad_street"] != nil){
+                                sqlstr += "street=" + self.mydb.quotedstring(detailData["ad_street"]) + ","
+                            }
+                            
+                            if (detailData["ad_myname"] != nil){
+                                sqlstr += "myname=" + self.mydb.quotedstring(detailData["ad_myname"]) + ","
+                            }
+                            
+                            if (detailData["ad_myphone"] != nil){
+                                sqlstr += "myphone=" + self.mydb.quotedstring(detailData["ad_myphone"]) + ","
+                            }
+                            
+                            if (detailData["ad_pricetype"] != nil){
+                                sqlstr += "pricetype=" + self.mydb.quotedstring(detailData["ad_pricetype"]) + ","
+                            }
+                            
+                            if (detailData["ad_price"] != nil){
+                                sqlstr += "price=" + self.mydb.quotedstring(detailData["ad_price"]) + ","
+                            }
+                            
+                            if (detailData["ad_type"] != nil){
+                                sqlstr += "adtype=" + self.mydb.quotedstring(detailData["ad_type"]) + ","
+                            }
+                            
+                            if (detailData["ad_category"] != nil){
+                                sqlstr += "categoryId=" + self.mydb.quotedstring(detailData["ad_category"]) + ","
+                            }
+
+                            if (detailData["imglist"] != nil){
+                                let imglist : NSMutableArray = detailData["imglist"]! as! NSMutableArray
+                                var incer = 1
+                                for var i = 0; i < imglist.count; ++i {
+                                    if incer == 1 {
+                                        sqlstr += "image" + "=" + self.mydb.quotedstring(imglist[i]) + ","
+                                    } else {
+                                        sqlstr += "image" + String(incer) + "=" + self.mydb.quotedstring(imglist[i]) + ","
+                                    }
+                                    ++incer
+                                }
+                                while incer < 20 {
+                                    if incer == 1 {
+                                        sqlstr += "image" + "='',"
+                                    } else {
+                                        sqlstr += "image" + String(incer) + "='',"
+                                    }
+                                    ++incer
+                                }
+                            }
                             sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"])
                             self.mydb.executesql(sqlstr)
                         }
@@ -725,6 +729,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         dowa = "active"
                     }
                     
+                    self.myhttpcl.get_ad_details(current_item)
+                    /*
                     if (self.myhttpcl.pause_ad_ebay(current_item, whatDo: dowa)){
                         self.mydb.executesql("UPDATE items SET state='"+dowa+"' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
                         if (dowa == "paused"){
@@ -735,7 +741,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     } else {
                         println(current_item + " not " + dowa)
                     }
-                    
+                    */
                 }
             }
         }
