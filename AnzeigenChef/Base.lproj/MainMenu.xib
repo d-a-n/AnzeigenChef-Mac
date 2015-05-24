@@ -829,12 +829,25 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView identifier="maintable" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="lastColumnOnly" emptySelection="NO" typeSelect="NO" autosaveName="maincolumns" rowHeight="18" headerView="Bc3-O5-sHn" id="zZQ-O4-AVI">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="762" height="229"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="829" height="229"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                                     <color key="gridColor" name="gridColor" catalog="System" colorSpace="catalog"/>
                                                                     <tableColumns>
+                                                                        <tableColumn identifier="pricetype" editable="NO" width="64" minWidth="10" maxWidth="3.4028234663852886e+38" id="tb5-c5-lEq">
+                                                                            <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="Type">
+                                                                                <font key="font" metaFont="smallSystem"/>
+                                                                                <color key="textColor" name="headerTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="headerColor" catalog="System" colorSpace="catalog"/>
+                                                                            </tableHeaderCell>
+                                                                            <textFieldCell key="dataCell" lineBreakMode="truncatingTail" selectable="YES" editable="YES" alignment="left" title="Text Cell" id="Nss-99-TBh">
+                                                                                <font key="font" metaFont="controlContent"/>
+                                                                                <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
+                                                                                <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
+                                                                            </textFieldCell>
+                                                                            <tableColumnResizingMask key="resizingMask" resizeWithTable="YES" userResizable="YES"/>
+                                                                        </tableColumn>
                                                                         <tableColumn identifier="itemid" editable="NO" width="118" minWidth="40" maxWidth="1000" id="DYh-xa-Lqe">
                                                                             <tableHeaderCell key="headerCell" lineBreakMode="truncatingTail" borderStyle="border" alignment="left" title="ArtID">
                                                                                 <font key="font" metaFont="smallSystem"/>
@@ -962,7 +975,7 @@
                                                             </subviews>
                                                             <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
                                                         </clipView>
-                                                        <scroller key="horizontalScroller" hidden="YES" verticalHuggingPriority="750" horizontal="YES" id="QaR-BC-W1O">
+                                                        <scroller key="horizontalScroller" verticalHuggingPriority="750" horizontal="YES" id="QaR-BC-W1O">
                                                             <rect key="frame" x="1" y="119" width="223" height="15"/>
                                                             <autoresizingMask key="autoresizingMask"/>
                                                         </scroller>
@@ -1265,14 +1278,40 @@
                         <action selector="add:" target="-1" id="TiY-HZ-ipx"/>
                     </connections>
                 </menuItem>
+                <menuItem isSeparatorItem="YES" id="ebR-4N-Rkt"/>
                 <menuItem title="Edit" id="T03-rf-zxv">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="edit:" target="Voe-Tx-rLC" id="OAI-Qu-yMi"/>
                     </connections>
                 </menuItem>
-                <menuItem title="Item 3" id="z07-no-KOe">
+                <menuItem title="Duplicate" id="dpn-bf-9vw">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+                <menuItem title="Delete" id="z07-no-KOe">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="delete:" target="-1" id="LIt-mx-Aqs"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="tar-MX-wh3"/>
+                <menuItem title="Deactivate" tag="876" id="3NE-QG-Nde">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="deactivate:" target="Voe-Tx-rLC" id="GvO-Wo-QhI"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Resume" tag="877" id="oIZ-qU-mpJ">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="deactivate:" target="Voe-Tx-rLC" id="aXH-fA-XEp"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Stop now" id="wWv-cY-Fjk">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="stopad:" target="Voe-Tx-rLC" id="wpN-fd-pZf"/>
+                    </connections>
                 </menuItem>
             </items>
             <connections>

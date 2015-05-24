@@ -117,6 +117,40 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             }
         }
+        
+        
+        if menuItem.action == Selector("deactivate:") && menuItem.tag == 876 {
+            if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("deactivate:") && menuItem.tag == 877 {
+            if (self.currentFolderID == -7 && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("stopad:") {
+            if ((self.currentFolderID == -9 || self.currentFolderID == -7) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("sendNow:") {
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
         return menuItem.enabled
     }
     
@@ -251,7 +285,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             let fieldName : String = tableColumn!.identifier!
             let cstr = nsdic[fieldName]
             if (cstr != nil){
-                return nsdic[fieldName]
+                var retval : String = nsdic[fieldName]!
+                if (fieldName == "pricetype"){
+                    if nsdic[fieldName]! == "1"{
+                        retval = NSLocalizedString("Fixedprice", comment: "PriceType FixedPrice")
+                    } else if nsdic[fieldName]! == "2" {
+                        retval = NSLocalizedString("Deal", comment: "PriceType Deal")
+                    } else {
+                        retval = NSLocalizedString("Give away", comment: "PriceType GiveAway")
+                    }
+                }
+                if (fieldName == "price"){
+                    retval += ",00"
+                }
+                return retval
             }
         }
         return ""
@@ -419,10 +466,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     self.progressBar.doubleValue+=1
                     if let ditem = thelist[ii] as? NSDictionary {
                         let cditem = self.fixdicttostrings(ditem)
-                        var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided,folder) VALUES (";
+                        var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid,pricetype,price,title,category,enddate,viewcount,watchcount,image,state,seourl,shippingprovided,folder) VALUES (";
                         sqlstr += dataArray[i]["id"]! + ","
                         sqlstr += self.mydb.quotedstring(cditem["id"]) + ","
-                        sqlstr += self.mydb.quotedstring(cditem["price"]) + ","
+                        
+                        var cprice : String = cditem["price"]! as! String
+                        var ctype : String = "0"
+                        if (cprice.contains("VB") && cprice.contains("€")){
+                            ctype = "2"
+                        } else if cprice.contains("€") {
+                            ctype = "1"
+                        } else {
+                            ctype = "3"
+                        }
+                        sqlstr += self.mydb.quotedstring(ctype) + ","
+                        sqlstr += self.mydb.quotedstring(cprice.cleanToInt()) + ","
+                        
                         sqlstr += self.mydb.quotedstring(cditem["title"]) + ","
                         sqlstr += self.mydb.quotedstring(cditem["category"]) + ","
                         
@@ -446,7 +505,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         sqlstr += "-9)" // Folder -8 is current running...
                         if (self.mydb.executesql(sqlstr)){
                             var sqlstr : String = "UPDATE items SET ";
-                            sqlstr += "price="+self.mydb.quotedstring(cditem["price"]) + ","
+                            
+                            var cprice : String = cditem["price"]! as! String
+                            var ctype : String = "0"
+                            if (cprice.contains("VB") && cprice.contains("€")){
+                                ctype = "2"
+                            } else if cprice.contains("€") {
+                                ctype = "1"
+                            } else {
+                                ctype = "3"
+                            }
+                            sqlstr += "pricetype="+self.mydb.quotedstring(ctype) + ","
+                            sqlstr += "price="+self.mydb.quotedstring(cprice.cleanToInt()) + ","
+                            
+                            
                             sqlstr += "title="+self.mydb.quotedstring(cditem["title"]) + ","
                             sqlstr += "category="+self.mydb.quotedstring(cditem["category"]) + ","
                              
