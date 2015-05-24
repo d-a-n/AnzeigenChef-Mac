@@ -33,6 +33,15 @@ class myimageview: NSImageView {
         }
     }
     
+    func loadPicFromFile(fileName : String) -> Bool{
+        if let da = NSData(contentsOfURL: NSURL(string: fileName)!){
+            self.image = NSImage(data: da)
+            self.toolTip = NSURL(string: fileName)?.absoluteString
+            return true
+        }
+        return false
+    }
+    
     func getmyfile() -> String{
         if (self.toolTip != nil){
             return self.toolTip!

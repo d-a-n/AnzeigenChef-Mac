@@ -35,12 +35,15 @@ class new_edit_ebay: NSWindowController {
     @IBOutlet var listAccount: NSComboBox!
     @IBOutlet var okButton: NSButton!
     
+    @IBOutlet var picSelButton: NSButton!
+    
     
     override func windowDidLoad() {
         super.windowDidLoad()
     }
     
     override func awakeFromNib() {
+        catSelButton.toolTip = ""
         dataArray = mydb.sql_read_accounts("")
         self.listAccount.removeAllItems()
         for var i=0; i<dataArray.count; ++i{
@@ -49,6 +52,105 @@ class new_edit_ebay: NSWindowController {
         }
         if (dataArray.count>0) {
             self.listAccount.selectItemAtIndex(0)
+        }
+        
+        if (self.editId != ""){
+            var ndata = self.mydb.sql_read_select("SELECT * FROM items WHERE id='" + self.editId + "'")
+            self.adTitle.stringValue = ndata[0]["title"]!
+            self.adPrice.stringValue = ndata[0]["price"]!
+            self.adDesc.string = ndata[0]["desc"]!
+            self.adPostalCode.stringValue = ndata[0]["postalcode"]!
+            self.adStreet.stringValue = ndata[0]["street"]!
+            self.adYourName.stringValue = ndata[0]["myname"]!
+            self.adPhone.stringValue = ndata[0]["myphone"]!
+            self.catSelButton.toolTip = ndata[0]["categoryId"]!
+            self.catSelButton.title = ndata[0]["category"]!
+            
+            if ndata[0]["adtype"]! == "1" {
+                adType.selectCellAtRow(1, column: 0)
+            } else {
+                adType.selectCellAtRow(0, column: 0)
+            }
+            
+            if ndata[0]["pricetype"]! == "1" {
+                adPriceType.selectCellAtRow(0, column: 0)
+            } else if ndata[0]["pricetype"]! == "2" {
+                adPriceType.selectCellAtRow(1, column: 0)
+            } else {
+                adPriceType.selectCellAtRow(2, column: 0)
+            }
+            
+            for var i=0; i<dataArray.count; ++i{
+                if dataArray[i]["id"] as! String == ndata[0]["account"]! {
+                    self.listAccount.selectItemAtIndex(i)
+                    break
+                }
+            }
+            
+            if (ndata[0]["image"]! != ""){
+                imglist.addObject(ndata[0]["image"]!)
+            }
+            if (ndata[0]["image2"]! != ""){
+                imglist.addObject(ndata[0]["image2"]!)
+            }
+            if (ndata[0]["image3"]! != ""){
+                imglist.addObject(ndata[0]["image3"]!)
+            }
+            if (ndata[0]["image4"]! != ""){
+                imglist.addObject(ndata[0]["image4"]!)
+            }
+            if (ndata[0]["image5"]! != ""){
+                imglist.addObject(ndata[0]["image5"]!)
+            }
+            if (ndata[0]["image6"]! != ""){
+                imglist.addObject(ndata[0]["image6"]!)
+            }
+            if (ndata[0]["image7"]! != ""){
+                imglist.addObject(ndata[0]["image7"]!)
+            }
+            if (ndata[0]["image8"]! != ""){
+                imglist.addObject(ndata[0]["image8"]!)
+            }
+            if (ndata[0]["image9"]! != ""){
+                imglist.addObject(ndata[0]["image9"]!)
+            }
+            if (ndata[0]["image10"]! != ""){
+                imglist.addObject(ndata[0]["image10"]!)
+            }
+            if (ndata[0]["image11"]! != ""){
+                imglist.addObject(ndata[0]["image11"]!)
+            }
+            if (ndata[0]["image12"]! != ""){
+                imglist.addObject(ndata[0]["image12"]!)
+            }
+            if (ndata[0]["image13"]! != ""){
+                imglist.addObject(ndata[0]["image13"]!)
+            }
+            if (ndata[0]["image14"]! != ""){
+                imglist.addObject(ndata[0]["image14"]!)
+            }
+            if (ndata[0]["image15"]! != ""){
+                imglist.addObject(ndata[0]["image15"]!)
+            }
+            if (ndata[0]["image16"]! != ""){
+                imglist.addObject(ndata[0]["image16"]!)
+            }
+            if (ndata[0]["image17"]! != ""){
+                imglist.addObject(ndata[0]["image17"]!)
+            }
+            if (ndata[0]["image18"]! != ""){
+                imglist.addObject(ndata[0]["image18"]!)
+            }
+            if (ndata[0]["image19"]! != ""){
+                imglist.addObject(ndata[0]["image19"]!)
+            }
+            if (ndata[0]["image20"]! != ""){
+                imglist.addObject(ndata[0]["image20"]!)
+            }
+            
+            if (imglist.count > 0 ){
+                self.picSelButton.title = String(imglist.count) + NSLocalizedString(" picture selected", comment: "picture selected text")
+            }
         }
     }
     
@@ -76,9 +178,10 @@ class new_edit_ebay: NSWindowController {
     }
     
     @IBAction func selectPicButton(sender: AnyObject) {
-        if (self.picsel == nil) {
-            self.picsel = picselect();
-        }
+        self.picsel == nil
+        self.picsel = picselect();
+        self.picsel.picload = self.imglist
+        
         self.window!.beginSheet(self.picsel.window!, completionHandler: {(returnCode) -> Void in
             if (returnCode == NSModalResponseOK){
                 self.imglist.removeAllObjects()
@@ -196,11 +299,7 @@ class new_edit_ebay: NSWindowController {
             } else {
                 currentimagename = "image" + String(i+1)
             }
-            if (picstringupdate == ""){
-                picstringupdate = currentimagename + "=" + self.mydb.quotedstring(self.imglist[i])
-            } else {
-                picstringupdate += "," + currentimagename + "=" + self.mydb.quotedstring(self.imglist[i])
-            }
+            picstringupdate += "," + currentimagename + "=" + self.mydb.quotedstring(self.imglist[i])
             picstringnewfields += "," + currentimagename
             picstringnew += ", " + self.mydb.quotedstring(self.imglist[i])
         }
@@ -210,7 +309,7 @@ class new_edit_ebay: NSWindowController {
             sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc\(picstringnewfields)) VALUES ("
             sqlStr += "'" + selectedAccount + "',"
             sqlStr += "'template',"
-            sqlStr += "'" + String(format:"%f", self.adPrice.doubleValue) + "',"
+            sqlStr += "'" + String(self.adPrice.integerValue) + "',"
             sqlStr += self.mydb.quotedstring(self.adTitle.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.catSelButton.title) + ","
             sqlStr += self.mydb.quotedstring(self.catSelButton.toolTip) + ","
@@ -248,7 +347,44 @@ class new_edit_ebay: NSWindowController {
                 // SHOW FAIL!
             }
         } else {
+            sqlStr = "UPDATE items SET "
+            sqlStr += "account='" + selectedAccount + "',"
+            sqlStr += "price='" + String(self.adPrice.integerValue) + "',"
+            sqlStr += "title=" + self.mydb.quotedstring(self.adTitle.stringValue) + ","
+            sqlStr += "category=" + self.mydb.quotedstring(self.catSelButton.title) + ","
+            sqlStr += "categoryId="+self.mydb.quotedstring(self.catSelButton.toolTip) + ","
+            // sqlStr += "0,"
+            // sqlStr += "'" + String(self.currentfolder) + "',"
             
+            if (adType.selectedRow == 0){
+                sqlStr += "adtype=0,"
+            } else {
+                sqlStr += "adtype=1,"
+            }
+            
+            // sqlStr += "''," // attribute?
+            
+            if (adPriceType.selectedRow == 0){
+                sqlStr += "pricetype=1,"
+            } else if adPriceType.selectedRow == 1 {
+                sqlStr += "pricetype=2,"
+            } else {
+                sqlStr += "pricetype=3,"
+            }
+            
+            sqlStr += "postalcode=" + self.mydb.quotedstring(self.adPostalCode.stringValue) + ","
+            sqlStr += "street=" + self.mydb.quotedstring(self.adStreet.stringValue) + ","
+            sqlStr += "myname=" + self.mydb.quotedstring(self.adYourName.stringValue) + ","
+            sqlStr += "myphone=" + self.mydb.quotedstring(self.adPhone.stringValue) + ","
+            sqlStr += "desc=" + self.mydb.quotedstring(self.adDesc.string)
+            sqlStr += "\(picstringupdate) WHERE id=" + self.editId
+            
+            if self.mydb.executesql(sqlStr){
+                println("Gespeichert: " + self.editId)
+                self.window?.sheetParent?.endSheet(self.window!, returnCode: NSModalResponseOK)
+            } else {
+                // SHOW FAIL!
+            }
         }
         
         

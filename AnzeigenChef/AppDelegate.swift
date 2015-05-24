@@ -59,13 +59,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.addcat("Inactive", myid: "-7", myimg : "NSStatusPartiallyAvailable", cparent: firstCatItem, is_template:false);
         self.addcat("Stopped", myid: "-8", myimg : "NSStatusUnavailable", cparent: firstCatItem, is_template:false);
         self.templateCatItem = self.addcat("Templates", myid: "-10", myimg: "NSFolder", cparent: firstCatItem, is_template:false);
+        self.itemstableview.doubleAction = Selector("edit:")
         self.loadCats()
-        catlist.setDataSource(self)
+        self.catlist.setDataSource(self)
         self.catlist.reloadData()
-        catlist.expandItem(firstCatItem);
-        catlist.registerForDraggedTypes([kNodesPBoardType])
-        catlist.setDelegate(self)
-        catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
+        self.catlist.expandItem(firstCatItem);
+        self.catlist.registerForDraggedTypes([kNodesPBoardType])
+        self.catlist.setDelegate(self)
+        self.catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
         self.currentFolderLabel.stringValue = selk.get_catname()
         self.currentFolderID = -9
         self.load_data("folder=-9")
@@ -109,11 +110,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
-        if menuItem.action == Selector("add:"){
-            if (self.currentFolderID == -10 || self.currentFolderID>0) {
-                menuItem.enabled = true
+        if menuItem.action == Selector("edit:") {
+            if (self.itemstableview.selectedRow > -1){
+                return true
             } else {
-                menuItem.enabled = false
+                return false
             }
         }
         return menuItem.enabled
@@ -264,6 +265,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         return proposedSelectionIndexes
     }
+    
+    
+  
     
     
     
@@ -602,6 +606,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         if (self.my_new_edit_ebay.currentfolder<=0 && self.my_new_edit_ebay.currentfolder != -10){
             self.my_new_edit_ebay.currentfolder = -10
         }
+        
+        self.window!.beginSheet(self.my_new_edit_ebay.window!, completionHandler: {(returnCode) -> Void in
+            if (returnCode == NSModalResponseOK){
+                self.load_data(self.currentFilter)
+            }
+        });
+    }
+    
+    
+    @IBAction func edit(sender: AnyObject) {
+        if self.itemstableview.selectedRow<0 { return }
+        self.my_new_edit_ebay = nil
+        self.my_new_edit_ebay = new_edit_ebay(windowNibName: "new_edit_ebay");
+        
+        let nsdic : [String : String] = self.tableDataArray.objectAtIndex(self.itemstableview.selectedRowIndexes.firstIndex) as! [String : String]
+        
+        self.my_new_edit_ebay.currentfolder = self.currentFolderID
+        self.my_new_edit_ebay.editId = nsdic["id"]!
         
         self.window!.beginSheet(self.my_new_edit_ebay.window!, completionHandler: {(returnCode) -> Void in
             if (returnCode == NSModalResponseOK){

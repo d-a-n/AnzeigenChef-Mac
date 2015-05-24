@@ -956,6 +956,7 @@
                                                                     <connections>
                                                                         <outlet property="dataSource" destination="Voe-Tx-rLC" id="rxY-Pp-zf9"/>
                                                                         <outlet property="delegate" destination="Voe-Tx-rLC" id="xgq-pE-hta"/>
+                                                                        <outlet property="menu" destination="RzR-sX-PKG" id="BMh-xT-7GP"/>
                                                                     </connections>
                                                                 </tableView>
                                                             </subviews>
@@ -1255,6 +1256,29 @@
                 <outlet property="delegate" destination="Voe-Tx-rLC" id="v6c-aL-eOm"/>
             </connections>
             <point key="canvasLocation" x="-303.5" y="400.5"/>
+        </menu>
+        <menu id="RzR-sX-PKG">
+            <items>
+                <menuItem title="New" id="HeZ-7z-adR">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="add:" target="-1" id="TiY-HZ-ipx"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Edit" id="T03-rf-zxv">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="edit:" target="Voe-Tx-rLC" id="OAI-Qu-yMi"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Item 3" id="z07-no-KOe">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                </menuItem>
+            </items>
+            <connections>
+                <outlet property="delegate" destination="Voe-Tx-rLC" id="AKJ-Nb-v0o"/>
+            </connections>
+            <point key="canvasLocation" x="861" y="562.5"/>
         </menu>
     </objects>
     <resources>

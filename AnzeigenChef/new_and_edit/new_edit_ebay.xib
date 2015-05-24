@@ -19,6 +19,7 @@
                 <outlet property="catSelButton" destination="AWq-4s-lDM" id="POR-cm-VdZ"/>
                 <outlet property="listAccount" destination="edl-Uq-7kz" id="NpR-cA-mkh"/>
                 <outlet property="okButton" destination="CNt-gS-8T0" id="YlH-Mb-Vqy"/>
+                <outlet property="picSelButton" destination="koV-eb-hQy" id="LqT-nH-bE4"/>
                 <outlet property="window" destination="F0z-JX-Cv5" id="gIp-Ho-8D9"/>
             </connections>
         </customObject>
