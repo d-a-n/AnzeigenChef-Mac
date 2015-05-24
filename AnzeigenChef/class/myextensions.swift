@@ -101,6 +101,20 @@ extension String
         return buffer
     }
     
+    func cleanToPhone() -> String {
+        var buffer = ""
+        let intarray : NSArray = ["1", "2", "3", "4", "5", "6", "7", "8", "9", "0", "+", "/", "-", "(", ")"]
+        
+        for character in self {
+            if intarray.containsObject("\(character)"){
+                buffer.append(character)
+            }
+        }
+        
+        
+        return buffer
+    }
+    
     
 }
 

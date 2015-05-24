@@ -56,6 +56,11 @@ class new_edit_ebay: NSWindowController {
         
         if (self.editId != ""){
             var ndata = self.mydb.sql_read_select("SELECT * FROM items WHERE id='" + self.editId + "'")
+            
+            if (currentfolder != -10 && currentfolder < 0) {
+                self.listAccount.enabled = false
+            }
+            
             self.adTitle.stringValue = ndata[0]["title"]!
             self.adPrice.stringValue = ndata[0]["price"]!
             self.adDesc.string = ndata[0]["desc"]!
@@ -261,9 +266,18 @@ class new_edit_ebay: NSWindowController {
         if (self.adTitle.stringValue == ""){
             infoArray.addObject(NSLocalizedString("Title is empty", comment: "Title empty?"))
         }
+        if (count(self.adTitle.stringValue) > 65){
+            infoArray.addObject(NSLocalizedString("Reduce title to max 65 chars", comment: "Title Max65"))
+        }
+        if (count(self.adTitle.stringValue) < 10){
+            infoArray.addObject(NSLocalizedString("Title must have minimum 10 chars", comment: "Title Min10"))
+        }
         
         if (self.adDesc.string == ""){
             infoArray.addObject(NSLocalizedString("Description is empty", comment: "Description empty?"))
+        }
+        if (count(self.adDesc.string!) < 10){
+            infoArray.addObject(NSLocalizedString("Description must have minimum 10 chars", comment: "Desc Min10"))
         }
         
         if (self.adPrice.stringValue == "" && self.adPriceType.selectedRow<2){
@@ -273,6 +287,26 @@ class new_edit_ebay: NSWindowController {
         if (self.adYourName.stringValue == ""){
             infoArray.addObject(NSLocalizedString("Your name is empty", comment: "Your name empty?"))
         }
+        if (count(self.adYourName.stringValue) > 30){
+            infoArray.addObject(NSLocalizedString("Reduce your contactname to max 30 chars", comment: "contactname Max30"))
+        }
+        if (count(self.adYourName.stringValue) < 2){
+            infoArray.addObject(NSLocalizedString("Your contactname must have minimum 2 chars", comment: "contactname Min2"))
+        }
+        
+        if (self.adPostalCode.stringValue == ""){
+            infoArray.addObject(NSLocalizedString("Your postalcode is empty", comment: "Your postalcode empty?"))
+        }
+        if (count(self.adPostalCode.stringValue) > 5){
+            infoArray.addObject(NSLocalizedString("Reduce postalcode to max 5 chars", comment: "postalcode Max5"))
+        }
+        
+        if (count(self.adPhone.stringValue) > 24){
+            infoArray.addObject(NSLocalizedString("Reduce phonenumber to max 24 chars", comment: "phone Max24"))
+        } else {
+            self.adPhone.stringValue = self.adPhone.stringValue.cleanToPhone()
+        }
+        
         
         if (infoArray.count>0){
             let errFieldList : String = infoArray.componentsJoinedByString("\n")
