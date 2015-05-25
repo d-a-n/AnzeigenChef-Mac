@@ -3,7 +3,7 @@ AnzeigenChef für Mac OSX
 
 Listen und verwalten von eBay Kleinanzeigen und Quoka
 
-![Screenshot](http://gastonx.net/wp-content/uploads/2015/05/Bildschirmfoto-2015-05-16-um-10.12.40-1024x670.png)
+![Screenshot](http://gastonx.net/wp-content/uploads/2015/05/Bildschirmfoto-2015-05-25-um-13.06.05.png)
 
 ## MAC Version ab OSX 10.9
 
