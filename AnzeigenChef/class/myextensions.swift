@@ -12,6 +12,7 @@ import Cocoa
 extension String
 {
     func html_decode() -> String {
+        
         let encodedData = self.dataUsingEncoding(NSUTF8StringEncoding)!
         let attributedOptions : [String: AnyObject] = [
             NSDocumentTypeDocumentAttribute: NSHTMLTextDocumentType,

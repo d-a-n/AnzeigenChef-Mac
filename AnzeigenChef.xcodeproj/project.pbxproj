@@ -13,6 +13,7 @@
 		543BA9531B10B07D00EFAF4D /* picselect.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BA9511B10B07D00EFAF4D /* picselect.swift */; };
 		543BA9541B10B07D00EFAF4D /* picselect.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543BA9521B10B07D00EFAF4D /* picselect.xib */; };
 		543BA9561B10B75C00EFAF4D /* myimageview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BA9551B10B75C00EFAF4D /* myimageview.swift */; };
+		543DA9471B13219200FA7290 /* itemstablecell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA9461B13219200FA7290 /* itemstablecell.swift */; };
 		5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485B5CE1AF79CB100919752 /* foldercontroller.swift */; };
 		5485B5D11AF79CB100919752 /* foldercontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5485B5CF1AF79CB100919752 /* foldercontroller.xib */; };
 		54AE77471B06971F0050755A /* MessageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AE77451B06971F0050755A /* MessageControl.swift */; };
@@ -55,6 +56,7 @@
 		543BA9511B10B07D00EFAF4D /* picselect.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = picselect.swift; sourceTree = "<group>"; };
 		543BA9521B10B07D00EFAF4D /* picselect.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = picselect.xib; sourceTree = "<group>"; };
 		543BA9551B10B75C00EFAF4D /* myimageview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = myimageview.swift; path = class/myimageview.swift; sourceTree = "<group>"; };
+		543DA9461B13219200FA7290 /* itemstablecell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = itemstablecell.swift; path = class/itemstablecell.swift; sourceTree = "<group>"; };
 		5485B5CE1AF79CB100919752 /* foldercontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = foldercontroller.swift; sourceTree = "<group>"; };
 		5485B5CF1AF79CB100919752 /* foldercontroller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = foldercontroller.xib; sourceTree = "<group>"; };
 		54AE77451B06971F0050755A /* MessageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageControl.swift; sourceTree = "<group>"; };
@@ -111,6 +113,7 @@
 				54F1311A1B03841D001070D8 /* httpcl.swift */,
 				54F1311B1B03841D001070D8 /* myextensions.swift */,
 				543BA9551B10B75C00EFAF4D /* myimageview.swift */,
+				543DA9461B13219200FA7290 /* itemstablecell.swift */,
 			);
 			name = class;
 			sourceTree = "<group>";
@@ -326,6 +329,7 @@
 				54AE774B1B06974F0050755A /* MessageAnswer.swift in Sources */,
 				54C847B31B04A30D00D2E091 /* new_edit_ebay.swift in Sources */,
 				5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */,
+				543DA9471B13219200FA7290 /* itemstablecell.swift in Sources */,
 				5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */,
 				54F1311F1B03841D001070D8 /* myextensions.swift in Sources */,
 				54F131261B038506001070D8 /* setup.swift in Sources */,

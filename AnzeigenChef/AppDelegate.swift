@@ -151,6 +151,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         
+        if menuItem.action == Selector("printFlyerAction:") {
+            if ((self.currentFolderID == -9) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("delete:") {
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
         return menuItem.enabled
     }
     
@@ -187,8 +203,30 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         
+        if theItem.action == Selector("printFlyerAction:") {
+            if ((self.currentFolderID == -9 ) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
         if theItem.action == Selector("sendNow:") {
-            if ((self.currentFolderID == -10 || self.currentFolderID > 0) && self.itemstableview.selectedRow > -1){
+            if (self.currentFolderID == -9){
+                theItem.label = "Update now"
+            } else {
+                theItem.label = "Send now"
+            }
+            
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -9) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+        }
+        
+        if theItem.action == Selector("delete:") {
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1){
                 return true
             } else {
                 return false
@@ -279,30 +317,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return tableDataArray.count
     }
     
-    func tableView(tableView: NSTableView, objectValueForTableColumn tableColumn: NSTableColumn?, row: Int) -> AnyObject?{
-        if (tableDataArray.count-1 >= row){
-            let nsdic : [String : String] = tableDataArray.objectAtIndex(row) as! [String : String]
-            let fieldName : String = tableColumn!.identifier!
-            let cstr = nsdic[fieldName]
-            if (cstr != nil){
-                var retval : String = nsdic[fieldName]!
-                if (fieldName == "pricetype"){
-                    if nsdic[fieldName]! == "1"{
-                        retval = NSLocalizedString("Fixedprice", comment: "PriceType FixedPrice")
-                    } else if nsdic[fieldName]! == "2" {
-                        retval = NSLocalizedString("Deal", comment: "PriceType Deal")
-                    } else {
-                        retval = NSLocalizedString("Give away", comment: "PriceType GiveAway")
-                    }
-                }
-                if (fieldName == "price"){
-                    retval += ",00"
-                }
-                return retval
-            }
-        }
-        return ""
-    }
     
     func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet{
         if (proposedSelectionIndexes.count>0){
@@ -313,6 +327,37 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return proposedSelectionIndexes
     }
     
+    func tableView(tableView: NSTableView, viewForTableColumn tableColumn: NSTableColumn?, row: Int) -> NSView?{
+        let cell = tableView.makeViewWithIdentifier("itemstablecell", owner: self) as! itemstablecell!
+        let nsdic : [String : String] = tableDataArray.objectAtIndex(row) as! [String : String]
+        
+        cell.titleLabel.stringValue = nsdic["title"]!
+        cell.descLabel.stringValue = nsdic["desc"]!
+        cell.watchLabel.stringValue = nsdic["watchcount"]!
+        cell.visitLabel.stringValue = nsdic["viewcount"]!
+        cell.postalCodeLabel.stringValue = nsdic["postalcode"]!
+        
+        if (nsdic["image"] != ""){
+            if let da = NSData(contentsOfURL: NSURL(string: nsdic["image"]!)!){
+                cell.image.image = NSImage(data: da)
+            }
+        } else {
+            cell.image.image = nil
+        }
+        
+        if nsdic["pricetype"]! == "1"{
+            cell.priceLabel.stringValue = nsdic["price"]! + " €"
+        } else if nsdic["pricetype"]! == "2" {
+            cell.priceLabel.stringValue = nsdic["price"]! + " € " + NSLocalizedString("VB", comment: "ItemsTable VB Label")
+        } else {
+            cell.priceLabel.stringValue = NSLocalizedString("Give away", comment: "ItemsTable GiveAway")
+        }
+        
+        if nsdic["adtype"] == "1" {
+            cell.priceLabel.stringValue = NSLocalizedString("Wanted", comment: "ItemsTable Wanted")
+        }
+        return cell
+    }
     
   
     
@@ -472,14 +517,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         if (self.mydb.executesql(sqlstr)){
                             var sqlstr : String = "UPDATE items SET ";
                             sqlstr += "category="+self.mydb.quotedstring(cditem["category"]) + ","
-                             
-                            var dateFormatter = NSDateFormatter()
-                            dateFormatter.dateFormat = "dd.MM.yyyy"
-                            let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
-                            dateFormatter.dateFormat = "yyyy-MM-dd"
-                            var endDate = dateFormatter.stringFromDate(date!)
-                            sqlstr += "enddate="+self.mydb.quotedstring(endDate) + ","
                             
+                            if cditem["endDate"] != nil {
+                                var dateFormatter = NSDateFormatter()
+                                dateFormatter.dateFormat = "dd.MM.yyyy"
+                                let date = dateFormatter.dateFromString(cditem["endDate"] as! String)
+                                dateFormatter.dateFormat = "yyyy-MM-dd"
+                                var endDate = dateFormatter.stringFromDate(date!)
+                                sqlstr += "enddate="+self.mydb.quotedstring(endDate) + ","
+                            } else {
+                                sqlstr += "enddate='',"
+                            }
                             sqlstr += "viewcount="+self.mydb.quotedstring(cditem["viewCount"]) + ","
                             sqlstr += "watchcount="+self.mydb.quotedstring(cditem["watchCount"]) + ","
                             sqlstr += "state="+self.mydb.quotedstring(cditem["state"]) + ","
@@ -548,7 +596,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                                     ++incer
                                 }
                             }
-                            sqlstr += "folder=-9 WHERE itemid="+self.mydb.quotedstring(cditem["id"])
+                            var folderNow = "-9"
+                            if (cditem["state"] as! String == "paused"){
+                                folderNow = "-7"
+                            }
+                            sqlstr += "folder=\(folderNow) WHERE itemid="+self.mydb.quotedstring(cditem["id"])
                             self.mydb.executesql(sqlstr)
                         }
                     }
@@ -674,6 +726,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         return newDic
     }
+ 
+    func delete(sender: NSMenuItem){
+        let selx = itemstableview.selectedRowIndexes.toArray()
+        for var i=0; i<selx.count; ++i{
+            let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+            let id = nsdic["id"]!
+            self.mydb.executesql("DELETE FROM items WHERE id=" + id)
+        }
+        self.load_data(self.currentFilter)
+    }
     
     func add(sender: NSMenuItem){
         self.my_new_edit_ebay = nil
@@ -728,9 +790,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     } else {
                         dowa = "active"
                     }
-                    
-                    self.myhttpcl.get_ad_details(current_item)
-                    /*
+                   
                     if (self.myhttpcl.pause_ad_ebay(current_item, whatDo: dowa)){
                         self.mydb.executesql("UPDATE items SET state='"+dowa+"' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
                         if (dowa == "paused"){
@@ -741,7 +801,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     } else {
                         println(current_item + " not " + dowa)
                     }
-                    */
+                    
                 }
             }
         }
@@ -823,6 +883,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         self.load_data(currentFilter)
+    }
+    
+    
+    @IBAction func printFlyerAction(sender: AnyObject) {
+        let selx = itemstableview.selectedRowIndexes.toArray()
+        for var i=0; i<selx.count; ++i{
+            let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+            let current_account : String = nsdic["account"]!
+            let current_id : String = nsdic["id"]!
+            
+            var dataArray : [[String : String]] = self.mydb.sql_read_accounts("id=" + current_account)
+            if (dataArray.count>0){
+                self.myhttpcl.logout_ebay_account()
+                if (self.myhttpcl.check_ebay_account(dataArray[0]["username"]!, password: dataArray[0]["password"]!)){
+                    
+                }
+            }
+        }
     }
     
     

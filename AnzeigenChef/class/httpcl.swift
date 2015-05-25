@@ -230,6 +230,12 @@ class httpcl{
                 
                 // Step 2: Send data...
                 var ebayUrl2 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben-schritt2.html")
+                
+                // NOW IS EDIT, NOT NEW!
+                if (listData["itemid"] as! String != ""){ // adId
+                    let itemid = listData["itemid"] as! String
+                    ebayUrl2 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-bearbeiten.html?adId=\(itemid)")
+                }
                 var request = NSMutableURLRequest(URL: ebayUrl2! )
                 request.setValue(ebayUrl?.absoluteString, forHTTPHeaderField: "Referer")
                 request.timeoutInterval = 60
@@ -247,6 +253,12 @@ class httpcl{
                             
                             // Step 3: Send last data...
                             var PostData : NSMutableArray = []
+                            
+                            if (listData["itemid"] as! String != ""){ // adId
+                                let itemid = listData["itemid"] as! String
+                                PostData.addObject("adId=" + itemid)
+                            }
+                            
                             PostData.addObject("title=" + (listData["title"] as! String).encodeURL())
                             PostData.addObject("description=" + (listData["desc"] as! String).encodeURL())
                             PostData.addObject("priceAmount=" + (listData["price"] as! String).encodeURL())
@@ -270,12 +282,29 @@ class httpcl{
                                 }
                             }
                             
+                            let pricetype = listData["pricetype"] as! String
+                            if pricetype == "1" {
+                                PostData.addObject("priceType=FIXED")
+                            } else if pricetype == "2" {
+                                PostData.addObject("priceType=NEGOTIABLE")
+                            } else {
+                                PostData.addObject("priceType=GIVE_AWAY")
+                            }
+                            
+                            let adtype = listData["adtype"] as! String
+                            if (adtype == "0") {
+                                PostData.addObject("adType=OFFER")
+                            } else {
+                                PostData.addObject("adType=WANTED")
+                            }
+                            
                             var ebayUrl3 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-abschicken.html")
                             var request = NSMutableURLRequest(URL: ebayUrl3! )
                             request.setValue(ebayUrl2?.absoluteString, forHTTPHeaderField: "Referer")
                             request.timeoutInterval = 60
                             request.HTTPShouldHandleCookies=true
                             var stringPost=(listData["categoryId"] as! String).stringByReplacingOccurrencesOfString("|", withString: "&", options: NSStringCompareOptions.LiteralSearch, range: nil) + "&" + PostData.componentsJoinedByString("&")
+                            
                             let data = stringPost.dataUsingEncoding(NSASCIIStringEncoding)
                             request.HTTPBody=data
                             request.HTTPMethod = "POST"
@@ -284,11 +313,12 @@ class httpcl{
                                 let res = response as! NSHTTPURLResponse!;
                                 if (res.statusCode >= 200 && res.statusCode < 300){
                                     var responseData3:NSString  = NSString(data:urlData3!, encoding:NSUTF8StringEncoding)!
-                                    if responseData3.containsString("PostAdSuccess"){
+                                    if responseData3.containsString("PostAdSuccess") || responseData3.containsString("PostSuccessView"){
                                         // JUHUUUU!!! gleich sync...
                                         return true
                                     } else {
                                         let flist = self.getfails(responseData3 as String)
+                                        // println("\(responseData3)")
                                         self.lastError = flist.componentsJoinedByString("\n\n")
                                     }
                                 } else {
@@ -312,16 +342,24 @@ class httpcl{
     }
     
     func sendPicToeBay(picPath : NSURL) -> String{
+        let pp = picPath.absoluteString
+        if (pp!.contains("ttp:/") || pp!.contains("ttps:/")){
+            return pp!
+        }
         var reponseError: NSError?
         var response: NSURLResponse?
         var error: NSError?
         let fileName = picPath.path!.lastPathComponent
-        let mimeType = "image/png"
+        var mimeType = "image/png"
+        if (picPath.path!.lastPathComponent.lowercaseString.contains(".jpg") || picPath.path!.lastPathComponent.lowercaseString.contains(".jpeg")){
+           mimeType = "image/jpeg"
+        }
         let boundaryConstant = "moxieboundary"+NSUUID().UUIDString;
+        let tempFileName = NSUUID().UUIDString
         
         let url:NSURL? = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-bild-hochladen.html")
         let cachePolicy = NSURLRequestCachePolicy.ReloadIgnoringLocalCacheData
-        var request = NSMutableURLRequest(URL: url!, cachePolicy: cachePolicy, timeoutInterval: 2.0)
+        var request = NSMutableURLRequest(URL: url!, cachePolicy: cachePolicy, timeoutInterval: 20.0)
         request.setValue("https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-aufgeben-schritt2.html", forHTTPHeaderField: "Referer")
         request.setValue("multipart/form-data; boundary=----"+boundaryConstant, forHTTPHeaderField: "Content-Type")
         request.HTTPMethod = "POST"
@@ -332,10 +370,10 @@ class httpcl{
         var dataStringM : NSMutableData = NSMutableData()
         dataStringM.appendData("------\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         dataStringM.appendData("Content-Disposition: form-data; name=\"name\"\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        dataStringM.appendData("\(fileName)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("\(tempFileName)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         
         dataStringM.appendData("------\(boundaryConstant)\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
-        dataStringM.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"\(fileName)\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
+        dataStringM.appendData("Content-Disposition: form-data; name=\"file\"; filename=\"\(tempFileName)\"\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         dataStringM.appendData("Content-Type: \(mimeType)\r\n\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
         dataStringM.appendData(picData!)
         dataStringM.appendData("\r\n".dataUsingEncoding(NSUTF8StringEncoding)!)
@@ -344,14 +382,13 @@ class httpcl{
  
         
         request.HTTPBody = dataStringM
-        
+
         var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
         if ( urlData != nil ) {
             let res = response as! NSHTTPURLResponse!;
             if (res.statusCode >= 200 && res.statusCode < 300)
             {
                 var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
-                
                 var xdata: NSData = responseData.dataUsingEncoding(NSUTF8StringEncoding)!
                 var err: NSError?
                 if let jsonobj : AnyObject = NSJSONSerialization.JSONObjectWithData(xdata, options: .MutableLeaves, error: &err) {
@@ -361,18 +398,24 @@ class httpcl{
                             if (json["status"] as! String == "OK"){
                                 return json["thumbnailUrl"] as! String
                             } else {
-                                println(responseData)
+                                self.lastError = "Status fail! Response: " + (responseData as String)
                             }
                         } else {
                             println(responseData)
                         }
+                    } else {
+                        println(err!.description  + (responseData as String))
                     }
                 } else {
                     println("Could not parse JSON: \(err!)" + "<br/><br/>" + (responseData as String))
                     return ""
                 }
-                
+            } else {
+                self.lastError = "Response ist " + String(res.statusCode)
+                println(self.lastError)
             }
+        } else {
+            println("URL DATA NIL! \(reponseError)")
         }
         return ""
         
@@ -566,6 +609,7 @@ class httpcl{
                 // description
                 var ad_description = (responseData as! String).getstring("name=\"description\"", endStr: "</textarea>")
                 ad_description = ad_description.getstring(">", endStr: "")
+              
                 
                 // price
                 var ad_price = (responseData as! String).getstring("name=\"priceAmount\"", endStr: "/>")
@@ -628,11 +672,40 @@ class httpcl{
                 var ad_category = (responseData as! String).getstring("name=\"categoryId\"", endStr: "/>")
                 ad_category = ad_category.getstring("value=\"", endStr: "\"")
                 
+                // Attribute
+                var attrString = responseData as! String
+                var attrList : NSMutableArray = []
+                while attrString.indexOf("<select ")>=0 {
+                    var attrStringVal = attrString.getstring("<select ", endStr: "</select>")
+                    let attrName = attrStringVal.getstring("name=\"", endStr: "\"")
+                    var attrVal = ""
+                    let attrOptions : NSArray = attrStringVal.componentsSeparatedByString("</option>")
+                    for var p = 0; p < attrOptions.count; ++p {
+                        let attrO = attrOptions[p] as! String
+                        if (attrO.contains("selected")){
+                            attrVal = attrO.getstring("value=\"", endStr: "\"")
+                            break
+                        }
+                    }
+                    if (attrVal != "" && attrName != ""){
+                        ad_category += "|" + attrName + "=" + attrVal
+                    }
+                    attrString = attrString.getstring("<select ", endStr: "")
+                }
+                
                 emptyDic["ad_category"] = "categoryId=" + ad_category
                 emptyDic["ad_type"] = ad_type
                 emptyDic["imglist"] = imglist
                 emptyDic["ad_title"] = ad_title.html_decode()
-                emptyDic["ad_description"] = ad_description.html_decode()
+                
+                ad_description = ad_description.stringByReplacingOccurrencesOfString("\r", withString: "[RETURN]", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                ad_description = ad_description.stringByReplacingOccurrencesOfString("\n", withString: "[NEWLINE]", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                ad_description = ad_description.html_decode()
+                ad_description = ad_description.stringByReplacingOccurrencesOfString("[RETURN]", withString: "\r", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                ad_description = ad_description.stringByReplacingOccurrencesOfString("[NEWLINE]", withString: "\n", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                
+                emptyDic["ad_description"] = ad_description
+                
                 emptyDic["ad_price"] = ad_price
                 emptyDic["ad_pricetype"] = ad_pricetype
                 emptyDic["ad_postalcode"] = ad_postalcode.html_decode()

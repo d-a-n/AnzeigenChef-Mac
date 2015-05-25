@@ -21,9 +21,16 @@ class MessageControlCell: NSTableCellView {
  
     
     override var backgroundStyle: NSBackgroundStyle {
+        
         set {
             if let rowView = self.superview as? NSTableRowView {
-                if rowView.selected {
+                
+                var focus = false
+                if let tableView = self.superview?.superview as? NSTableView {
+                    focus = (tableView.isEqual(tableView.window?.firstResponder))
+                }
+                
+                if rowView.selected && focus {
                     self.l1.textColor = NSColor.highlightColor()
                     self.l1_right.textColor = NSColor.highlightColor()
                     self.l2.textColor = NSColor.highlightColor()
@@ -38,6 +45,7 @@ class MessageControlCell: NSTableCellView {
             return super.backgroundStyle;
         }
     }
+     
     
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)
@@ -45,6 +53,8 @@ class MessageControlCell: NSTableCellView {
         // Drawing code here.
         
     }
+    
+
     
     
     
