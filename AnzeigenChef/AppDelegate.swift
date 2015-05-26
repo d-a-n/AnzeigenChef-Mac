@@ -856,6 +856,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
             let current_account : String = nsdic["account"]!
             let current_id : String = nsdic["id"]!
+            let current_itemid : String = nsdic["itemid"]!
             
             var dataArray : [[String : String]] = self.mydb.sql_read_accounts("id=" + current_account)
             if (dataArray.count>0){
@@ -864,13 +865,22 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     
                     let ok = self.myhttpcl.addItem(nsdic)
                     if (ok){
-                        self.syncbutton(self)
-                        let alert = NSAlert()
-                        alert.messageText = NSLocalizedString("Your ad will be visible in two minutes.", comment: "Visible Message")
-                        alert.informativeText = NSLocalizedString("Listing success!", comment: "Listing success")
-                        alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
-                        alert.alertStyle = NSAlertStyle.InformationalAlertStyle
-                        let result = alert.runModal()
+                        if current_itemid != "" {
+                            let alert = NSAlert()
+                            alert.messageText = NSLocalizedString("Your ad has been updated.", comment: "AdUpdated Message")
+                            alert.informativeText = NSLocalizedString("Update success!", comment: "Update success")
+                            alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
+                            alert.alertStyle = NSAlertStyle.InformationalAlertStyle
+                            let result = alert.runModal()
+                        } else {
+                            self.syncbutton(self)
+                            let alert = NSAlert()
+                            alert.messageText = NSLocalizedString("Your ad will be visible in two minutes.", comment: "Visible Message")
+                            alert.informativeText = NSLocalizedString("Listing success!", comment: "Listing success")
+                            alert.addButtonWithTitle(NSLocalizedString("OK", comment: "OK Button"))
+                            alert.alertStyle = NSAlertStyle.InformationalAlertStyle
+                            let result = alert.runModal()
+                        }
                     } else {
                         let alert = NSAlert()
                         alert.informativeText = self.myhttpcl.lastError
@@ -1001,6 +1011,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     //MARK:DB Items
     func load_data(filterStr : String){
+        
+        // Save old select
+        let oldSelect = self.itemstableview.selectedRowIndexes.toArray()
+        var idList : NSMutableArray = []
+        for var i = 0; i < oldSelect.count; ++i {
+            let tItem : [String : String] = self.tableDataArray.objectAtIndex(oldSelect[i]) as! [String : String]
+            idList.addObject(tItem["id"]!)
+        }
+        
         self.currentFilter = filterStr
         var newFilter = "SELECT * FROM items"
         if (filterStr != "") {
@@ -1008,13 +1027,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         tableDataArray = self.mydb.sql_read_select(newFilter)
         itemstableview.reloadData()
+        
+        // After reload, check old selects...
+        var newIndexSet : NSMutableIndexSet = NSMutableIndexSet.new()
+        for var i = 0; i < idList.count; ++i {
+            for var ii = 0; ii < self.tableDataArray.count; ++ii {
+                let tItem : [String : String] = self.tableDataArray.objectAtIndex(ii) as! [String : String]
+                let check1 : String = tItem["id"]!
+                let check2 : String = idList[i] as! String
+                if (check1 == check2){
+                    newIndexSet.addIndex(ii)
+                    break
+                }
+            }
+        }
+        if tableDataArray.count > 0 && newIndexSet.count == 0 {
+            newIndexSet.addIndex(0)
+        }
+        
+        
         let itemtext : String = NSLocalizedString("Items", comment: "Quantity of items in current view")
         var newWinTitle = NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String + " "
         newWinTitle += NSBundle.mainBundle().infoDictionary!["CFBundleShortVersionString"] as! String
         newWinTitle += " (" + String(tableDataArray.count) + " " + itemtext + ")"
         self.window.title = newWinTitle
         if (tableDataArray.count>0){
-            self.tableView(itemstableview, selectionIndexesForProposedSelection: NSIndexSet(index: 0))
+            self.itemstableview.allowsEmptySelection = true
+            itemstableview.selectRowIndexes(NSIndexSet.new(), byExtendingSelection: false)
+            itemstableview.selectRowIndexes(newIndexSet, byExtendingSelection: true)
+            self.tableView(itemstableview, selectionIndexesForProposedSelection: newIndexSet)
+            self.itemstableview.allowsEmptySelection = false
         } else {
             self.messControl.resetAll()
         }

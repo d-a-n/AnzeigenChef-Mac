@@ -13,6 +13,7 @@ import Foundation
 class httpcl{
     
     var lastError: String = ""
+    var lastItemId : String = ""
     
     func check_ebay_account(username : String, password : String)->Bool {
         
@@ -314,6 +315,7 @@ class httpcl{
                                 if (res.statusCode >= 200 && res.statusCode < 300){
                                     var responseData3:NSString  = NSString(data:urlData3!, encoding:NSUTF8StringEncoding)!
                                     if responseData3.containsString("PostAdSuccess") || responseData3.containsString("PostSuccessView"){
+                                        self.lastItemId = (responseData3 as! String).getstring("p-mein-anzeige-status.json?id=", endStr: "\"")
                                         // JUHUUUU!!! gleich sync...
                                         return true
                                     } else {

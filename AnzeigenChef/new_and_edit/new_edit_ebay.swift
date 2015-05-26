@@ -414,7 +414,6 @@ class new_edit_ebay: NSWindowController {
             sqlStr += "\(picstringupdate) WHERE id=" + self.editId
             
             if self.mydb.executesql(sqlStr){
-                println("Gespeichert: " + self.editId)
                 self.window?.sheetParent?.endSheet(self.window!, returnCode: NSModalResponseOK)
             } else {
                 // SHOW FAIL!
