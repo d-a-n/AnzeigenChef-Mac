@@ -17,6 +17,7 @@ class itemstablecell: NSTableCellView {
     @IBOutlet var priceLabel: NSTextField!
     @IBOutlet var postalCodeLabel: NSTextField!
     @IBOutlet var image: NSImageView!
+    @IBOutlet var rightImage : NSImageView!
 
     override func drawRect(dirtyRect: NSRect) {
         super.drawRect(dirtyRect)

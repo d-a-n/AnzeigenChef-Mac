@@ -11,7 +11,7 @@ import Foundation
 class dbfunc{
     func opendb(){
         let documents = NSSearchPathForDirectoriesInDomains(.DocumentDirectory, .UserDomainMask, true)[0] as! String
-        let path = documents.stringByAppendingPathComponent("test.sqlite")
+        let path = documents.stringByAppendingPathComponent("anzeigenchef.sqlite")
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
@@ -21,12 +21,22 @@ class dbfunc{
                 println("error creating table: \(errmsg)")
             }
             
-            if sqlite3_exec(db, "create table if not exists folders (id integer primary key autoincrement, foldername text, folderparentid integer)", nil, nil, nil) != SQLITE_OK {
+            
+            
+            if sqlite3_exec(db, "create table if not exists folders (id integer primary key autoincrement, foldername text, folderparentid integer, expand integer NOT NULL DEFAULT 0)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             }
+            if (self.sql_column_exists("folders", columnName: "expand") == false){
+                if sqlite3_exec(db,"ALTER TABLE folders ADD COLUMN expand integer NOT NULL DEFAULT 0", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
             
-            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer DEFAULT 0, itemid text, price int DEFAULT 0, title text, category text, categoryId text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,image2 text,image3 text,image4 text,image5 text,image6 text,image7 text,image8 text,image9 text,image10 text,image11 text,image12 text,image13 text,image14 text,image15 text,image16 text,image17 text,image18 text,image19 text,image20 text, state text,seourl text, shippingprovided text, folder int, adtype integer DEFAULT 0, attribute text, pricetype integer DEFAULT 0, postalcode text, street text, myname text, myphone text, desc text)", nil, nil, nil) != SQLITE_OK {
+            
+            
+            if sqlite3_exec(db, "create table if not exists items (id integer primary key autoincrement, account integer DEFAULT 0, itemid text, price int DEFAULT 0, title text, category text, categoryId text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,image2 text,image3 text,image4 text,image5 text,image6 text,image7 text,image8 text,image9 text,image10 text,image11 text,image12 text,image13 text,image14 text,image15 text,image16 text,image17 text,image18 text,image19 text,image20 text, state text,seourl text, shippingprovided text, folder int, adtype integer DEFAULT 0, attribute text, pricetype integer DEFAULT 0, postalcode text, street text, myname text, myphone text, desc text, messagecount integer DEFAULT 0, messageunread integer DEFAULT 0, parentad integer DEFAULT 0)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             } else {
@@ -107,7 +117,7 @@ class dbfunc{
         var statement: COpaquePointer = nil
         var sText = "select id, foldername, folderparentid from folders";
         if (sqlFilter != ""){
-            sText = sText + " WHERE " + sqlFilter
+            sText = sText + " WHERE " + sqlFilter + " ORDER BY foldername ASC"
         }
         if sqlite3_prepare_v2(db, sText, -1, &statement, nil) != SQLITE_OK {
             let errmsg = String.fromCString(sqlite3_errmsg(db))
@@ -196,6 +206,25 @@ class dbfunc{
         
         statement = nil
         return sqldata
+    }
+    
+    func sql_column_exists(tableName : String, columnName : String) -> Bool{
+        var statement: COpaquePointer = nil
+        if sqlite3_prepare_v2(db, "PRAGMA table_info(\(tableName)) ", -1, &statement, nil) != SQLITE_OK {
+            let errmsg = String.fromCString(sqlite3_errmsg(db))
+            println("error preparing select: \(errmsg)")
+            return false
+        } else {
+            while sqlite3_step(statement) == SQLITE_ROW {
+                let cname = sqlite3_column_text(statement,Int32(1))
+                let buf_cname = String.fromCString(UnsafePointer<Int8>(cname))!
+                if (buf_cname == "\(columnName)"){
+                    return true
+                }
+            }
+        }
+        statement = nil
+        return false
     }
     
     func textAt(col:Int, statementx: COpaquePointer) -> String {

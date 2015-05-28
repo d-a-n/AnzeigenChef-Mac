@@ -92,6 +92,8 @@ class setup: NSWindowController,NSTableViewDataSource,NSTableViewDelegate {
                     mydb.executesql("INSERT INTO accounts (username,password,platform) VALUES ('"+self.setupAccount.txt_username.stringValue+"','"+self.setupAccount.txt_password.stringValue+"','"+aType+"')")
                     self.loaddata()
                     self.accountTable.reloadData()
+                    let appDelegate = NSApplication.sharedApplication().delegate as! AppDelegate
+                    appDelegate.syncbutton(self)
                 } else {
                     let myPopup: NSAlert = NSAlert()
                     myPopup.messageText = "Fail"

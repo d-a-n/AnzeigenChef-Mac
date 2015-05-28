@@ -38,9 +38,12 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var currentFolderID : Int = -8
     var syncinprocess : Bool = false
     var currentFilter = ""
+    var cat_start_expandlist : NSMutableArray = []
     
     private let kNodesPBoardType = "myNodesPBoardType"
+    private let kRowPBoardType = "myRowsPBoardType"
     private var dragNodesArray: [catitem] = []
+    private var dragRowsArray: [String] = [] // ids!
     dynamic private var contents: [AnyObject] = []
     
  
@@ -60,16 +63,25 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.addcat("Stopped", myid: "-8", myimg : "NSStatusUnavailable", cparent: firstCatItem, is_template:false);
         self.templateCatItem = self.addcat("Templates", myid: "-10", myimg: "NSFolder", cparent: firstCatItem, is_template:false);
         self.itemstableview.doubleAction = Selector("edit:")
+        self.itemstableview.registerForDraggedTypes([kRowPBoardType])
         self.loadCats()
         self.catlist.setDataSource(self)
         self.catlist.reloadData()
-        self.catlist.expandItem(firstCatItem);
-        self.catlist.registerForDraggedTypes([kNodesPBoardType])
+        self.catlist.expandItem(firstCatItem)
+        self.catlist.expandItem(templateCatItem)
+        self.catlist.registerForDraggedTypes([kNodesPBoardType,kRowPBoardType])
         self.catlist.setDelegate(self)
         self.catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
         self.currentFolderLabel.stringValue = selk.get_catname()
         self.currentFolderID = -9
         self.load_data("folder=-9")
+        
+        for var i=0; i < cat_start_expandlist.count; ++i {
+            self.catlist.expandItem(cat_start_expandlist[i])
+        }
+        
+        cat_start_expandlist.removeAllObjects()
+        
         // self.syncbutton(self)
     }
 
@@ -308,8 +320,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return child1
     }
     
-    
+    func outlineView(outlineView: NSOutlineView, shouldExpandItem item: AnyObject) -> Bool {
+        if let it = item as? catitem {
+            self.mydb.executesql("UPDATE folders SET expand=1 WHERE id=" + (item as! catitem).get_catid())
+        }
+        return true
+    }
    
+    func outlineView(outlineView: NSOutlineView, shouldCollapseItem item: AnyObject) -> Bool {
+        if let it = item as? catitem {
+            self.mydb.executesql("UPDATE folders SET expand=0 WHERE id=" + (item as! catitem).get_catid())
+        }
+        return true
+    }
     
     
     //MARK: TableView
@@ -338,9 +361,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         cell.postalCodeLabel.stringValue = nsdic["postalcode"]!
         
         if (nsdic["image"] != ""){
-            if let da = NSData(contentsOfURL: NSURL(string: nsdic["image"]!)!){
-                cell.image.image = NSImage(data: da)
-            }
+            self.loadImage(nsdic["image"]!, myImage: cell.image)
         } else {
             cell.image.image = nil
         }
@@ -356,11 +377,42 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         if nsdic["adtype"] == "1" {
             cell.priceLabel.stringValue = NSLocalizedString("Wanted", comment: "ItemsTable Wanted")
         }
+        
+        var messagecount : String = nsdic["messagecount"]!
+        if (messagecount == ""){ messagecount = "0" }
+        if messagecount.toInt() > 0 {
+            cell.rightImage.image = NSImage(named: "Talk - Ellipses_48x48")
+        } else {
+            cell.rightImage.image = nil
+        }
+        
         return cell
     }
     
-  
+    func tableView(tableView: NSTableView, writeRowsWithIndexes rowIndexes: NSIndexSet, toPasteboard pboard: NSPasteboard) -> Bool {
+        
+        // no drag from outside of templates!
+        if currentFolderID <= 0 && (currentFolderID > -10 || currentFolderID < -10) {
+            return false
+        }
+        
+        let mutableArray : NSMutableArray = NSMutableArray()
+        dragRowsArray.removeAll(keepCapacity: false)
+        
+        let indexArray = rowIndexes.toArray()
+        for var i=0; i < indexArray.count; ++i {
+            let itemId = tableDataArray[indexArray[i]]["id"] as! String
+            mutableArray.addObject(itemId)
+            dragRowsArray.append(itemId)
+        }
+        
+        let data : NSData = NSKeyedArchiver.archivedDataWithRootObject(mutableArray)
+        pboard.setData(data, forType: kRowPBoardType)
+        
+        return true
+    }
     
+ 
     
     
     //MARK: CatList DragDROP!
@@ -387,6 +439,20 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     func outlineView(outlineView: NSOutlineView, validateDrop info: NSDraggingInfo, proposedItem item: AnyObject?, proposedChildIndex index: Int) -> NSDragOperation
     {
         var result = NSDragOperation.None
+        
+        // drag come from tableview
+        if (info.draggingSource() === self.itemstableview ) {
+            if (item == nil) {
+                result = .None
+            } else {
+                if (item as! catitem).get_catid().toInt() == -10 || (item as! catitem).get_catid().toInt() > 0 {
+                    result = .Move
+                } else {
+                    result = .None
+                }
+            }
+            return result
+        }
         
         // if nil?
         if (item == nil) {
@@ -424,6 +490,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
 
     func outlineView(outlineView: NSOutlineView, acceptDrop info: NSDraggingInfo, item: AnyObject?, childIndex index: Int) -> Bool {
+        
+        if (info.draggingSource() === self.itemstableview) {
+            for var i=0; i < dragRowsArray.count; ++i {
+                if (self.mydb.executesql("UPDATE items SET folder='"+(item as! catitem).get_catid()+"' WHERE id="+dragRowsArray[i])){
+                    
+                }
+            }
+            self.load_data(currentFilter)
+            return true
+        }
+        
         if (self.mydb.executesql("UPDATE folders SET folderparentid='"+(item as! catitem).get_catid()+"' WHERE id="+(dragNodesArray[0] as catitem).get_catid())){
             (dragNodesArray[0] as catitem).get_parent().removeChild((dragNodesArray[0] as catitem))
             (item as! catitem).addChild((dragNodesArray[0] as catitem))
@@ -511,6 +588,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     self.progressBar.doubleValue+=1
                     if let ditem = thelist[ii] as? NSDictionary {
                         let cditem = self.fixdicttostrings(ditem)
+                        let accountid : String = dataArray[i]["id"]!
+                        let itemid : String = cditem["id"]! as! String
+                        
+                        // check if exists
+                        let checkCount = self.mydb.sql_read_select("SELECT COUNT(*) AS M FROM items WHERE itemid='" + itemid + "' AND account=" + accountid)
+                        let foundItem : Bool = checkCount[0]["M"]?.toInt() > 0
+                        
                         var sqlstr : String = "INSERT OR IGNORE INTO items (account,itemid) VALUES (";
                         sqlstr += dataArray[i]["id"]! + ","
                         sqlstr += self.mydb.quotedstring(cditem["id"]) + ")"
@@ -535,73 +619,84 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                             sqlstr += "shippingprovided="+self.mydb.quotedstring(cditem["shippingProvided"]) + ","
                             
                             // details
-                            let detailData = self.myhttpcl.get_ad_details(cditem["id"] as! String)
-                            if (detailData["ad_title"] != nil){
-                                sqlstr += "title=" + self.mydb.quotedstring(detailData["ad_title"]) + ","
-                            }
-                            
-                            if (detailData["ad_description"] != nil){
-                                sqlstr += "desc=" + self.mydb.quotedstring(detailData["ad_description"]) + ","
-                            }
-                            
-                            if (detailData["ad_postalcode"] != nil){
-                                sqlstr += "postalcode=" + self.mydb.quotedstring(detailData["ad_postalcode"]) + ","
-                            }
-                            
-                            if (detailData["ad_street"] != nil){
-                                sqlstr += "street=" + self.mydb.quotedstring(detailData["ad_street"]) + ","
-                            }
-                            
-                            if (detailData["ad_myname"] != nil){
-                                sqlstr += "myname=" + self.mydb.quotedstring(detailData["ad_myname"]) + ","
-                            }
-                            
-                            if (detailData["ad_myphone"] != nil){
-                                sqlstr += "myphone=" + self.mydb.quotedstring(detailData["ad_myphone"]) + ","
-                            }
-                            
-                            if (detailData["ad_pricetype"] != nil){
-                                sqlstr += "pricetype=" + self.mydb.quotedstring(detailData["ad_pricetype"]) + ","
-                            }
-                            
-                            if (detailData["ad_price"] != nil){
-                                sqlstr += "price=" + self.mydb.quotedstring(detailData["ad_price"]) + ","
-                            }
-                            
-                            if (detailData["ad_type"] != nil){
-                                sqlstr += "adtype=" + self.mydb.quotedstring(detailData["ad_type"]) + ","
-                            }
-                            
-                            if (detailData["ad_category"] != nil){
-                                sqlstr += "categoryId=" + self.mydb.quotedstring(detailData["ad_category"]) + ","
-                            }
-
-                            if (detailData["imglist"] != nil){
-                                let imglist : NSMutableArray = detailData["imglist"]! as! NSMutableArray
-                                var incer = 1
-                                for var i = 0; i < imglist.count; ++i {
-                                    if incer == 1 {
-                                        sqlstr += "image" + "=" + self.mydb.quotedstring(imglist[i]) + ","
-                                    } else {
-                                        sqlstr += "image" + String(incer) + "=" + self.mydb.quotedstring(imglist[i]) + ","
-                                    }
-                                    ++incer
+                            // only if not exists!
+                            if (foundItem){
+                                var folderNow = "-9"
+                                if (cditem["state"] as! String == "paused"){
+                                    folderNow = "-7"
                                 }
-                                while incer < 20 {
-                                    if incer == 1 {
-                                        sqlstr += "image" + "='',"
-                                    } else {
-                                        sqlstr += "image" + String(incer) + "='',"
-                                    }
-                                    ++incer
+                                sqlstr += "folder=\(folderNow) WHERE itemid="+self.mydb.quotedstring(cditem["id"])
+                                self.mydb.executesql(sqlstr)
+                            } else {
+                                let detailData = self.myhttpcl.get_ad_details(cditem["id"] as! String)
+                                if (detailData["ad_title"] != nil){
+                                    sqlstr += "title=" + self.mydb.quotedstring(detailData["ad_title"]) + ","
                                 }
+                                
+                                if (detailData["ad_description"] != nil){
+                                    sqlstr += "desc=" + self.mydb.quotedstring(detailData["ad_description"]) + ","
+                                }
+                                
+                                if (detailData["ad_postalcode"] != nil){
+                                    sqlstr += "postalcode=" + self.mydb.quotedstring(detailData["ad_postalcode"]) + ","
+                                }
+                                
+                                if (detailData["ad_street"] != nil){
+                                    sqlstr += "street=" + self.mydb.quotedstring(detailData["ad_street"]) + ","
+                                }
+                                
+                                if (detailData["ad_myname"] != nil){
+                                    sqlstr += "myname=" + self.mydb.quotedstring(detailData["ad_myname"]) + ","
+                                }
+                                
+                                if (detailData["ad_myphone"] != nil){
+                                    sqlstr += "myphone=" + self.mydb.quotedstring(detailData["ad_myphone"]) + ","
+                                }
+                                
+                                if (detailData["ad_pricetype"] != nil){
+                                    sqlstr += "pricetype=" + self.mydb.quotedstring(detailData["ad_pricetype"]) + ","
+                                }
+                                
+                                if (detailData["ad_price"] != nil){
+                                    sqlstr += "price=" + self.mydb.quotedstring(detailData["ad_price"]) + ","
+                                }
+                                
+                                if (detailData["ad_type"] != nil){
+                                    sqlstr += "adtype=" + self.mydb.quotedstring(detailData["ad_type"]) + ","
+                                }
+                                
+                                if (detailData["ad_category"] != nil){
+                                    sqlstr += "categoryId=" + self.mydb.quotedstring(detailData["ad_category"]) + ","
+                                }
+                                
+                                if (detailData["imglist"] != nil){
+                                    let imglist : NSMutableArray = detailData["imglist"]! as! NSMutableArray
+                                    var incer = 1
+                                    for var i = 0; i < imglist.count; ++i {
+                                        if incer == 1 {
+                                            sqlstr += "image" + "=" + self.mydb.quotedstring(imglist[i]) + ","
+                                        } else {
+                                            sqlstr += "image" + String(incer) + "=" + self.mydb.quotedstring(imglist[i]) + ","
+                                        }
+                                        ++incer
+                                    }
+                                    while incer < 20 {
+                                        if incer == 1 {
+                                            sqlstr += "image" + "='',"
+                                        } else {
+                                            sqlstr += "image" + String(incer) + "='',"
+                                        }
+                                        ++incer
+                                    }
+                                }
+                                var folderNow = "-9"
+                                if (cditem["state"] as! String == "paused"){
+                                    folderNow = "-7"
+                                }
+                                sqlstr += "folder=\(folderNow) WHERE itemid="+self.mydb.quotedstring(cditem["id"])
+                                self.mydb.executesql(sqlstr)
                             }
-                            var folderNow = "-9"
-                            if (cditem["state"] as! String == "paused"){
-                                folderNow = "-7"
-                            }
-                            sqlstr += "folder=\(folderNow) WHERE itemid="+self.mydb.quotedstring(cditem["id"])
-                            self.mydb.executesql(sqlstr)
+                            
                         }
                     }
                 }
@@ -685,6 +780,16 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         }
                     }
                 }
+                
+                // Update Message Counts
+                let mcountquery = self.mydb.sql_read_select("SELECT count(*) AS M, adid, account FROM conversations GROUP BY account,adid")
+                for var m = 0; m < mcountquery.count; ++m {
+                    let mdic = mcountquery[m]
+                    let mdic_adid : String = mdic["adid"]!
+                    let mdic_count : String = mdic["M"]!
+                    let mdic_account : String = mdic["account"]!
+                    self.mydb.executesql("UPDATE items SET messagecount='" + mdic_count + "' WHERE itemid='" + mdic_adid + "' AND account='" + mdic_account + "'")
+                }
                 // end
             }
             
@@ -703,6 +808,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
     }
     
+    func loadImage(url:String, myImage: NSImageView) {
+        let image_url:String = url
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            let url:NSURL = NSURL(string:image_url)!
+            var data:NSData = NSData(contentsOfURL: url)!
+            var temppic = NSImage(data: data)!
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                myImage.image = temppic
+            }
+        }
+        
+    }
     
     func fixdicttostrings(oldDic : NSDictionary) -> NSMutableDictionary{
         var newDic : NSMutableDictionary = NSMutableDictionary.new()
@@ -833,7 +951,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                         
                         if (self.myhttpcl.stop_ad_ebay(current_item)){
                             self.mydb.executesql("UPDATE items SET state='stopped', folder='-8' WHERE itemid='"+current_item+"' AND account='"+current_account+"'")
-                            self.load_data(currentFilter)
                         } else {
                             println(current_item + " not stopped")
                         }
@@ -841,6 +958,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                     }
                 }
             }
+            self.load_data(currentFilter)
         case NSAlertSecondButtonReturn:
             return
         default:
@@ -914,6 +1032,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     
+    @IBAction func websiteButtonAction(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://gastonx.net")!)
+    }
+    
+    
+    @IBAction func sourcecodeAction(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://github.com/gastonx/AnzeigenChef-Mac")!)
+    }
     
     
     //MARK:CatPopUp actions
@@ -985,24 +1111,36 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     //MARK:DB CAT
     func loadCats(){
-        let ldata = mydb.sql_read_folders("folderparentid='-10'")
+        
+        let ldata = mydb.sql_read_select("select * from folders WHERE folderparentid='-10' ORDER BY foldername ASC")
         for var i=0; i<ldata.count; ++i{
+            
             let newcat = self.addcat(ldata[i]["foldername"]!, myid: ldata[i]["id"]!, myimg: "NSFolder", cparent: templateCatItem, is_template: true)
+
+            if (ldata[i]["expand"] as String! == "1"){
+                // self.catlist.expandItem(newcat)
+                cat_start_expandlist.addObject(newcat)
+            }
+            
             loadChilds(newcat)
+            
         }
         // AB jetzt Schleife, bis nix mehr kommt
     }
     
     func loadChilds(fromCat : catitem){
-        let ldata = mydb.sql_read_folders("folderparentid='"+fromCat.get_catid()+"'")
+        let ldata = mydb.sql_read_select("select * from folders WHERE folderparentid='"+fromCat.get_catid()+"' ORDER BY foldername ASC")
         for var i=0; i<ldata.count; ++i{
             let newcat = self.addcat(ldata[i]["foldername"]!, myid: ldata[i]["id"]!, myimg: "NSFolder", cparent: fromCat, is_template: true)
+            if (ldata[i]["expand"] as String! == "1"){
+                cat_start_expandlist.addObject(newcat)
+            }
             self.loadChilds(newcat)
         }
     }
     
     func catdelete(which : String){
-        let ldata = mydb.sql_read_folders("folderparentid='"+which+"'")
+        let ldata = mydb.sql_read_select("select * from folders WHERE folderparentid='"+which+"' ORDER BY foldername ASC")
         for var i=0; i<ldata.count; ++i{
             self.mydb.executesql("DELETE FROM folders WHERE id="+ldata[i]["id"]!)
             self.catdelete(ldata[i]["id"]!)

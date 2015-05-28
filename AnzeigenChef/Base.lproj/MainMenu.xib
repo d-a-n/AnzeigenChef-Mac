@@ -688,8 +688,18 @@
                                     <action selector="showHelp:" target="-1" id="y7X-2Q-9no"/>
                                 </connections>
                             </menuItem>
+                            <menuItem isSeparatorItem="YES" id="GdW-tO-3BF"/>
                             <menuItem title="Website" id="aAI-cH-lOh">
                                 <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="websiteButtonAction:" target="Voe-Tx-rLC" id="xLJ-B1-No9"/>
+                                </connections>
+                            </menuItem>
+                            <menuItem title="Sourcecode on GitHub" id="UKQ-LK-llj">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="sourcecodeAction:" target="Voe-Tx-rLC" id="hXp-gc-lmr"/>
+                                </connections>
                             </menuItem>
                         </items>
                     </menu>
@@ -879,7 +889,7 @@
                                                                                     <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                     <subviews>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="F6X-YO-EUd">
-                                                                                            <rect key="frame" x="89" y="74" width="324" height="17"/>
+                                                                                            <rect key="frame" x="89" y="74" width="268" height="17"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" usesSingleLineMode="YES" id="7tW-ld-C4P">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -893,7 +903,7 @@
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyUpOrDown" imageFrameStyle="grayBezel" id="rrk-hh-TEF"/>
                                                                                         </imageView>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" setsMaxLayoutWidthAtFirstLayout="YES" id="l1s-wt-7ZW">
-                                                                                            <rect key="frame" x="89" y="36" width="324" height="30"/>
+                                                                                            <rect key="frame" x="89" y="30" width="268" height="36"/>
                                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                                                             <textFieldCell key="cell" truncatesLastVisibleLine="YES" sendsActionOnEndEditing="YES" title="Table View Cell" id="FUa-gJ-Flp">
                                                                                                 <font key="font" size="10" name=".HelveticaNeueDeskInterface-Regular"/>
@@ -907,7 +917,7 @@
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSQuickLookTemplate" id="TIU-A9-u0Y"/>
                                                                                         </imageView>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="g1h-gv-ex9">
-                                                                                            <rect key="frame" x="116" y="5" width="46" height="16"/>
+                                                                                            <rect key="frame" x="116" y="5" width="37" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="222" usesSingleLineMode="YES" id="v9A-Qe-1AD">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -916,12 +926,12 @@
                                                                                             </textFieldCell>
                                                                                         </textField>
                                                                                         <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="oFw-rE-jJ0">
-                                                                                            <rect key="frame" x="168" y="7" width="19" height="12"/>
+                                                                                            <rect key="frame" x="159" y="7" width="19" height="12"/>
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSUser" id="oFU-1o-HBP"/>
                                                                                         </imageView>
                                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="trB-kV-3cO">
-                                                                                            <rect key="frame" x="193" y="5" width="49" height="16"/>
+                                                                                            <rect key="frame" x="183" y="5" width="37" height="16"/>
                                                                                             <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="222" usesSingleLineMode="YES" id="6Wp-B6-PH1">
                                                                                                 <font key="font" metaFont="cellTitle"/>
@@ -929,24 +939,29 @@
                                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
                                                                                         </textField>
-                                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="kas-hR-Qz4">
-                                                                                            <rect key="frame" x="330" y="5" width="83" height="17"/>
-                                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="24 € VB" usesSingleLineMode="YES" id="0hA-aZ-K0o">
+                                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="oEM-s2-zo1">
+                                                                                            <rect key="frame" x="226" y="7" width="19" height="12"/>
+                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSHomeTemplate" id="hGA-tK-dI3"/>
+                                                                                        </imageView>
+                                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="YCw-IM-ML2">
+                                                                                            <rect key="frame" x="251" y="5" width="37" height="16"/>
+                                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
+                                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="222" usesSingleLineMode="YES" id="QBV-5k-qMj">
                                                                                                 <font key="font" metaFont="cellTitle"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                                                                                             </textFieldCell>
                                                                                         </textField>
-                                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="oEM-s2-zo1">
-                                                                                            <rect key="frame" x="238" y="7" width="19" height="12"/>
-                                                                                            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSHomeTemplate" id="hGA-tK-dI3"/>
+                                                                                        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="sy3-qX-hgk">
+                                                                                            <rect key="frame" x="363" y="43" width="48" height="48"/>
+                                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMinY="YES"/>
+                                                                                            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" id="xWn-YC-spM"/>
                                                                                         </imageView>
-                                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="YCw-IM-ML2">
-                                                                                            <rect key="frame" x="263" y="5" width="63" height="16"/>
-                                                                                            <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMaxY="YES"/>
-                                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="222" usesSingleLineMode="YES" id="QBV-5k-qMj">
+                                                                                        <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" id="kas-hR-Qz4">
+                                                                                            <rect key="frame" x="292" y="5" width="111" height="17"/>
+                                                                                            <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
+                                                                                            <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" alignment="right" title="24 € VB" usesSingleLineMode="YES" id="0hA-aZ-K0o">
                                                                                                 <font key="font" metaFont="cellTitle"/>
                                                                                                 <color key="textColor" name="controlTextColor" catalog="System" colorSpace="catalog"/>
                                                                                                 <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
@@ -958,6 +973,7 @@
                                                                                         <outlet property="image" destination="ARL-yj-Kgo" id="kc6-Qs-TRc"/>
                                                                                         <outlet property="postalCodeLabel" destination="YCw-IM-ML2" id="wkz-ev-fWi"/>
                                                                                         <outlet property="priceLabel" destination="kas-hR-Qz4" id="Efu-pb-JQ2"/>
+                                                                                        <outlet property="rightImage" destination="sy3-qX-hgk" id="Hn9-KC-R6o"/>
                                                                                         <outlet property="titleLabel" destination="F6X-YO-EUd" id="qjY-Hg-7Pq"/>
                                                                                         <outlet property="visitLabel" destination="trB-kV-3cO" id="AHo-nn-LUc"/>
                                                                                         <outlet property="watchLabel" destination="g1h-gv-ex9" id="r0K-5b-8g1"/>
