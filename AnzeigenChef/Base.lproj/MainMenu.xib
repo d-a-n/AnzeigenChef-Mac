@@ -83,19 +83,19 @@
                         </items>
                     </menu>
                 </menuItem>
-                <menuItem title="Listing" id="dMs-cI-mzQ">
+                <menuItem title="Ads" id="dMs-cI-mzQ">
                     <modifierMask key="keyEquivalentModifierMask"/>
-                    <menu key="submenu" title="Listing" id="bib-Uj-vzu">
+                    <menu key="submenu" title="Ads" id="bib-Uj-vzu">
                         <items>
                             <menuItem title="New" keyEquivalent="n" id="Was-JA-tGl">
                                 <connections>
                                     <action selector="add:" target="-1" id="sIg-Gx-XMY"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="New folder" id="qoE-5m-dnf">
+                            <menuItem title="New search" id="vUI-o3-7oq">
                                 <modifierMask key="keyEquivalentModifierMask"/>
                                 <connections>
-                                    <action selector="addFolderAction:" target="Voe-Tx-rLC" id="Eog-O6-XyF"/>
+                                    <action selector="addSearch:" target="Voe-Tx-rLC" id="y6a-uQ-bWQ"/>
                                 </connections>
                             </menuItem>
                             <menuItem isSeparatorItem="YES" id="m54-Is-iLE"/>
@@ -1191,7 +1191,7 @@
                             <action selector="showSetup:" target="-1" id="7OZ-4t-jCn"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="235D866E-E35C-429F-83B6-5C9686FFD046" label="New" paletteLabel="New" tag="-1" image="NSMultipleDocuments" id="Jas-75-8Rh">
+                    <toolbarItem implicitItemIdentifier="235D866E-E35C-429F-83B6-5C9686FFD046" label="New ad" paletteLabel="New ad" tag="-1" image="NSMultipleDocuments" id="Jas-75-8Rh">
                         <connections>
                             <action selector="add:" target="-1" id="qpX-Dp-KMx"/>
                         </connections>
@@ -1232,14 +1232,20 @@
                             <action selector="deactivate:" target="Voe-Tx-rLC" id="6Gf-8p-MxJ"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="DDA823CF-62AD-4884-AFFD-F9DCCC305B92" label="Print flyer" paletteLabel="Print flyer" tag="-1" image="Tag - Blue_48x48" id="wYW-fR-Hne">
+                    <toolbarItem implicitItemIdentifier="DDA823CF-62AD-4884-AFFD-F9DCCC305B92" label="Print flyer" paletteLabel="Print flyer" tag="-1" image="Tag - Sale - Green_48x48" id="wYW-fR-Hne">
                         <connections>
                             <action selector="printFlyerAction:" target="Voe-Tx-rLC" id="Ap9-ce-URN"/>
+                        </connections>
+                    </toolbarItem>
+                    <toolbarItem implicitItemIdentifier="C4E3E6BD-35D5-49BF-A767-31AFEDA95840" label="New seach" paletteLabel="New seach" tag="-1" image="Tag - Blue_48x48" id="QhM-OR-fqq">
+                        <connections>
+                            <action selector="addSearch:" target="Voe-Tx-rLC" id="7oQ-Ir-3lS"/>
                         </connections>
                     </toolbarItem>
                 </allowedToolbarItems>
                 <defaultToolbarItems>
                     <toolbarItem reference="Jas-75-8Rh"/>
+                    <toolbarItem reference="QhM-OR-fqq"/>
                     <toolbarItem reference="gSB-xw-Krp"/>
                     <toolbarItem reference="zSR-CS-7aR"/>
                     <toolbarItem reference="gSB-xw-Krp"/>
@@ -1258,7 +1264,7 @@
             </toolbar>
             <point key="canvasLocation" x="317" y="440.5"/>
         </window>
-        <menu autoenablesItems="NO" id="O7F-Zu-eW3">
+        <menu id="O7F-Zu-eW3">
             <items>
                 <menuItem title="New folder" tag="1" id="rVc-Xc-yrU">
                     <modifierMask key="keyEquivalentModifierMask"/>
@@ -1267,6 +1273,13 @@
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="GGT-qi-1kv"/>
+                <menuItem title="Edit search" id="Fzh-zB-ur2">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="editSearch:" target="Voe-Tx-rLC" id="sMA-gB-UPm"/>
+                    </connections>
+                </menuItem>
+                <menuItem isSeparatorItem="YES" id="bki-Wj-ZkI"/>
                 <menuItem title="Rename" tag="2" id="STE-XA-QyX">
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
@@ -1344,6 +1357,12 @@
             </connections>
             <point key="canvasLocation" x="880" y="190.5"/>
         </menu>
+        <imageView horizontalHuggingPriority="251" verticalHuggingPriority="251" id="eav-5l-gMk">
+            <rect key="frame" x="0.0" y="0.0" width="48" height="48"/>
+            <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
+            <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="Circle - Green_48x48" id="fm6-x7-Loj"/>
+            <point key="canvasLocation" x="479" y="-87"/>
+        </imageView>
     </objects>
     <resources>
         <image name="Badge - Green_48x48" width="48" height="48"/>
@@ -1363,5 +1382,6 @@
         <image name="NSUser" width="32" height="32"/>
         <image name="Stop - 2_48x48" width="48" height="48"/>
         <image name="Tag - Blue_48x48" width="48" height="48"/>
+        <image name="Tag - Sale - Green_48x48" width="48" height="48"/>
     </resources>
 </document>

@@ -39,6 +39,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var syncinprocess : Bool = false
     var currentFilter = ""
     var cat_start_expandlist : NSMutableArray = []
+    var searchCat : catitem!
+    var my_new_edit_search : new_edit_search!
+ 
     
     private let kNodesPBoardType = "myNodesPBoardType"
     private let kRowPBoardType = "myRowsPBoardType"
@@ -48,6 +51,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
  
     var firstCatItem : catitem = catitem(cname: NSBundle.mainBundle().infoDictionary!["CFBundleName"] as! String, cid: "0", cimg: "", istemplate:false, cparent : NSApp, cgroup : true)
+    
+    
     var templateCatItem : catitem!
     
     //MARK: Application
@@ -58,6 +63,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     func applicationDidFinishLaunching(aNotification: NSNotification) {
         mydb.opendb();
+        
         let selk : catitem = self.addcat("Activ", myid: "-9", myimg : "NSStatusAvailable", cparent: firstCatItem, is_template:false);
         self.addcat("Inactive", myid: "-7", myimg : "NSStatusPartiallyAvailable", cparent: firstCatItem, is_template:false);
         self.addcat("Stopped", myid: "-8", myimg : "NSStatusUnavailable", cparent: firstCatItem, is_template:false);
@@ -65,10 +71,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.itemstableview.doubleAction = Selector("edit:")
         self.itemstableview.registerForDraggedTypes([kRowPBoardType])
         self.loadCats()
+        
+        searchCat = self.addcat("Search", myid: "-5", myimg: "NSQuickLookTemplate", cparent: firstCatItem, is_template: false)
+        self.loadSearch()
+        
+        
+        
         self.catlist.setDataSource(self)
         self.catlist.reloadData()
         self.catlist.expandItem(firstCatItem)
         self.catlist.expandItem(templateCatItem)
+        self.catlist.expandItem(searchCat)
         self.catlist.registerForDraggedTypes([kNodesPBoardType,kRowPBoardType])
         self.catlist.setDelegate(self)
         self.catlist.selectRowIndexes(NSIndexSet(index: catlist.rowForItem(selk)), byExtendingSelection: true)
@@ -89,39 +102,65 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         
     }
     
-    override func awakeFromNib() {
-        
-    }
     
+   
     
-    
-  
-    
-    
-    func menuNeedsUpdate(menu: NSMenu){
-        
-        catpopup.itemWithTag(1)?.enabled=false
-        catpopup.itemWithTag(2)?.enabled=false
-        catpopup.itemWithTag(3)?.enabled=false
-        catpopup.itemWithTag(4)?.enabled=false
-        
-        let clickedRow = catlist.clickedRow
-        catlastclickrow = clickedRow
-        if (clickedRow > -1){
-            let clickedItem : catitem = catlist.itemAtRow(clickedRow) as! catitem
-            if (clickedItem.istemplate()){
-                catpopup.itemWithTag(1)?.enabled=true
-                catpopup.itemWithTag(2)?.enabled=true
-                catpopup.itemWithTag(3)?.enabled=true
-                catpopup.itemWithTag(4)?.enabled=true
-            }
-            if (clickedItem.get_catid().toInt() == -10){
-                catpopup.itemWithTag(1)?.enabled=true
-            }
-        }
-    }
     
     override func validateMenuItem(menuItem: NSMenuItem) -> Bool {
+        self.catlastclickrow = catlist.clickedRow
+        
+        if menuItem.action == Selector("addFolderAction:") {
+            if (self.catlastclickrow > -1){
+                let clickedItem : catitem = catlist.itemAtRow(self.catlastclickrow) as! catitem
+                if (clickedItem.istemplate() || clickedItem.get_catid() == "-10" ){
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("renameFolderAction:") {
+            if (self.catlastclickrow > -1){
+                let clickedItem : catitem = catlist.itemAtRow(self.catlastclickrow) as! catitem
+                if (clickedItem.istemplate()){
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("editSearch:") {
+            if (self.catlastclickrow > 0){
+                let clickedItem : catitem = catlist.itemAtRow(self.catlastclickrow) as! catitem
+                if (clickedItem.get_parent().get_catid() == "-5"){
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        
+        if menuItem.action == Selector("deleteFolderAction:") {
+            if (self.catlastclickrow > -1){
+                let clickedItem : catitem = catlist.itemAtRow(self.catlastclickrow) as! catitem
+                if (clickedItem.istemplate() || clickedItem.get_parent().get_catid() == "-5"){
+                    return true
+                } else {
+                    return false
+                }
+            } else {
+                return false
+            }
+        }
+        
         if menuItem.action == Selector("edit:") {
             if (self.itemstableview.selectedRow > -1){
                 return true
@@ -304,7 +343,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return nil;
     }
     
+   
+    
     func outlineView(outlineView: NSOutlineView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet{
+        
         if (proposedSelectionIndexes.count>0){
             let n : catitem = self.catlist.itemAtRow(proposedSelectionIndexes.firstIndex) as! catitem
             self.currentFolderLabel.stringValue = n.get_catname()
@@ -315,7 +357,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     func addcat(myname : String, myid : String, myimg : String, cparent: catitem, is_template : Bool) -> catitem{
-        var child1 : catitem = catitem(cname: myname, cid: myid, cimg : myimg, istemplate:is_template, cparent : cparent, cgroup: false)
+        var gr = false
+        if myimg == "NSQuickLookTemplate" {
+            gr = true
+        }
+        var child1 : catitem = catitem(cname: myname, cid: myid, cimg : myimg, istemplate:is_template, cparent : cparent, cgroup: gr)
         cparent.addChild(child1)
         return child1
     }
@@ -870,6 +916,19 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         });
     }
     
+    @IBAction func addSearch(sender: AnyObject) {
+        self.my_new_edit_search = nil
+        self.my_new_edit_search = new_edit_search(windowNibName: "new_edit_search");
+        
+        self.window!.beginSheet(self.my_new_edit_search.window!, completionHandler: {(returnCode) -> Void in
+            if (returnCode == NSModalResponseOK){
+                self.addcat(self.my_new_edit_search.menuname.stringValue, myid: self.my_new_edit_search.currentEditId , myimg: "Tag - Blue_48x48", cparent: self.searchCat, is_template: false)
+                self.catlist.reloadItem(self.searchCat, reloadChildren: true)
+                self.catlist.expandItem(self.searchCat, expandChildren: true)
+            }
+        });
+    }
+    
     
     @IBAction func edit(sender: AnyObject) {
         if self.itemstableview.selectedRow<0 { return }
@@ -1044,7 +1103,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     //MARK:CatPopUp actions
     @IBAction func addFolderAction(sender: AnyObject) {
-        
+
+        self.catlastclickrow = self.catlist.clickedRow
         self.folderControl = nil
         self.folderControl = foldercontroller(windowNibName: "foldercontroller");
         
@@ -1053,7 +1113,6 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         self.window!.beginSheet(self.folderControl.window!, completionHandler: {(returnCode) -> Void in
             if (returnCode == NSModalResponseOK){
                 if (self.catlastclickrow > -1){
-                    
                     
                     let currentitem = self.catlist.itemAtRow(self.catlastclickrow) as! catitem
                     if (self.mydb.executesql("INSERT INTO folders (foldername,folderparentid) VALUES ('"+self.folderControl.folderNameEdit.stringValue+"','"+String(currentitem.get_catid())+"')")){
@@ -1069,6 +1128,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     @IBAction func renameFolderAction(sender: AnyObject) {
+        
+        self.catlastclickrow = self.catlist.clickedRow
+        
         if (self.catlastclickrow < 0){
             return
         }
@@ -1094,20 +1156,48 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     }
     
     @IBAction func deleteFolderAction(sender: AnyObject) {
+        
         if (self.catlastclickrow < 0){
             return
         }
         
         let currentitem = self.catlist.itemAtRow(self.catlastclickrow) as! catitem
         
+        if currentitem.get_parent().get_catid() == "-5" {
+            self.mydb.executesql("DELETE FROM searchquery WHERE id="+currentitem.get_catid())
+            currentitem.get_parent().removeChild(currentitem)
+            self.catlist.reloadItem(self.searchCat, reloadChildren: true)
+            return
+        }
+        
         
         if (!currentitem.get_parent().isEqual(currentitem)){
             self.mydb.executesql("DELETE FROM folders WHERE id="+currentitem.get_catid())
             self.catdelete(currentitem.get_catid())
             currentitem.get_parent().removeChild(currentitem)
-            self.catlist.reloadData()
+            self.catlist.reloadItem(self.templateCatItem, reloadChildren: true)
         }
     }
+    
+    
+    
+    @IBAction func editSearch(sender: AnyObject) {
+        self.my_new_edit_search = nil
+        self.my_new_edit_search = new_edit_search(windowNibName: "new_edit_search");
+        
+        let currentitem = self.catlist.itemAtRow(self.catlastclickrow) as! catitem
+        
+        self.my_new_edit_search.currentEditId = currentitem.get_catid()
+        
+        self.window!.beginSheet(self.my_new_edit_search.window!, completionHandler: {(returnCode) -> Void in
+            if (returnCode == NSModalResponseOK){
+                currentitem.set_catname(self.my_new_edit_search.menuname.stringValue) 
+                self.catlist.reloadItem(self.searchCat, reloadChildren: true)
+            }
+        });
+    }
+    
+    
     
     //MARK:DB CAT
     func loadCats(){
@@ -1126,6 +1216,13 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             
         }
         // AB jetzt Schleife, bis nix mehr kommt
+    }
+    
+    func loadSearch(){
+        let ldata = mydb.sql_read_select("select * from searchquery ORDER BY sort ASC")
+        for var i=0; i<ldata.count; ++i{
+            let newcat = self.addcat(ldata[i]["desc"]!, myid: ldata[i]["id"]!, myimg: "Tag - Blue_48x48", cparent: searchCat, is_template: false)
+        }
     }
     
     func loadChilds(fromCat : catitem){

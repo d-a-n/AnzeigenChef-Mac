@@ -15,7 +15,7 @@ class dbfunc{
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
-            // sqlite3_exec(db,"DROP TABLE items", nil, nil, nil)
+            
             if sqlite3_exec(db, "create table if not exists accounts (id integer primary key autoincrement, username text, password text, platform text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -60,6 +60,19 @@ class dbfunc{
             } else {
                 sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS conversations_text_idx on conversations_text (account,cid,receiveddate)", nil, nil, nil)
             }
+            
+            
+            if sqlite3_exec(db, "create table if not exists searchquery (id integer primary key autoincrement, active integer NOT NULL DEFAULT 1, category text, desc text, sort integer NOT NULL DEFAULT 0, query text, ziporcity text, distance integer NOT NULL DEFAULT 0, created datetime, modified datetime)", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String.fromCString(sqlite3_errmsg(db))
+                println("error creating table: \(errmsg)")
+            }
+            if (self.sql_column_exists("searchquery", columnName: "category_text") == false){
+                if sqlite3_exec(db,"ALTER TABLE searchquery ADD COLUMN category_text text", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            
         }
     }
     
@@ -244,7 +257,7 @@ class dbfunc{
     }
     
     func quotedstring(identifier : AnyObject?) -> String{
-        if (identifier === nil) { return "''" }
+        if (identifier === nil) { return "''" } 
         
         var escapedString = (identifier as! String).stringByReplacingOccurrencesOfString("'",
             withString: "''",

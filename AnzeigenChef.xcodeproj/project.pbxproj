@@ -24,6 +24,8 @@
 		54C847B41B04A30D00D2E091 /* new_edit_ebay.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54C847B21B04A30D00D2E091 /* new_edit_ebay.xib */; };
 		54E68E541B09DFC6000144D6 /* catselector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54E68E521B09DFC6000144D6 /* catselector.swift */; };
 		54E68E551B09DFC6000144D6 /* catselector.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54E68E531B09DFC6000144D6 /* catselector.xib */; };
+		54EC1D121B1CCC72006DDFE2 /* new_edit_search.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54EC1D101B1CCC72006DDFE2 /* new_edit_search.swift */; };
+		54EC1D131B1CCC72006DDFE2 /* new_edit_search.xib in Resources */ = {isa = PBXBuildFile; fileRef = 54EC1D111B1CCC72006DDFE2 /* new_edit_search.xib */; };
 		54F1311C1B03841D001070D8 /* catitem.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131181B03841D001070D8 /* catitem.swift */; };
 		54F1311D1B03841D001070D8 /* dbfunc.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F131191B03841D001070D8 /* dbfunc.swift */; };
 		54F1311E1B03841D001070D8 /* httpcl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54F1311A1B03841D001070D8 /* httpcl.swift */; };
@@ -67,6 +69,8 @@
 		54C847B21B04A30D00D2E091 /* new_edit_ebay.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = new_edit_ebay.xib; sourceTree = "<group>"; };
 		54E68E521B09DFC6000144D6 /* catselector.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = catselector.swift; sourceTree = "<group>"; };
 		54E68E531B09DFC6000144D6 /* catselector.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = catselector.xib; sourceTree = "<group>"; };
+		54EC1D101B1CCC72006DDFE2 /* new_edit_search.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = new_edit_search.swift; sourceTree = "<group>"; };
+		54EC1D111B1CCC72006DDFE2 /* new_edit_search.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = new_edit_search.xib; sourceTree = "<group>"; };
 		54F131181B03841D001070D8 /* catitem.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = catitem.swift; path = class/catitem.swift; sourceTree = "<group>"; };
 		54F131191B03841D001070D8 /* dbfunc.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = dbfunc.swift; path = class/dbfunc.swift; sourceTree = "<group>"; };
 		54F1311A1B03841D001070D8 /* httpcl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = httpcl.swift; path = class/httpcl.swift; sourceTree = "<group>"; };
@@ -138,6 +142,8 @@
 				54E68E531B09DFC6000144D6 /* catselector.xib */,
 				543BA9511B10B07D00EFAF4D /* picselect.swift */,
 				543BA9521B10B07D00EFAF4D /* picselect.xib */,
+				54EC1D101B1CCC72006DDFE2 /* new_edit_search.swift */,
+				54EC1D111B1CCC72006DDFE2 /* new_edit_search.xib */,
 			);
 			path = new_and_edit;
 			sourceTree = "<group>";
@@ -299,6 +305,7 @@
 			files = (
 				54F131251B038506001070D8 /* setup_account.xib in Resources */,
 				54E68E551B09DFC6000144D6 /* catselector.xib in Resources */,
+				54EC1D131B1CCC72006DDFE2 /* new_edit_search.xib in Resources */,
 				54F1C2E11AF4C422005219FC /* Images.xcassets in Resources */,
 				54AE774C1B06974F0050755A /* MessageAnswer.xib in Resources */,
 				54F1C3041AF55E06005219FC /* setup.xib in Resources */,
@@ -329,6 +336,7 @@
 				54AE774B1B06974F0050755A /* MessageAnswer.swift in Sources */,
 				54C847B31B04A30D00D2E091 /* new_edit_ebay.swift in Sources */,
 				5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */,
+				54EC1D121B1CCC72006DDFE2 /* new_edit_search.swift in Sources */,
 				543DA9471B13219200FA7290 /* itemstablecell.swift in Sources */,
 				5424010D1AF61B98006DF527 /* AnzeigenChef-Bridging-Header.m in Sources */,
 				54F1311F1B03841D001070D8 /* myextensions.swift in Sources */,
