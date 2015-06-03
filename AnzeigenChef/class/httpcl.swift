@@ -63,6 +63,93 @@ class httpcl{
         return false
     }
     
+    
+    func get_search(sdate : [String : String]) -> [[String : String]] {
+        var reponseError: NSError?
+        var response: NSURLResponse?
+        var stringPost : String = "keywords=" + (sdate["query"]!).encodeURL() + "&locationStr=" + (sdate["ziporcity"]!).encodeURL() + "&radius=" + (sdate["distance"]!).encodeURL()
+ 
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/s-suchanfrage.html?" + stringPost)
+        println("http://kleinanzeigen.ebay.de/anzeigen/s-suchanfrage.html?" + stringPost)
+        
+        if (sdate["ownurl"]! != ""){
+            ebayUrl = NSURL(string: sdate["ownurl"]!)
+        }
+        
+        var request = NSMutableURLRequest(URL: ebayUrl! )
+        request.HTTPMethod = "GET"
+        request.timeoutInterval = 60
+        request.HTTPShouldHandleCookies=true
+        
+        var ergArray : [[String : String]] = []
+        
+        var urlData: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
+        if ( urlData != nil ) {
+            let res = response as! NSHTTPURLResponse!;
+            if (res.statusCode >= 200 && res.statusCode < 300)
+            {
+                var responseData:NSString  = NSString(data:urlData!, encoding:NSUTF8StringEncoding)!
+                var tempstr : String = responseData as! String
+                
+                
+                while tempstr.contains("<li class=\"ad-listitem") {
+                    let currentline = tempstr.getstring("<li class=\"ad-listitem", endStr: "</li>")
+                    
+                    let url = currentline.getstring("href=\"", endStr: "\"")
+                    
+                    var title = currentline.getstring("class=\"ad-title\"", endStr: "</")
+                    title = title.getstring(">", endStr: "")
+                    
+                    var price = currentline.getstring("class=\"ad-listitem-details\"", endStr: "</strong>")
+                    price = price.getstring("<strong>", endStr: "")
+                    price = price.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    
+                    var adtype = "1"
+                    if price.contains("VB") && price.contains("€") {
+                        price = price.cleanToInt()
+                        adtype = "2"
+                    } else if price.contains("€") {
+                        price = price.cleanToInt()
+                        adtype = "1"
+                    } else if price.contains("VB") {
+                        price = price.cleanToInt()
+                        adtype = "2"
+                    } else {
+                        price = "0"
+                        adtype = "3"
+                    }
+                    
+                    var desc = currentline.getstring("</h2>", endStr: "</section>")
+                    desc = desc.stringByReplacingOccurrencesOfString("<p>", withString: "\n", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    desc = desc.stringByReplacingOccurrencesOfString("</p>", withString: "\n", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    desc = desc.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    
+                    var dist = currentline.getstring("ad-listitem-location", endStr: "</h3>")
+                    dist = dist.getstring(">", endStr: "")
+                    dist = dist.stringByReplacingOccurrencesOfString("<br>", withString: " ", options: NSStringCompareOptions.LiteralSearch, range: nil)
+                    
+                    let image = currentline.getstring("data-imgsrc=\"", endStr: "\"")
+     
+                    var addtime = currentline.getstring("ad-listitem-addon", endStr: "</")
+                    addtime = addtime.getstring(">", endStr: "")
+                    addtime = addtime.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())
+                    
+                    // println(title + "\n" + url + "\n" + price + "\n" + dist + "\n" + image + "\n" + addtime + "\n" + desc + "\n\n")
+                    
+                    if dist != "" {
+                        let res : [String : String] = ["url" : url, "title" : title, "price" : price, "desc" : desc, "dist" : dist, "image" : image, "addtime" : addtime, "pricetype" : adtype]
+                        ergArray.append(res)
+                    }
+                    
+                    tempstr = tempstr.getstring("<li class=\"ad-listitem", endStr: "")
+                }
+            }
+        }
+        
+        return ergArray
+    }
+    
+    
     func getcats_ebay()->NSDictionary{
         var reponseError: NSError?
         var response: NSURLResponse?

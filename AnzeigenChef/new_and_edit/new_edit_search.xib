@@ -11,6 +11,7 @@
                 <outlet property="distance" destination="h36-uq-dGb" id="Py8-JC-NY6"/>
                 <outlet property="menuname" destination="UNN-3B-nHM" id="7rz-iO-BZl"/>
                 <outlet property="okbutton" destination="1gj-uZ-u6f" id="jec-gA-Egq"/>
+                <outlet property="ownurl" destination="ACo-oP-bHX" id="FYh-IU-5i8"/>
                 <outlet property="postalcode" destination="ycb-OG-JG5" id="7nl-LQ-6dS"/>
                 <outlet property="query" destination="hV0-1b-hY0" id="ny5-3O-vX1"/>
                 <outlet property="searchactive" destination="cQA-zr-Q66" id="UEt-yE-7ga"/>
@@ -22,10 +23,10 @@
         <window title="Window" allowsToolTipsWhenApplicationIsInactive="NO" autorecalculatesKeyViewLoop="NO" oneShot="NO" releasedWhenClosed="NO" visibleAtLaunch="NO" animationBehavior="default" id="F0z-JX-Cv5">
             <windowStyleMask key="styleMask" titled="YES" closable="YES" miniaturizable="YES"/>
             <windowPositionMask key="initialPositionMask" leftStrut="YES" rightStrut="YES" topStrut="YES" bottomStrut="YES"/>
-            <rect key="contentRect" x="196" y="240" width="605" height="327"/>
+            <rect key="contentRect" x="196" y="240" width="605" height="379"/>
             <rect key="screenRect" x="0.0" y="0.0" width="2560" height="1417"/>
             <view key="contentView" id="se5-gp-TjO">
-                <rect key="frame" x="0.0" y="5" width="605" height="327"/>
+                <rect key="frame" x="0.0" y="-1" width="605" height="379"/>
                 <autoresizingMask key="autoresizingMask"/>
                 <subviews>
                     <box autoresizesSubviews="NO" title="Box" boxType="custom" borderType="none" titlePosition="noTitle" id="9Ew-0B-c2i">
@@ -79,19 +80,19 @@ Gw
                         <color key="fillColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </box>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="aMq-0C-iUH">
-                        <rect key="frame" x="18" y="171" width="256" height="17"/>
+                        <rect key="frame" x="18" y="223" width="256" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Query" id="xIl-MN-dg7">
-                            <font key="font" metaFont="titleBar" size="12"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.14725188389999999" green="0.27380570119999997" blue="0.71172691050000003" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="hV0-1b-hY0">
-                        <rect key="frame" x="20" y="147" width="565" height="22"/>
+                        <rect key="frame" x="20" y="199" width="565" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="FbD-r4-BuN">
-                            <font key="font" metaFont="controlContent"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -100,16 +101,16 @@ Gw
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="V5M-t3-BQk">
-                        <rect key="frame" x="458" y="122" width="129" height="17"/>
+                        <rect key="frame" x="458" y="174" width="129" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Searchdistance" id="Uli-i6-HVs">
-                            <font key="font" metaFont="titleBar" size="12"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.14725188389999999" green="0.27380570119999997" blue="0.71172691050000003" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <comboBox verticalHuggingPriority="750" id="h36-uq-dGb">
-                        <rect key="frame" x="460" y="95" width="128" height="26"/>
+                        <rect key="frame" x="460" y="147" width="128" height="26"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <comboBoxCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" sendsActionOnEndEditing="YES" borderStyle="bezel" drawsBackground="YES" completes="NO" numberOfVisibleItems="5" id="uK2-Sd-1QH">
                             <font key="font" metaFont="system"/>
@@ -126,7 +127,7 @@ Gw
                         </connections>
                     </comboBox>
                     <button id="cQA-zr-Q66">
-                        <rect key="frame" x="18" y="69" width="113" height="18"/>
+                        <rect key="frame" x="18" y="121" width="113" height="18"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="check" title="Search is active" bezelStyle="regularSquare" imagePosition="left" state="on" inset="2" id="UoU-hE-r5y">
                             <behavior key="behavior" changeContents="YES" doesNotDimImage="YES" lightByContents="YES"/>
@@ -134,10 +135,10 @@ Gw
                         </buttonCell>
                     </button>
                     <textField verticalHuggingPriority="750" id="ycb-OG-JG5">
-                        <rect key="frame" x="20" y="98" width="432" height="22"/>
+                        <rect key="frame" x="20" y="150" width="432" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="bHe-YO-TLr">
-                            <font key="font" metaFont="controlContent"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -146,28 +147,28 @@ Gw
                         </connections>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="h79-vI-0eo">
-                        <rect key="frame" x="18" y="122" width="436" height="17"/>
+                        <rect key="frame" x="18" y="174" width="436" height="17"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Postalcode or cityname" id="IHT-sM-hg0">
-                            <font key="font" metaFont="titleBar" size="12"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.14725188389999999" green="0.27380570119999997" blue="0.71172691050000003" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="r0X-Ok-pBA">
-                        <rect key="frame" x="18" y="286" width="256" height="17"/>
+                        <rect key="frame" x="18" y="338" width="256" height="17"/>
                         <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Menuename of search" id="hkm-s4-5oi">
-                            <font key="font" metaFont="titleBar" size="12"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" red="0.71172691050000003" green="0.011681155964774138" blue="0.380877579352976" alpha="1" colorSpace="calibratedRGB"/>
                             <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
                     </textField>
                     <textField verticalHuggingPriority="750" id="UNN-3B-nHM">
-                        <rect key="frame" x="20" y="262" width="565" height="22"/>
+                        <rect key="frame" x="20" y="314" width="565" height="22"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="SU3-eo-qC3">
-                            <font key="font" metaFont="controlContent"/>
+                            <font key="font" metaFont="cellTitle"/>
                             <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
                             <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
                         </textFieldCell>
@@ -176,7 +177,7 @@ Gw
                         </connections>
                     </textField>
                     <button verticalHuggingPriority="750" id="cXV-Mb-Mv5">
-                        <rect key="frame" x="20" y="194" width="559" height="42"/>
+                        <rect key="frame" x="20" y="246" width="565" height="42"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                         <buttonCell key="cell" type="squareTextured" title="Select a categoy for search..." bezelStyle="texturedSquare" alignment="center" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="aBS-9s-zyt">
                             <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
@@ -186,12 +187,33 @@ Gw
                             <action selector="selectcataction:" target="-2" id="V4Q-kY-rpp"/>
                         </connections>
                     </button>
+                    <textField horizontalHuggingPriority="251" verticalHuggingPriority="750" id="NoC-aK-ouj">
+                        <rect key="frame" x="18" y="88" width="436" height="17"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" sendsActionOnEndEditing="YES" title="Paste URL from eBay Ads search (for individual rules) *Optional" id="ePi-uv-czi">
+                            <font key="font" metaFont="titleBar" size="12"/>
+                            <color key="textColor" red="0.14725188389999999" green="0.27380570119999997" blue="0.71172691050000003" alpha="1" colorSpace="calibratedRGB"/>
+                            <color key="backgroundColor" name="controlColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                    </textField>
+                    <textField verticalHuggingPriority="750" id="ACo-oP-bHX">
+                        <rect key="frame" x="20" y="63" width="565" height="22"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
+                        <textFieldCell key="cell" scrollable="YES" lineBreakMode="clipping" selectable="YES" editable="YES" sendsActionOnEndEditing="YES" state="on" borderStyle="bezel" drawsBackground="YES" usesSingleLineMode="YES" id="g4a-RR-nut">
+                            <font key="font" metaFont="titleBar" size="12"/>
+                            <color key="textColor" name="textColor" catalog="System" colorSpace="catalog"/>
+                            <color key="backgroundColor" name="textBackgroundColor" catalog="System" colorSpace="catalog"/>
+                        </textFieldCell>
+                        <connections>
+                            <outlet property="delegate" destination="-2" id="q3Q-8C-B4K"/>
+                        </connections>
+                    </textField>
                 </subviews>
             </view>
             <connections>
                 <outlet property="delegate" destination="-2" id="0bl-1N-AYu"/>
             </connections>
-            <point key="canvasLocation" x="835.5" y="617.5"/>
+            <point key="canvasLocation" x="835.5" y="643.5"/>
         </window>
     </objects>
 </document>

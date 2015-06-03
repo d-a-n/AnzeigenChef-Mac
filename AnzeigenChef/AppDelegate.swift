@@ -33,9 +33,11 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     var setupControl : setup!
     var folderControl : foldercontroller!
     var katDataArray : [[String : String]] = []
-    var tableDataArray : NSArray = []
+    var tableDataArray : NSMutableArray = []
     var catlastclickrow : Int = -1
     var currentFolderID : Int = -8
+    var currentFolderParentID : Int = 0
+    var currentcatitemobj : catitem!
     var syncinprocess : Bool = false
     var currentFilter = ""
     var cat_start_expandlist : NSMutableArray = []
@@ -74,7 +76,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         
         searchCat = self.addcat("Search", myid: "-5", myimg: "NSQuickLookTemplate", cparent: firstCatItem, is_template: false)
         self.loadSearch()
-        
+        self.updateCatCount()
         
         
         self.catlist.setDataSource(self)
@@ -162,7 +164,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         
         if menuItem.action == Selector("edit:") {
-            if (self.itemstableview.selectedRow > -1){
+            if (self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
                 return true
             } else {
                 return false
@@ -195,7 +197,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         
         if menuItem.action == Selector("sendNow:") {
-            if ((self.currentFolderID == -10 || self.currentFolderID > 0) && self.itemstableview.selectedRow > -1){
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0) && self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
                 return true
             } else {
                 return false
@@ -211,7 +213,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         
         if menuItem.action == Selector("delete:") {
-            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1){
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
                 return true
             } else {
                 return false
@@ -269,7 +271,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 theItem.label = "Send now"
             }
             
-            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -9) && self.itemstableview.selectedRow > -1){
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -9) && self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
                 return true
             } else {
                 return false
@@ -277,7 +279,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         
         if theItem.action == Selector("delete:") {
-            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1){
+            if ((self.currentFolderID == -10 || self.currentFolderID > 0 || self.currentFolderID == -8) && self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
                 return true
             } else {
                 return false
@@ -351,6 +353,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             let n : catitem = self.catlist.itemAtRow(proposedSelectionIndexes.firstIndex) as! catitem
             self.currentFolderLabel.stringValue = n.get_catname()
             self.currentFolderID = n.get_catid().toInt()!
+            self.currentFolderParentID = n.get_parent().get_catid().toInt()!
+            self.currentcatitemobj = n;
             self.load_data("folder="+String(self.currentFolderID))
         }
         return proposedSelectionIndexes
@@ -389,7 +393,17 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     func tableView(tableView: NSTableView, selectionIndexesForProposedSelection proposedSelectionIndexes: NSIndexSet) -> NSIndexSet{
         if (proposedSelectionIndexes.count>0){
-            let n : [String : String] = tableDataArray.objectAtIndex(proposedSelectionIndexes.firstIndex) as! [String : String]
+            var n : [String : String] = tableDataArray.objectAtIndex(proposedSelectionIndexes.firstIndex) as! [String : String]
+            
+            if self.currentFolderParentID == -5 && n["messageunread"]! == "1" {
+                self.mydb.executesql("UPDATE searchqueryurls SET messageunread=0 WHERE id=" + n["id"]!)
+                n["messageunread"] = "0"
+                tableDataArray.replaceObjectAtIndex(proposedSelectionIndexes.firstIndex, withObject: n)
+                tableView.reloadDataForRowIndexes(NSIndexSet(index: proposedSelectionIndexes.firstIndex), columnIndexes: NSIndexSet(index: 0))
+                currentcatitemobj.reducecatcount()
+                self.catlist.reloadItem(self.searchCat, reloadChildren: true)
+            }
+            
             let this_itemid : String = n["itemid"]!
             self.messControl.loadData("adid='"+this_itemid+"' ORDER BY receiveddate DESC")
         }
@@ -428,6 +442,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         if (messagecount == ""){ messagecount = "0" }
         if messagecount.toInt() > 0 {
             cell.rightImage.image = NSImage(named: "Talk - Ellipses_48x48")
+        } else if nsdic["messageunread"]! == "1" {
+            cell.rightImage.image = NSImage(named: "Tag - Blue_48x48")
         } else {
             cell.rightImage.image = nil
         }
@@ -748,6 +764,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 }
                 // end
                 
+                
+                
+                
                 // now conversations to db..
                 for var ii=0; ii<conv.count; ++ii{
                     self.progressBar.doubleValue+=1
@@ -839,7 +858,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 // end
             }
             
-            
+            self.sync_search()
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.progressBar.doubleValue = 0
@@ -847,11 +866,41 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 if (self.currentFolderID == -9){
                     self.load_data("folder=-9")
                 }
+                self.catlist.reloadItem(self.searchCat, reloadChildren: true)
                 self.syncinprocess = false
             }
             
             
         }
+    }
+    
+    func sync_search(){
+        var dataArray : [[String : String]] = self.mydb.sql_read_select("SELECT * FROM searchquery WHERE active=1")
+        self.progressBar.maxValue = Double(dataArray.count)
+        self.progressBar.doubleValue = 0
+        for var i=0; i<dataArray.count; ++i {
+            self.progressBar.doubleValue = self.progressBar.doubleValue + 1
+            self.mydb.executesql("DELETE FROM searchqueryurls WHERE searchquery_id=" + dataArray[i]["id"]!)
+            let mdata : [[String : String]] = self.myhttpcl.get_search(dataArray[i])
+            for var ii=0; ii<mdata.count; ++ii {
+                var sqlstr = "INSERT OR IGNORE INTO searchqueryurls (searchquery_id,image,title,seourl,desc,price,postalcode,pricetype,folder,messageunread) VALUES (" + dataArray[i]["id"]! + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["image"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["title"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["url"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["desc"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["price"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["dist"]) + ","
+                sqlstr += self.mydb.quotedstring(mdata[ii]["pricetype"]) + ","
+                sqlstr += self.mydb.quotedstring(dataArray[i]["id"]!) + ",1)"
+                self.mydb.executesql(sqlstr)
+            }
+        }
+        
+        self.updateCatCount()
+        
+        
+        self.progressBar.doubleValue = self.progressBar.maxValue
+        self.progressBar.stopAnimation(self)
     }
     
     func loadImage(url:String, myImage: NSImageView) {
@@ -1165,6 +1214,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         
         if currentitem.get_parent().get_catid() == "-5" {
             self.mydb.executesql("DELETE FROM searchquery WHERE id="+currentitem.get_catid())
+            self.mydb.executesql("DELETE FROM searchqueryurls WHERE searchquery_id="+currentitem.get_catid())
             currentitem.get_parent().removeChild(currentitem)
             self.catlist.reloadItem(self.searchCat, reloadChildren: true)
             return
@@ -1216,6 +1266,21 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             
         }
         // AB jetzt Schleife, bis nix mehr kommt
+        
+        
+    }
+    
+    func updateCatCount(){
+        var countArray : [[String : String]] = self.mydb.sql_read_select("SELECT folder,count(id) AS M FROM searchqueryurls WHERE messageunread=1 GROUP BY folder")
+        for var i = 0; i < countArray.count; ++i {
+            for var o = 0; o < self.searchCat.getChildCount(); ++o {
+                if self.searchCat.childAtIndex(o).get_catid() == countArray[i]["folder"] {
+                    let newCount : String = countArray[i]["M"]!
+                    self.searchCat.childAtIndex(o).set_cat_count(newCount.toInt()!)
+                    break
+                }
+            }
+        }
     }
     
     func loadSearch(){
@@ -1256,11 +1321,23 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         }
         
         self.currentFilter = filterStr
-        var newFilter = "SELECT * FROM items"
+        var currentTable = "items"
+        
+        if self.currentFolderParentID == -5 {
+            currentTable = "searchqueryurls"
+        }
+        
+        var newFilter = "SELECT * FROM " + currentTable
         if (filterStr != "") {
             newFilter += " WHERE " + filterStr
         }
-        tableDataArray = self.mydb.sql_read_select(newFilter)
+        
+        let tempArray = self.mydb.sql_read_select(newFilter)
+        tableDataArray = NSMutableArray.new()
+        for var i = 0; i < tempArray.count; ++i {
+            tableDataArray.addObject(tempArray[i])
+        }
+        
         itemstableview.reloadData()
         
         // After reload, check old selects...

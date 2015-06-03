@@ -10,6 +10,7 @@ import Cocoa
 
 class new_edit_search: NSWindowController,NSTextFieldDelegate {
 
+    @IBOutlet var ownurl: NSTextField!
     @IBOutlet var menuname: NSTextField!
     @IBOutlet var searchactive: NSButton!
     @IBOutlet var postalcode: NSTextField!
@@ -18,6 +19,7 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
     @IBOutlet var okbutton: NSButton!
     var catSel : catselector!
     @IBOutlet var catSelButton: NSButton!
+    
     var mydb = dbfunc()
     var currentEditId = ""
     
@@ -52,6 +54,7 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             query.stringValue = ndata[0]["query"]!
             postalcode.stringValue = ndata[0]["ziporcity"]!
             menuname.stringValue = ndata[0]["desc"]!
+            ownurl.stringValue = ndata[0]["ownurl"]!
             
             let dist : String = ndata[0]["distance"]!
             
@@ -92,6 +95,7 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
         if (self.currentEditId != ""){
             var sqlarray : NSMutableArray = []
             sqlarray.addObject("category='" + self.catSelButton.toolTip! + "'")
+            sqlarray.addObject("category_text='" + self.catSelButton.title + "'")
             sqlarray.addObject("query=" + self.mydb.quotedstring(self.query.stringValue))
             sqlarray.addObject("desc=" + self.mydb.quotedstring(self.menuname.stringValue))
             sqlarray.addObject("ziporcity=" + self.mydb.quotedstring(self.postalcode.stringValue))
@@ -124,6 +128,8 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
                 sqlarray.addObject("active=0")
             }
             
+            sqlarray.addObject("ownurl=" + self.mydb.quotedstring(self.ownurl.stringValue))
+            
             if self.mydb.executesql("UPDATE searchquery SET " + sqlarray.componentsJoinedByString(", ") + " WHERE id=" + self.currentEditId) {
                 self.window?.sheetParent?.endSheet(self.window!, returnCode: NSModalResponseOK)
             } else {
@@ -132,8 +138,9 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             
         } else {
             var sqlarray : NSMutableArray = []
-            var sqlstart = "INSERT INTO searchquery (category,query,desc,ziporcity,distance,active) VALUES ("
+            var sqlstart = "INSERT INTO searchquery (category,category_text,query,desc,ziporcity,distance,active,ownurl) VALUES ("
             sqlarray.addObject(self.mydb.quotedstring(self.catSelButton.toolTip!))
+            sqlarray.addObject(self.mydb.quotedstring(self.catSelButton.title))
             sqlarray.addObject(self.mydb.quotedstring(self.query.stringValue))
             sqlarray.addObject(self.mydb.quotedstring(self.menuname.stringValue))
             sqlarray.addObject(self.mydb.quotedstring(self.postalcode.stringValue))
@@ -165,6 +172,8 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             } else {
                 sqlarray.addObject("0")
             }
+            
+            sqlarray.addObject(self.mydb.quotedstring(self.ownurl.stringValue))
             
             if self.mydb.executesql(sqlstart + sqlarray.componentsJoinedByString(", ") + ")") {
                 self.currentEditId = String(self.mydb.lastId())
@@ -201,6 +210,11 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
     }
     
     func checkup(){
+        if (menuname.stringValue != "" && ownurl.stringValue != "") {
+            okbutton.enabled = true
+            return
+        }
+        
         if (menuname.stringValue != "" && postalcode.stringValue != "" && query.stringValue != "" && self.catSelButton.toolTip != "" && distance.indexOfSelectedItem >= 0){
             okbutton.enabled = true
         } else {

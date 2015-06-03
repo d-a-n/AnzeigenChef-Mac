@@ -784,7 +784,7 @@
                                                                             <imageCell key="cell" refusesFirstResponder="YES" alignment="left" imageScaling="proportionallyDown" image="NSStatusUnavailable" id="jQK-El-ywc"/>
                                                                         </imageView>
                                                                         <textField verticalHuggingPriority="750" horizontalCompressionResistancePriority="250" allowsExpansionToolTips="YES" id="tDh-6Z-r3Q">
-                                                                            <rect key="frame" x="25" y="0.0" width="131" height="17"/>
+                                                                            <rect key="frame" x="25" y="0.0" width="130" height="17"/>
                                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" flexibleMinY="YES"/>
                                                                             <textFieldCell key="cell" lineBreakMode="truncatingTail" sendsActionOnEndEditing="YES" title="Table View Cell" id="agD-hT-sfZ">
                                                                                 <font key="font" metaFont="cellTitle"/>

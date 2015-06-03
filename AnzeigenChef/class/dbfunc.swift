@@ -15,7 +15,7 @@ class dbfunc{
         if sqlite3_open(path, &db) != SQLITE_OK {
             println("error opening database")
         } else {
-            
+            // sqlite3_exec(db, "DROP TABLE searchqueryurls", nil, nil, nil)
             if sqlite3_exec(db, "create table if not exists accounts (id integer primary key autoincrement, username text, password text, platform text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -62,16 +62,20 @@ class dbfunc{
             }
             
             
-            if sqlite3_exec(db, "create table if not exists searchquery (id integer primary key autoincrement, active integer NOT NULL DEFAULT 1, category text, desc text, sort integer NOT NULL DEFAULT 0, query text, ziporcity text, distance integer NOT NULL DEFAULT 0, created datetime, modified datetime)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists searchquery (id integer primary key autoincrement, active integer NOT NULL DEFAULT 1, category text, category_text text, desc text, sort integer NOT NULL DEFAULT 0, query text, ziporcity text, distance integer NOT NULL DEFAULT 0, created datetime, modified datetime, ownurl text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
             }
-            if (self.sql_column_exists("searchquery", columnName: "category_text") == false){
-                if sqlite3_exec(db,"ALTER TABLE searchquery ADD COLUMN category_text text", nil, nil, nil) != SQLITE_OK{
-                    let errmsg = String.fromCString(sqlite3_errmsg(db))
-                    println("error add column table: \(errmsg)")
-                }
+            
+            if sqlite3_exec(db, "create table if not exists searchqueryurls (id integer primary key autoincrement, price int DEFAULT 0, title text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,state text,seourl text, folder int, adtype integer DEFAULT 0, pricetype integer DEFAULT 0, postalcode text, desc text, messagecount integer DEFAULT 0, messageunread integer DEFAULT 0, parentad integer DEFAULT 0, searchquery_id integer, itemid text)", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String.fromCString(sqlite3_errmsg(db))
+                println("error creating table: \(errmsg)")
+            } else {
+                sqlite3_exec(db, "CREATE UNIQUE INDEX IF NOT EXISTS searchqueryurls_idx on searchqueryurls (seourl)", nil, nil, nil)
+                sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS searchqueryurls_idx1 on searchqueryurls (folder,searchquery_id)", nil, nil, nil)
+                sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS searchqueryurls_idx2 on searchqueryurls (folder,messageunread)", nil, nil, nil)
             }
+            
             
         }
     }

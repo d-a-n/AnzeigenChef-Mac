@@ -15,6 +15,7 @@ class catitem : NSObject{
     var istemplateitem = false
     var catisgroup = false
     var catparent : [catitem] = []
+    var catcount = 0
     
     var catchilds : [catitem] = []
     
@@ -31,6 +32,14 @@ class catitem : NSObject{
     
     func isgroup() -> Bool {
         return self.catisgroup
+    }
+    
+    func set_cat_count(newCount : Int){
+        self.catcount = newCount
+    }
+    
+    func reducecatcount(){
+        --self.catcount
     }
     
     func get_parent() -> catitem{
@@ -50,7 +59,11 @@ class catitem : NSObject{
     }
     
     func get_catname() -> String {
-        return self.catname;
+        if self.catcount > 0 {
+            return "\(self.catname) (\(self.catcount))"
+        } else {
+            return self.catname;
+        }
     }
     
     func set_catid(newId : String){
