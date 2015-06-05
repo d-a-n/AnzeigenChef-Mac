@@ -68,6 +68,23 @@ class httpcl{
         var reponseError: NSError?
         var response: NSURLResponse?
         var stringPost : String = "keywords=" + (sdate["query"]!).encodeURL() + "&locationStr=" + (sdate["ziporcity"]!).encodeURL() + "&radius=" + (sdate["distance"]!).encodeURL()
+        if sdate["fromprice"]! != "0" && sdate["fromprice"]! != "" {
+            stringPost += "&minPrice=" + sdate["fromprice"]!
+        }
+        if sdate["toprice"]! != "0" && sdate["toprice"]! != "" {
+            stringPost += "&maxPrice=" + sdate["toprice"]!
+        }
+        
+        // Category...
+        let catIds : String = sdate["category"]!
+        let catArray = catIds.componentsSeparatedByString("|")
+        for var i=0; i<catArray.count; ++i{
+            let line : String = catArray[i]
+            if line.contains("categoryId="){
+                stringPost += "&categoryId=" + line.getstring("=", endStr: "")
+                break
+            }
+        }
  
         var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/s-suchanfrage.html?" + stringPost)
         println("http://kleinanzeigen.ebay.de/anzeigen/s-suchanfrage.html?" + stringPost)

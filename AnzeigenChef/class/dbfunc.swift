@@ -62,9 +62,22 @@ class dbfunc{
             }
             
             
-            if sqlite3_exec(db, "create table if not exists searchquery (id integer primary key autoincrement, active integer NOT NULL DEFAULT 1, category text, category_text text, desc text, sort integer NOT NULL DEFAULT 0, query text, ziporcity text, distance integer NOT NULL DEFAULT 0, created datetime, modified datetime, ownurl text)", nil, nil, nil) != SQLITE_OK {
+            if sqlite3_exec(db, "create table if not exists searchquery (id integer primary key autoincrement, active integer NOT NULL DEFAULT 1, category text, category_text text, desc text, sort integer NOT NULL DEFAULT 0, query text, ziporcity text, distance integer NOT NULL DEFAULT 0, created datetime, modified datetime, ownurl text, fromprice integer NOT NULL DEFAULT 0, toprice integer NOT NULL DEFAULT 0)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
+            }
+            
+            if (self.sql_column_exists("searchquery", columnName: "fromprice") == false){
+                if sqlite3_exec(db,"ALTER TABLE searchquery ADD COLUMN fromprice integer NOT NULL DEFAULT 0", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            if (self.sql_column_exists("searchquery", columnName: "toprice") == false){
+                if sqlite3_exec(db,"ALTER TABLE searchquery ADD COLUMN toprice integer NOT NULL DEFAULT 0", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
             }
             
             if sqlite3_exec(db, "create table if not exists searchqueryurls (id integer primary key autoincrement, price int DEFAULT 0, title text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,state text,seourl text, folder int, adtype integer DEFAULT 0, pricetype integer DEFAULT 0, postalcode text, desc text, messagecount integer DEFAULT 0, messageunread integer DEFAULT 0, parentad integer DEFAULT 0, searchquery_id integer, itemid text)", nil, nil, nil) != SQLITE_OK {

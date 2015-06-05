@@ -17,6 +17,9 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
     @IBOutlet var distance: NSComboBox!
     @IBOutlet var query: NSTextField!
     @IBOutlet var okbutton: NSButton!
+    @IBOutlet var fromPrice: NSTextField!
+    @IBOutlet var toPrice: NSTextField!
+    
     var catSel : catselector!
     @IBOutlet var catSelButton: NSButton!
     
@@ -55,6 +58,8 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             postalcode.stringValue = ndata[0]["ziporcity"]!
             menuname.stringValue = ndata[0]["desc"]!
             ownurl.stringValue = ndata[0]["ownurl"]!
+            fromPrice.stringValue = ndata[0]["fromprice"]!
+            toPrice.stringValue = ndata[0]["toprice"]!
             
             let dist : String = ndata[0]["distance"]!
             
@@ -130,6 +135,9 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             
             sqlarray.addObject("ownurl=" + self.mydb.quotedstring(self.ownurl.stringValue))
             
+            sqlarray.addObject("fromprice=" + self.mydb.quotedstring(String(self.fromPrice.integerValue)))
+            sqlarray.addObject("toprice=" + self.mydb.quotedstring(String(self.toPrice.integerValue)))
+            
             if self.mydb.executesql("UPDATE searchquery SET " + sqlarray.componentsJoinedByString(", ") + " WHERE id=" + self.currentEditId) {
                 self.window?.sheetParent?.endSheet(self.window!, returnCode: NSModalResponseOK)
             } else {
@@ -138,7 +146,7 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             
         } else {
             var sqlarray : NSMutableArray = []
-            var sqlstart = "INSERT INTO searchquery (category,category_text,query,desc,ziporcity,distance,active,ownurl) VALUES ("
+            var sqlstart = "INSERT INTO searchquery (category,category_text,query,desc,ziporcity,distance,active,ownurl,fromprice,toprice) VALUES ("
             sqlarray.addObject(self.mydb.quotedstring(self.catSelButton.toolTip!))
             sqlarray.addObject(self.mydb.quotedstring(self.catSelButton.title))
             sqlarray.addObject(self.mydb.quotedstring(self.query.stringValue))
@@ -174,6 +182,8 @@ class new_edit_search: NSWindowController,NSTextFieldDelegate {
             }
             
             sqlarray.addObject(self.mydb.quotedstring(self.ownurl.stringValue))
+            sqlarray.addObject(self.mydb.quotedstring(String(self.fromPrice.integerValue)))
+            sqlarray.addObject(self.mydb.quotedstring(String(self.toPrice.integerValue)))
             
             if self.mydb.executesql(sqlstart + sqlarray.componentsJoinedByString(", ") + ")") {
                 self.currentEditId = String(self.mydb.lastId())
