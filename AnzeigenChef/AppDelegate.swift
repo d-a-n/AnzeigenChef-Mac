@@ -4,7 +4,7 @@
 //
 //  Created by DerDaHinten on 02.05.15.
 //  Copyright (c) 2015 Anon. All rights reserved.
-//
+//  http://www.customicondesign.com/free-icons/flatastic-icon-set/flatastic-part-8/
 
 import Cocoa
 import Foundation
@@ -401,7 +401,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 tableDataArray.replaceObjectAtIndex(proposedSelectionIndexes.firstIndex, withObject: n)
                 tableView.reloadDataForRowIndexes(NSIndexSet(index: proposedSelectionIndexes.firstIndex), columnIndexes: NSIndexSet(index: 0))
                 currentcatitemobj.reducecatcount()
+                let oldSel : NSIndexSet = self.catlist.selectedRowIndexes
                 self.catlist.reloadItem(self.searchCat, reloadChildren: true)
+                self.catlist.selectRowIndexes(oldSel, byExtendingSelection: false)
             }
             
             let this_itemid : String = n["itemid"]!
@@ -858,7 +860,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 // end
             }
             
-            self.sync_search()
+            self.progressBar.doubleValue = 0
+            self.progressBar.stopAnimation(self)
             
             dispatch_async(dispatch_get_main_queue()) {
                 self.progressBar.doubleValue = 0
@@ -868,40 +871,53 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 }
                 self.catlist.reloadItem(self.searchCat, reloadChildren: true)
                 self.syncinprocess = false
+                
+                self.sync_search()
             }
-            
-            
         }
+        
+        
+        
     }
     
     func sync_search(){
-        var dataArray : [[String : String]] = self.mydb.sql_read_select("SELECT * FROM searchquery WHERE active=1")
-        self.progressBar.maxValue = Double(dataArray.count)
-        self.progressBar.doubleValue = 0
-        for var i=0; i<dataArray.count; ++i {
-            self.progressBar.doubleValue = self.progressBar.doubleValue + 1
-            self.mydb.executesql("DELETE FROM searchqueryurls WHERE searchquery_id=" + dataArray[i]["id"]!)
-            let mdata : [[String : String]] = self.myhttpcl.get_search(dataArray[i])
-            for var ii=0; ii<mdata.count; ++ii {
-                var sqlstr = "INSERT OR IGNORE INTO searchqueryurls (searchquery_id,image,title,seourl,desc,price,postalcode,pricetype,folder,messageunread) VALUES (" + dataArray[i]["id"]! + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["image"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["title"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["url"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["desc"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["price"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["dist"]) + ","
-                sqlstr += self.mydb.quotedstring(mdata[ii]["pricetype"]) + ","
-                sqlstr += self.mydb.quotedstring(dataArray[i]["id"]!) + ",1)"
-                self.mydb.executesql(sqlstr)
+        self.syncinprocess = true
+        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
+            var dataArray : [[String : String]] = self.mydb.sql_read_select("SELECT * FROM searchquery WHERE active=1")
+            self.progressBar.maxValue = Double(dataArray.count)
+            self.progressBar.doubleValue = 0
+            for var i=0; i<dataArray.count; ++i {
+                self.progressBar.doubleValue = self.progressBar.doubleValue + 1
+                // self.mydb.executesql("DELETE FROM searchqueryurls WHERE searchquery_id=" + dataArray[i]["id"]!)
+                let mdata : [[String : String]] = self.myhttpcl.get_search(dataArray[i])
+                for var ii=0; ii<mdata.count; ++ii {
+                    var sqlstr = "INSERT OR IGNORE INTO searchqueryurls (searchquery_id,image,title,seourl,desc,price,postalcode,pricetype,folder,messageunread) VALUES (" + dataArray[i]["id"]! + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["image"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["title"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["url"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["desc"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["price"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["dist"]) + ","
+                    sqlstr += self.mydb.quotedstring(mdata[ii]["pricetype"]) + ","
+                    sqlstr += self.mydb.quotedstring(dataArray[i]["id"]!) + ",1)"
+                    self.mydb.executesql(sqlstr)
+                }
+            }
+        
+            self.progressBar.doubleValue = 0
+            self.progressBar.stopAnimation(self)
+            
+            dispatch_async(dispatch_get_main_queue()) {
+                self.progressBar.doubleValue = self.progressBar.maxValue
+                self.progressBar.stopAnimation(self)
+                self.syncinprocess = false
+                self.updateCatCount()
+                self.catlist.reloadItem(self.searchCat, reloadChildren: true)
             }
         }
-        
-        self.updateCatCount()
-        
-        
-        self.progressBar.doubleValue = self.progressBar.maxValue
-        self.progressBar.stopAnimation(self)
     }
+    
+    
     
     func loadImage(url:String, myImage: NSImageView) {
         let image_url:String = url
@@ -974,6 +990,7 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 self.addcat(self.my_new_edit_search.menuname.stringValue, myid: self.my_new_edit_search.currentEditId , myimg: "Tag - Blue_48x48", cparent: self.searchCat, is_template: false)
                 self.catlist.reloadItem(self.searchCat, reloadChildren: true)
                 self.catlist.expandItem(self.searchCat, expandChildren: true)
+                self.sync_search()
             }
         });
     }
@@ -1330,6 +1347,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         var newFilter = "SELECT * FROM " + currentTable
         if (filterStr != "") {
             newFilter += " WHERE " + filterStr
+        }
+        
+        if self.currentFolderParentID == -5 && newFilter.contains("ORDER BY") == false{
+            newFilter += " ORDER BY id DESC"
         }
         
         let tempArray = self.mydb.sql_read_select(newFilter)
