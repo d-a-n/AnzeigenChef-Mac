@@ -220,6 +220,15 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         
+        if menuItem.action == Selector("showOnlineAction:") {
+            if (((self.currentFolderID < 0 && self.currentFolderID != -10) || currentFolderParentID == -5) && self.itemstableview.selectedRow > -1){
+                return true
+            } else {
+                return false
+            }
+            
+        }
+        
         return menuItem.enabled
     }
     
@@ -997,12 +1006,24 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     
     @IBAction func edit(sender: AnyObject) {
+        
         if self.itemstableview.selectedRow<0 { return }
-        self.my_new_edit_ebay = nil
-        self.my_new_edit_ebay = new_edit_ebay(windowNibName: "new_edit_ebay");
         
         let nsdic : [String : String] = self.tableDataArray.objectAtIndex(self.itemstableview.selectedRowIndexes.firstIndex) as! [String : String]
         
+        if (self.currentFolderParentID == -5){
+            if nsdic["seourl"] != nil {
+                var seourl : String = nsdic["seourl"]!
+                seourl = "http://kleinanzeigen.ebay.de\(seourl)"
+                NSWorkspace.sharedWorkspace().openURL(NSURL(string: seourl.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!)
+            } else {
+                println(nsdic);
+            }
+            return
+        }
+        
+        self.my_new_edit_ebay = nil
+        self.my_new_edit_ebay = new_edit_ebay(windowNibName: "new_edit_ebay");
         self.my_new_edit_ebay.currentfolder = self.currentFolderID
         self.my_new_edit_ebay.editId = nsdic["id"]!
         
@@ -1011,6 +1032,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 self.load_data(self.currentFilter)
             }
         });
+    }
+    
+    
+    @IBAction func showOnlineAction(sender: AnyObject) {
+        if self.itemstableview.selectedRow<0 { return }
+        
+        let nsdic : [String : String] = self.tableDataArray.objectAtIndex(self.itemstableview.selectedRowIndexes.firstIndex) as! [String : String]
+        
+        if (self.currentFolderParentID == -5){
+            if nsdic["seourl"] != nil {
+                var seourl : String = nsdic["seourl"]!
+                seourl = "http://kleinanzeigen.ebay.de\(seourl)"
+                NSWorkspace.sharedWorkspace().openURL(NSURL(string: seourl.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!)
+            } else {
+                println(nsdic);
+            }
+            return
+        }
+        
+        
+        if nsdic["seourl"] != nil {
+            var seourl : String = nsdic["seourl"]!
+            seourl = "\(seourl)"
+            NSWorkspace.sharedWorkspace().openURL(NSURL(string: seourl.stringByAddingPercentEscapesUsingEncoding(NSUTF8StringEncoding)!)!)
+        }
     }
     
     

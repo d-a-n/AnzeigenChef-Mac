@@ -143,6 +143,12 @@
                                     <action selector="stopad:" target="Voe-Tx-rLC" id="CIc-2T-oiS"/>
                                 </connections>
                             </menuItem>
+                            <menuItem title="Show online..." id="pUq-mK-IWi">
+                                <modifierMask key="keyEquivalentModifierMask"/>
+                                <connections>
+                                    <action selector="showOnlineAction:" target="Voe-Tx-rLC" id="3P3-jl-mQ5"/>
+                                </connections>
+                            </menuItem>
                             <menuItem isSeparatorItem="YES" id="TlA-La-4ET"/>
                             <menuItem title="Print flyer" id="JKA-ye-16U">
                                 <modifierMask key="keyEquivalentModifierMask"/>
@@ -911,6 +917,12 @@
                     <modifierMask key="keyEquivalentModifierMask"/>
                     <connections>
                         <action selector="stopad:" target="Voe-Tx-rLC" id="wpN-fd-pZf"/>
+                    </connections>
+                </menuItem>
+                <menuItem title="Show online..." id="Bqf-f7-gBX">
+                    <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="showOnlineAction:" target="Voe-Tx-rLC" id="3wZ-MO-qPt"/>
                     </connections>
                 </menuItem>
                 <menuItem isSeparatorItem="YES" id="BYg-Zc-8ao"/>
