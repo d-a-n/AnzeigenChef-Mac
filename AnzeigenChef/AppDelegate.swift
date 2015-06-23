@@ -171,6 +171,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
             }
         }
         
+        if menuItem.action == Selector("duplicateAction:") {
+            if (self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
+                return true
+            } else {
+                return false
+            }
+        }
+        
         
         if menuItem.action == Selector("deactivate:") && menuItem.tag == 876 {
             if (self.currentFolderID == -9 && self.itemstableview.selectedRow > -1){
@@ -238,6 +246,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                 return false
             } else {
                 return true
+            }
+        }
+        
+        if theItem.action == Selector("duplicateAction:") {
+            if (self.itemstableview.selectedRow > -1 && self.currentFolderParentID != -5){
+                return true
+            } else {
+                return false
             }
         }
         
@@ -929,15 +945,29 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
     
     
     func loadImage(url:String, myImage: NSImageView) {
-        let image_url:String = url
+        let image_url:String = url.stringByAddingPercentEscapesUsingEncoding(NSASCIIStringEncoding)!
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) {
-            let url:NSURL = NSURL(string:image_url)!
-            var data:NSData = NSData(contentsOfURL: url)!
-            var temppic = NSImage(data: data)!
-            
-            dispatch_async(dispatch_get_main_queue()) {
-                myImage.image = temppic
+            if let new_url : NSURL? = NSURL(string:image_url.stringByTrimmingCharactersInSet(NSCharacterSet.whitespaceAndNewlineCharacterSet())) {
+                var data:NSData?
+                
+                if url.contains("file:"){
+                   data = NSData(contentsOfFile: new_url!.path! )
+                } else {
+                   data = NSData(contentsOfURL: new_url!)
+                }
+                
+                var temppic : NSImage?
+                if data == nil{
+                    temppic = nil
+                } else {
+                    temppic = NSImage(data: data!)!
+                }
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    myImage.image = temppic
+                }
             }
+            
         }
         
     }
@@ -965,6 +995,31 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         return newDic
     }
  
+    @IBAction func duplicateAction(sender: AnyObject){
+        let selx = itemstableview.selectedRowIndexes.toArray()
+        for var i=0; i<selx.count; ++i{
+            let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
+            let id = nsdic["id"]!
+            self.mydb.executesql("DROP TABLE IF EXISTS tmp")
+            self.mydb.executesql("CREATE TEMPORARY TABLE tmp AS SELECT * FROM items WHERE id="+id)
+            if currentFolderID < 0 && currentFolderID != -10 {
+                self.mydb.executesql("UPDATE tmp SET id = NULL, itemid = NULL, folder=-10, watchcount=0, viewcount=0, messageunread=0, messagecount=0")
+            } else {
+                self.mydb.executesql("UPDATE tmp SET id = NULL, itemid = NULL, watchcount=0, viewcount=0, messageunread=0, messagecount=0")
+            }
+            self.mydb.executesql("INSERT INTO items SELECT * FROM tmp")
+        }
+        if currentFolderID < 0 && currentFolderID != -10 {
+            let alert = NSAlert()
+            alert.messageText = NSLocalizedString("Ad is in templates now", comment: "Duplicate message...")
+            alert.informativeText = NSLocalizedString("Duplicated ad moved", comment: "Duplicate message header...")
+            alert.addButtonWithTitle(NSLocalizedString("OK", comment: "Alert OK"))
+            alert.alertStyle = NSAlertStyle.WarningAlertStyle
+            let result = alert.runModal()
+        }
+        self.load_data(self.currentFilter)
+    }
+    
     func delete(sender: NSMenuItem){
         let selx = itemstableview.selectedRowIndexes.toArray()
         for var i=0; i<selx.count; ++i{

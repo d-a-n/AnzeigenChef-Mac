@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
-<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14C109" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
+<document type="com.apple.InterfaceBuilder3.Cocoa.XIB" version="3.0" toolsVersion="7706" systemVersion="14D136" targetRuntime="MacOSX.Cocoa" propertyAccessControl="none" customObjectInstantitationMethod="direct">
     <dependencies>
         <deployment identifier="macosx"/>
         <plugIn identifier="com.apple.InterfaceBuilder.CocoaPlugin" version="7706"/>
@@ -184,7 +184,11 @@
                                     <action selector="copy:" target="-1" id="G1f-GL-Joy"/>
                                 </connections>
                             </menuItem>
-                            <menuItem title="Duplicate" keyEquivalent="C" id="pq3-r3-Jyh"/>
+                            <menuItem title="Duplicate" keyEquivalent="C" id="pq3-r3-Jyh">
+                                <connections>
+                                    <action selector="duplicateAction:" target="Voe-Tx-rLC" id="518-SA-Ru6"/>
+                                </connections>
+                            </menuItem>
                             <menuItem title="Paste" keyEquivalent="v" id="gVA-U4-sdL">
                                 <connections>
                                     <action selector="paste:" target="-1" id="UvS-8e-Qdg"/>
@@ -433,7 +437,7 @@
                                                             <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                                                             <subviews>
                                                                 <tableView identifier="maintable" focusRingType="none" verticalHuggingPriority="750" allowsExpansionToolTips="YES" columnAutoresizingStyle="firstColumnOnly" alternatingRowBackgroundColors="YES" columnReordering="NO" columnResizing="NO" typeSelect="NO" autosaveName="maincolumns" rowHeight="94" rowSizeStyle="automatic" headerView="j6P-A1-5DC" viewBased="YES" id="zZQ-O4-AVI">
-                                                                    <rect key="frame" x="0.0" y="0.0" width="417" height="497"/>
+                                                                    <rect key="frame" x="0.0" y="0.0" width="417" height="0.0"/>
                                                                     <autoresizingMask key="autoresizingMask"/>
                                                                     <size key="intercellSpacing" width="3" height="2"/>
                                                                     <color key="backgroundColor" name="controlBackgroundColor" catalog="System" colorSpace="catalog"/>
@@ -780,7 +784,11 @@
                             <action selector="orderFrontStandardAboutPanel:" target="-1" id="erw-WM-Apf"/>
                         </connections>
                     </toolbarItem>
-                    <toolbarItem implicitItemIdentifier="0F7D82FA-13B5-4E93-90D2-C0D32D98D76B" label="Duplicate" paletteLabel="Duplicate" tag="-1" image="Paste" id="vpI-HN-yty"/>
+                    <toolbarItem implicitItemIdentifier="0F7D82FA-13B5-4E93-90D2-C0D32D98D76B" label="Duplicate" paletteLabel="Duplicate" tag="-1" image="Paste" id="vpI-HN-yty">
+                        <connections>
+                            <action selector="duplicateAction:" target="Voe-Tx-rLC" id="TsI-wr-gC0"/>
+                        </connections>
+                    </toolbarItem>
                     <toolbarItem implicitItemIdentifier="20801ACA-CAFE-4751-A2F5-1B6EF878BB2B" label="Delete" paletteLabel="Delete" tag="-1" image="Remove-ticket" id="0jG-H4-6b8">
                         <connections>
                             <action selector="delete:" target="-1" id="13U-3z-ekT"/>
@@ -893,6 +901,9 @@
                 </menuItem>
                 <menuItem title="Duplicate" id="dpn-bf-9vw">
                     <modifierMask key="keyEquivalentModifierMask"/>
+                    <connections>
+                        <action selector="duplicateAction:" target="Voe-Tx-rLC" id="j7m-tr-g0N"/>
+                    </connections>
                 </menuItem>
                 <menuItem title="Delete" id="z07-no-KOe">
                     <modifierMask key="keyEquivalentModifierMask"/>

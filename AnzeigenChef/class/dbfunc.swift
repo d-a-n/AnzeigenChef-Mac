@@ -105,6 +105,8 @@ class dbfunc{
             let errmsg = String.fromCString(sqlite3_errmsg(db))
             println("sql error: \(errmsg)\nSQL: "+sqlStr)
             return false
+        } else {
+            sqlite3_finalize(nil)
         }
         return true
     }
