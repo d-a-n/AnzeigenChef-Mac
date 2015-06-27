@@ -1000,14 +1000,8 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         for var i=0; i<selx.count; ++i{
             let nsdic : [String : String] = self.tableDataArray.objectAtIndex(selx[i]) as! [String : String]
             let id = nsdic["id"]!
-            self.mydb.executesql("DROP TABLE IF EXISTS tmp")
-            self.mydb.executesql("CREATE TEMPORARY TABLE tmp AS SELECT * FROM items WHERE id="+id)
-            if currentFolderID < 0 && currentFolderID != -10 {
-                self.mydb.executesql("UPDATE tmp SET id = NULL, itemid = NULL, folder=-10, watchcount=0, viewcount=0, messageunread=0, messagecount=0")
-            } else {
-                self.mydb.executesql("UPDATE tmp SET id = NULL, itemid = NULL, watchcount=0, viewcount=0, messageunread=0, messagecount=0")
-            }
-            self.mydb.executesql("INSERT INTO items SELECT * FROM tmp")
+ 
+            self.mydb.makedup(id,fid: currentFolderID)
         }
         if currentFolderID < 0 && currentFolderID != -10 {
             let alert = NSAlert()
@@ -1262,9 +1256,10 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         NSWorkspace.sharedWorkspace().openURL(NSURL(string: "http://gastonx.net")!)
     }
     
+   
     
-    @IBAction func sourcecodeAction(sender: AnyObject) {
-        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://github.com/gastonx/AnzeigenChef-Mac")!)
+    @IBAction func spendAction(sender: AnyObject) {
+        NSWorkspace.sharedWorkspace().openURL(NSURL(string: "https://www.paypal.com/de/cgi-bin/webscr?cmd=_xclick&business=hpmacher@gmail.com&item_name=AnzeigenChef%20Spende&currency_code=EUR")!)
     }
     
     

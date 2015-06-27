@@ -47,6 +47,11 @@ class dbfunc{
                 sqlite3_exec(db, "CREATE INDEX IF NOT EXISTS items_folder on items (folder)", nil, nil, nil)
             }
             
+            if sqlite3_exec(db, "create table if not exists items_dup (id integer, account integer DEFAULT 0, itemid text, price int DEFAULT 0, title text, category text, categoryId text, enddate date, viewcount int DEFAULT 0, watchcount int DEFAULT 0, image text,image2 text,image3 text,image4 text,image5 text,image6 text,image7 text,image8 text,image9 text,image10 text,image11 text,image12 text,image13 text,image14 text,image15 text,image16 text,image17 text,image18 text,image19 text,image20 text, state text,seourl text, shippingprovided text, folder int, adtype integer DEFAULT 0, attribute text, pricetype integer DEFAULT 0, postalcode text, street text, myname text, myphone text, desc text, messagecount integer DEFAULT 0, messageunread integer DEFAULT 0, parentad integer DEFAULT 0)", nil, nil, nil) != SQLITE_OK {
+                let errmsg = String.fromCString(sqlite3_errmsg(db))
+                println("error creating table: \(errmsg)")
+            }
+            
             if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread INTEGER, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")
@@ -101,13 +106,47 @@ class dbfunc{
     }
     
     func executesql(sqlStr : String) -> Bool{
+        
         if sqlite3_exec(db, sqlStr, nil, nil, nil) != SQLITE_OK {
             let errmsg = String.fromCString(sqlite3_errmsg(db))
             println("sql error: \(errmsg)\nSQL: "+sqlStr)
             return false
-        } else {
-            sqlite3_finalize(nil)
         }
+         
+        return true
+    }
+    
+    func makedup(id : String, fid : Int) -> Bool{
+        var statement: COpaquePointer = nil
+        
+        self.executesql("DELETE FROM items_dup")
+        
+        if sqlite3_prepare_v2(db, "INSERT INTO items_dup SELECT * FROM items WHERE id="+id, -1, &statement,nil) != SQLITE_OK {
+            let errmsg = String.fromCString(sqlite3_errmsg(db))
+            println("error preparing select: \(errmsg)")
+            return false
+        } else {
+            sqlite3_step(statement);
+            sqlite3_finalize(statement);
+        }
+  
+        if fid < 0 && fid != -10 {
+            sqlite3_exec(db, "UPDATE items_dup SET id = NULL, itemid = NULL, folder=-10, watchcount=0, viewcount=0, messageunread=0, messagecount=0",nil,nil,nil)
+        } else {
+            sqlite3_exec(db, "UPDATE items_dup SET id = NULL, itemid = NULL, watchcount=0, viewcount=0, messageunread=0, messagecount=0",nil,nil,nil)
+        }
+        
+        
+        
+        if sqlite3_prepare_v2(db, "INSERT INTO items SELECT * FROM items_dup", -1, &statement,nil) != SQLITE_OK {
+            let errmsg = String.fromCString(sqlite3_errmsg(db))
+            println("error preparing INSERT: \(errmsg)")
+            return false
+        } else {
+            sqlite3_step(statement);
+            sqlite3_finalize(statement);
+        }
+         
         return true
     }
     
@@ -144,6 +183,8 @@ class dbfunc{
         statement = nil
         return sqldata
     }
+    
+    
     
     func sql_read_folders(sqlFilter : String) -> [[String : String]]{
         var statement: COpaquePointer = nil

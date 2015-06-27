@@ -14,6 +14,7 @@
 		543BA9541B10B07D00EFAF4D /* picselect.xib in Resources */ = {isa = PBXBuildFile; fileRef = 543BA9521B10B07D00EFAF4D /* picselect.xib */; };
 		543BA9561B10B75C00EFAF4D /* myimageview.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543BA9551B10B75C00EFAF4D /* myimageview.swift */; };
 		543DA9471B13219200FA7290 /* itemstablecell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 543DA9461B13219200FA7290 /* itemstablecell.swift */; };
+		5446F0A61B3C802E00245490 /* x-click-butcc-donate.gif in Resources */ = {isa = PBXBuildFile; fileRef = 5446F0A51B3C802E00245490 /* x-click-butcc-donate.gif */; };
 		5485B5D01AF79CB100919752 /* foldercontroller.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5485B5CE1AF79CB100919752 /* foldercontroller.swift */; };
 		5485B5D11AF79CB100919752 /* foldercontroller.xib in Resources */ = {isa = PBXBuildFile; fileRef = 5485B5CF1AF79CB100919752 /* foldercontroller.xib */; };
 		54AE77471B06971F0050755A /* MessageControl.swift in Sources */ = {isa = PBXBuildFile; fileRef = 54AE77451B06971F0050755A /* MessageControl.swift */; };
@@ -59,6 +60,7 @@
 		543BA9521B10B07D00EFAF4D /* picselect.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = picselect.xib; sourceTree = "<group>"; };
 		543BA9551B10B75C00EFAF4D /* myimageview.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = myimageview.swift; path = class/myimageview.swift; sourceTree = "<group>"; };
 		543DA9461B13219200FA7290 /* itemstablecell.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; name = itemstablecell.swift; path = class/itemstablecell.swift; sourceTree = "<group>"; };
+		5446F0A51B3C802E00245490 /* x-click-butcc-donate.gif */ = {isa = PBXFileReference; lastKnownFileType = image.gif; path = "x-click-butcc-donate.gif"; sourceTree = "<group>"; };
 		5485B5CE1AF79CB100919752 /* foldercontroller.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = foldercontroller.swift; sourceTree = "<group>"; };
 		5485B5CF1AF79CB100919752 /* foldercontroller.xib */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = file.xib; path = foldercontroller.xib; sourceTree = "<group>"; };
 		54AE77451B06971F0050755A /* MessageControl.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = MessageControl.swift; sourceTree = "<group>"; };
@@ -200,6 +202,7 @@
 		54F1C2DC1AF4C422005219FC /* Supporting Files */ = {
 			isa = PBXGroup;
 			children = (
+				5446F0A51B3C802E00245490 /* x-click-butcc-donate.gif */,
 				542400F01AF61681006DF527 /* libsqlite3.dylib */,
 				54F1C2DD1AF4C422005219FC /* Info.plist */,
 			);
@@ -303,6 +306,7 @@
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5446F0A61B3C802E00245490 /* x-click-butcc-donate.gif in Resources */,
 				54F131251B038506001070D8 /* setup_account.xib in Resources */,
 				54E68E551B09DFC6000144D6 /* catselector.xib in Resources */,
 				54EC1D131B1CCC72006DDFE2 /* new_edit_search.xib in Resources */,
