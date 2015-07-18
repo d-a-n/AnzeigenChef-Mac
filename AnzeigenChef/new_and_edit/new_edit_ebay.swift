@@ -37,6 +37,10 @@ class new_edit_ebay: NSWindowController {
     
     @IBOutlet var picSelButton: NSButton!
     
+    @IBOutlet var adCompany: NSButton!
+    
+    @IBOutlet var adImpress: NSTextView!
+    
     
     override func windowDidLoad() {
         super.windowDidLoad()
@@ -70,6 +74,13 @@ class new_edit_ebay: NSWindowController {
             self.adPhone.stringValue = ndata[0]["myphone"]!
             self.catSelButton.toolTip = ndata[0]["categoryId"]!
             self.catSelButton.title = ndata[0]["category"]!
+            self.adImpress.string = ndata[0]["companyimpress"]!
+            
+            if ndata[0]["company"]! == "1" {
+                adCompany.state = 1
+            } else {
+                adCompany.state = 0
+            }
             
             if ndata[0]["adtype"]! == "1" {
                 adType.selectCellAtRow(1, column: 0)
@@ -307,6 +318,9 @@ class new_edit_ebay: NSWindowController {
             self.adPhone.stringValue = self.adPhone.stringValue.cleanToPhone()
         }
         
+        if (self.adCompany.state == 1 && self.adImpress.string == ""){
+            infoArray.addObject(NSLocalizedString("You need a impress for commercial ads", comment: "noimpress"))
+        }
         
         if (infoArray.count>0){
             let errFieldList : String = infoArray.componentsJoinedByString("\n")
@@ -340,7 +354,7 @@ class new_edit_ebay: NSWindowController {
         
         // Build SQL
         if (self.editId == ""){
-            sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, shippingprovided, folder, adtype, attribute, pricetype, postalcode, street, myname, myphone, desc\(picstringnewfields)) VALUES ("
+            sqlStr = "INSERT INTO items (account, state, price, title, category, categoryId, shippingprovided, folder, adtype, attribute, pricetype, postalcode, company, companyimpress, street, myname, myphone, desc\(picstringnewfields)) VALUES ("
             sqlStr += "'" + selectedAccount + "',"
             sqlStr += "'template',"
             sqlStr += "'" + String(self.adPrice.integerValue) + "',"
@@ -367,6 +381,15 @@ class new_edit_ebay: NSWindowController {
             }
             
             sqlStr += self.mydb.quotedstring(self.adPostalCode.stringValue) + ","
+            
+            if self.adCompany.state == 1 {
+                sqlStr += self.mydb.quotedstring("1") + ","
+            } else {
+                sqlStr += self.mydb.quotedstring("0") + ","
+            }
+            
+            sqlStr += self.mydb.quotedstring(self.adImpress.string) + ","
+            
             sqlStr += self.mydb.quotedstring(self.adStreet.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.adYourName.stringValue) + ","
             sqlStr += self.mydb.quotedstring(self.adPhone.stringValue) + ","
@@ -395,6 +418,14 @@ class new_edit_ebay: NSWindowController {
             } else {
                 sqlStr += "adtype=1,"
             }
+            
+            if self.adCompany.state == 1 {
+                sqlStr += "company=1,"
+            } else {
+                sqlStr += "company=0,"
+            }
+            
+            sqlStr += "companyimpress=" + self.mydb.quotedstring(self.adImpress.string) + ","
             
             // sqlStr += "''," // attribute?
             

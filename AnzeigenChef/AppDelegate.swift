@@ -446,6 +446,9 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
         cell.watchLabel.stringValue = nsdic["watchcount"]!
         cell.visitLabel.stringValue = nsdic["viewcount"]!
         cell.postalCodeLabel.stringValue = nsdic["postalcode"]!
+        if (nsdic["company"]! == "1"){
+            cell.postalCodeLabel.stringValue = nsdic["postalcode"]! + " (GW)"
+        }
         
         if (nsdic["image"] != ""){
             self.loadImage(nsdic["image"]!, myImage: cell.image)
@@ -724,6 +727,14 @@ class AppDelegate: NSObject, NSApplicationDelegate, NSOutlineViewDataSource, NSO
                                 
                                 if (detailData["ad_description"] != nil){
                                     sqlstr += "desc=" + self.mydb.quotedstring(detailData["ad_description"]) + ","
+                                }
+                                
+                                if (detailData["ad_company"] != nil){
+                                    sqlstr += "company=" + self.mydb.quotedstring(detailData["ad_company"]) + ","
+                                }
+                                
+                                if (detailData["ad_company_impress"] != nil){
+                                    sqlstr += "companyimpress=" + self.mydb.quotedstring(detailData["ad_company_impress"]) + ","
                                 }
                                 
                                 if (detailData["ad_postalcode"] != nil){

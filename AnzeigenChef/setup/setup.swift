@@ -120,8 +120,14 @@ class setup: NSWindowController,NSTableViewDataSource,NSTableViewDelegate {
     @IBAction func deleteAccount(sender: AnyObject) {
         var mydb = dbfunc();
         mydb.executesql("DELETE FROM accounts WHERE id='"+dataArray[currentSelection]["id"]!+"'")
+        mydb.executesql("DELETE FROM items WHERE account='"+dataArray[currentSelection]["id"]!+"' AND folder=-9")
+        mydb.executesql("DELETE FROM items WHERE account='"+dataArray[currentSelection]["id"]!+"' AND folder=-8")
+        mydb.executesql("DELETE FROM items WHERE account='"+dataArray[currentSelection]["id"]!+"' AND folder=-7")
         self.loaddata()
         self.accountTable.reloadData()
+        
+        let appDelegate = NSApplication.sharedApplication().delegate as! AppDelegate
+        appDelegate.load_data(appDelegate.currentFilter)
     }
     
     @IBAction func saveAndClose(sender: AnyObject) {

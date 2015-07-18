@@ -52,6 +52,33 @@ class dbfunc{
                 println("error creating table: \(errmsg)")
             }
             
+            if (self.sql_column_exists("items", columnName: "company") == false){
+                if sqlite3_exec(db,"ALTER TABLE items ADD COLUMN company integer NOT NULL DEFAULT 0", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            if (self.sql_column_exists("items", columnName: "companyimpress") == false){
+                if sqlite3_exec(db,"ALTER TABLE items ADD COLUMN companyimpress text", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            if (self.sql_column_exists("items_dup", columnName: "company") == false){
+                if sqlite3_exec(db,"ALTER TABLE items_dup ADD COLUMN company integer NOT NULL DEFAULT 0", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            if (self.sql_column_exists("items_dup", columnName: "companyimpress") == false){
+                if sqlite3_exec(db,"ALTER TABLE items_dup ADD COLUMN companyimpress text", nil, nil, nil) != SQLITE_OK{
+                    let errmsg = String.fromCString(sqlite3_errmsg(db))
+                    println("error add column table: \(errmsg)")
+                }
+            }
+            
+            
+            
             if sqlite3_exec(db, "create table if not exists conversations (id integer primary key autoincrement, account integer, adtitle text, adstatus text, adimage text,email text, cid text, buyername text, sellername text, adid text, role text, unread INTEGER, textshort text,boundness text, receiveddate datetime, negotiationenabled text)", nil, nil, nil) != SQLITE_OK {
                 let errmsg = String.fromCString(sqlite3_errmsg(db))
                 println("error creating table: \(errmsg)")

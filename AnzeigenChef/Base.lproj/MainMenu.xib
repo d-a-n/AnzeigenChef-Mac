@@ -590,7 +590,7 @@
                                                                 <button verticalHuggingPriority="750" id="zV5-wT-Rnc">
                                                                     <rect key="frame" x="176" y="0.0" width="149" height="32"/>
                                                                     <autoresizingMask key="autoresizingMask" flexibleMinX="YES" flexibleMaxY="YES"/>
-                                                                    <buttonCell key="cell" type="push" title="Anwer question" bezelStyle="rounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ukh-qy-oZv">
+                                                                    <buttonCell key="cell" type="push" title="Answer question" bezelStyle="rounded" alignment="center" enabled="NO" state="on" borderStyle="border" imageScaling="proportionallyDown" inset="2" id="ukh-qy-oZv">
                                                                         <behavior key="behavior" pushIn="YES" lightByBackground="YES" lightByGray="YES"/>
                                                                         <font key="font" metaFont="system"/>
                                                                     </buttonCell>

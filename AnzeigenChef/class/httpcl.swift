@@ -403,6 +403,13 @@ class httpcl{
                                 PostData.addObject("adType=WANTED")
                             }
                             
+                            if (listData["company"] as! String == "1"){
+                                PostData.addObject("posterType=COMMERCIAL")
+                                PostData.addObject("imprint=" + (listData["companyimpress"] as! String).encodeURL())
+                            } else {
+                                PostData.addObject("posterType=PRIVATE")
+                            }
+                            
                             var ebayUrl3 = NSURL(string: "https://kleinanzeigen.ebay.de/anzeigen/p-anzeige-abschicken.html")
                             var request = NSMutableURLRequest(URL: ebayUrl3! )
                             request.setValue(ebayUrl2?.absoluteString, forHTTPHeaderField: "Referer")
@@ -716,6 +723,9 @@ class httpcl{
                 var ad_description = (responseData as! String).getstring("name=\"description\"", endStr: "</textarea>")
                 ad_description = ad_description.getstring(">", endStr: "")
               
+                // ad_company_impress
+                var ad_company_impress = (responseData as! String).getstring("name=\"imprint\"", endStr: "</textarea>")
+                ad_company_impress = ad_company_impress.getstring(">", endStr: "")
                 
                 // price
                 var ad_price = (responseData as! String).getstring("name=\"priceAmount\"", endStr: "/>")
@@ -774,6 +784,15 @@ class httpcl{
                     ad_type = "1"
                 }
                 
+                // ad_company
+                var ad_company = "0"
+                var adcompanytemp = ""
+                adtypetemp = (responseData as! String).getstring("id=\"posterType-commercial\"", endStr: "/>")
+                if (adtypetemp.contains("checked")){
+                    ad_company = "1"
+                }
+                
+                
                 // category
                 var ad_category = (responseData as! String).getstring("name=\"categoryId\"", endStr: "/>")
                 ad_category = ad_category.getstring("value=\"", endStr: "\"")
@@ -803,6 +822,8 @@ class httpcl{
                 emptyDic["ad_type"] = ad_type
                 emptyDic["imglist"] = imglist
                 emptyDic["ad_title"] = ad_title.html_decode()
+                emptyDic["ad_company"] = ad_company;
+                emptyDic["ad_company_impress"] = ad_company_impress;
                 
                 ad_description = ad_description.stringByReplacingOccurrencesOfString("\r", withString: "[RETURN]", options: NSStringCompareOptions.LiteralSearch, range: nil)
                 ad_description = ad_description.stringByReplacingOccurrencesOfString("\n", withString: "[NEWLINE]", options: NSStringCompareOptions.LiteralSearch, range: nil)
