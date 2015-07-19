@@ -601,7 +601,7 @@ class httpcl{
         var response: NSURLResponse?
         var emptyarray : NSArray = []
         
-        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-meine-anzeigen-verwalten.json")
+        var ebayUrl = NSURL(string: "http://kleinanzeigen.ebay.de/anzeigen/m-meine-anzeigen-verwalten.json?pageSize=99999")
         var request = NSMutableURLRequest(URL: ebayUrl! )
         
         var urlData2: NSData? = NSURLConnection.sendSynchronousRequest(request, returningResponse:&response, error:&reponseError)
